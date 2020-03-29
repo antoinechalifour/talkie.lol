@@ -1,0 +1,7 @@
+mutation CreateSpace {
+  createSpace {
+    space {
+      slug
+    }
+  }
+}

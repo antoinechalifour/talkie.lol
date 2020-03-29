@@ -1,0 +1,7 @@
+subscription SpaceLeft($slug: String!) {
+  spaceLeft(args: { slug: $slug }) {
+    user {
+      id
+    }
+  }
+}

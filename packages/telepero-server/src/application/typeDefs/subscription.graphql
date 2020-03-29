@@ -1,0 +1,44 @@
+# import Space from './space.graphql'
+# import SessionDescription from './sessionDescription.graphql'
+
+type Subscription {
+  spaceJoined(args: SpaceJoinedInput!): SpaceJoinedEvent!
+  spaceLeft(args: SpaceLeftInput!): SpaceLeftEvent!
+
+  offerReceived: OfferReceivedEvent!
+  answerReceived: AnswerReceivedEvent!
+  iceCandidateReceived: IceCandidateReceivedEvent!
+}
+
+input SpaceLeftInput {
+  slug: String!
+}
+
+input SpaceJoinedInput {
+  slug: String!
+}
+
+type AnswerReceivedEvent {
+  senderId: String!
+  answer: SessionDescription!
+}
+
+type IceCandidateReceivedEvent {
+  senderId: String!
+  iceCandidate: String!
+}
+
+type OfferReceivedEvent {
+  senderId: String!
+  offer: SessionDescription!
+}
+
+type SpaceLeftEvent {
+  space: Space!
+  user: User!
+}
+
+type SpaceJoinedEvent {
+  space: Space!
+  user: User!
+}

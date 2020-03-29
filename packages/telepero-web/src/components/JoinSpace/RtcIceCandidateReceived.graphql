@@ -1,0 +1,6 @@
+subscription RtcIceCandidateReceived {
+  iceCandidateReceived {
+    iceCandidate
+    senderId
+  }
+}

@@ -1,0 +1,9 @@
+subscription RtcAnswerReceived {
+  answerReceived {
+    answer {
+      sdp
+      type
+    }
+    senderId
+  }
+}

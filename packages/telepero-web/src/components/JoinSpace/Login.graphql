@@ -1,0 +1,10 @@
+mutation Login($slug: String!) {
+  login(args: { slug: $slug }) {
+    session {
+      token
+      user {
+        id
+      }
+    }
+  }
+}

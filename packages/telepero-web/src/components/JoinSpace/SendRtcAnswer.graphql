@@ -1,0 +1,5 @@
+mutation SendRtcAnswer($answer: String!, $recipientId: String!) {
+  sendRtcAnswer(args: { answer: $answer, recipientId: $recipientId }) {
+    success
+  }
+}

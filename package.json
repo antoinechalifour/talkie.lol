@@ -1,0 +1,12 @@
+{
+  "name": "telepero",
+  "author": "antoinechalifour <antoine.chalifour@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/**"
+  ],
+  "devDependencies": {
+    "prettier": "2.0.2"
+  }
+}

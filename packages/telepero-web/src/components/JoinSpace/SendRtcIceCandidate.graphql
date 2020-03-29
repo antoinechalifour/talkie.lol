@@ -1,0 +1,7 @@
+mutation SendRtcIceCandidate($recipientId: String!, $iceCandidate: String!) {
+  sendRtcIceCandidate(
+    args: { recipientId: $recipientId, iceCandidate: $iceCandidate }
+  ) {
+    success
+  }
+}

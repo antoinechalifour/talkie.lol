@@ -1,0 +1,72 @@
+# import Space from './space.graphql'
+# import Session from './session.graphql'
+
+type Mutation {
+  createSpace: CreateSpaceResult!
+  login(args: LoginInput!): LoginResult!
+  joinSpace(args: JoinSpaceInput!): JoinSpaceResult!
+  leaveSpace(args: LeaveSpaceInput!): LeaveSpaceResult!
+
+  sendRtcOffer(args: SendRtcOfferInput!): SendRtcOfferResult!
+  sendRtcAnswer(args: SendRtcAnswerInput!): SendRtcAnswerResult!
+  sendRtcIceCandidate(
+    args: SendRtcIceCandidateInput!
+  ): SendRtcIceCandidateResult!
+}
+
+type LoginResult {
+  success: Boolean!
+  session: Session!
+}
+
+input LoginInput {
+  slug: String!
+}
+
+type SendRtcIceCandidateResult {
+  success: Boolean!
+}
+
+input SendRtcIceCandidateInput {
+  iceCandidate: String!
+  recipientId: String!
+}
+
+type SendRtcAnswerResult {
+  success: Boolean!
+}
+
+input SendRtcAnswerInput {
+  answer: String!
+  recipientId: String!
+}
+
+type SendRtcOfferResult {
+  success: Boolean!
+}
+
+input SendRtcOfferInput {
+  offer: String!
+  recipientId: String!
+}
+
+type CreateSpaceResult {
+  success: Boolean!
+  space: Space
+}
+
+type LeaveSpaceResult {
+  success: Boolean!
+}
+
+input LeaveSpaceInput {
+  slug: String!
+}
+
+type JoinSpaceResult {
+  success: Boolean!
+}
+
+input JoinSpaceInput {
+  slug: String!
+}

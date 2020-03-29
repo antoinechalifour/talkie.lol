@@ -1,0 +1,7 @@
+subscription SpaceJoined($slug: String!) {
+  spaceJoined(args: { slug: $slug }) {
+    user {
+      id
+    }
+  }
+}

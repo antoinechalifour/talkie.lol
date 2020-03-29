@@ -1,0 +1,5 @@
+mutation SendRtcOffer($offer: String!, $recipientId: String!) {
+  sendRtcOffer(args: { offer: $offer, recipientId: $recipientId }) {
+    success
+  }
+}

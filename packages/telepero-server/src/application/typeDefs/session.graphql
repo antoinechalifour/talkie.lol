@@ -1,0 +1,8 @@
+# import User from './user.graphql'
+# import Space from './space.graphql'
+
+type Session {
+  token: String!
+  user: User!
+  space: Space!
+}

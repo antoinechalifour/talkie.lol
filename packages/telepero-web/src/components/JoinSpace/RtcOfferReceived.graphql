@@ -1,0 +1,9 @@
+subscription RtcOfferReceived {
+  offerReceived {
+    offer {
+      sdp
+      type
+    }
+    senderId
+  }
+}
