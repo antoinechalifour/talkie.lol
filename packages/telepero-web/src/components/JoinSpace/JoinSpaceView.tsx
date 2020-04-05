@@ -33,7 +33,6 @@ export const JoinSpaceView: React.FC<SpaceViewProps> = ({ spaceSlug }) => {
   }, [login, spaceSlug]);
 
   if (loginResult.data) {
-    console.log(loginResult.data);
     return (
       <AuthenticatedClient token={loginResult.data.login.session.token}>
         <Space userId={loginResult.data.login.session.user.id} slug={spaceSlug} />

@@ -1,0 +1,19 @@
+mutation SendRtcIceCandidate(
+  $recipientId: String!
+  $candidate: String!
+  $sdpMid: String!
+  $sdpMLineIndex: Int!
+) {
+  sendRtcIceCandidate(
+    args: {
+      iceCandidate: {
+        candidate: $candidate
+        sdpMid: $sdpMid
+        sdpMLineIndex: $sdpMLineIndex
+      }
+      recipientId: $recipientId
+    }
+  ) {
+    success
+  }
+}

@@ -10,6 +10,7 @@ import { SpaceJoinedEvent } from "../domain/events/SpaceJoinedEvent";
 import { SpaceLeftEvent } from "../domain/events/SpaceLeftEvent";
 import { SessionDescription } from "../domain/entities/SessionDescription";
 import { NotificationPort } from "../usecase/ports/NotificationPort";
+import {IceCandidate} from "../domain/entities/IceCandidate";
 
 interface Dependencies {
   pubSub: PubSub;
@@ -37,7 +38,7 @@ export class NotificationAdapter implements NotificationPort {
   }
 
   notifyRtcIceCandidateReceived(
-    iceCandidate: string,
+    iceCandidate: IceCandidate,
     sender: User,
     recipient: User
   ): void {

@@ -27,8 +27,14 @@ type SendRtcIceCandidateResult {
   success: Boolean!
 }
 
+input IceCandidateInput {
+  candidate: String!
+  sdpMid: String!
+  sdpMLineIndex: Int!
+}
+
 input SendRtcIceCandidateInput {
-  iceCandidate: String!
+  iceCandidate: IceCandidateInput!
   recipientId: String!
 }
 

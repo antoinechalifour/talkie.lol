@@ -1,6 +1,10 @@
 subscription RtcIceCandidateReceived {
   iceCandidateReceived {
-    iceCandidate
+    iceCandidate {
+      candidate
+      sdpMid
+      sdpMLineIndex
+    }
     senderId
   }
 }

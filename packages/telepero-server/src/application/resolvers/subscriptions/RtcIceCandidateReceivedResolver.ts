@@ -11,7 +11,11 @@ interface Dependencies {
 }
 
 interface RtcIceCandidateReceivedResult {
-  iceCandidate: string;
+  iceCandidate: {
+    candidate: string;
+    sdpMid: string;
+    sdpMLineIndex: number;
+  };
   senderId: string;
 }
 

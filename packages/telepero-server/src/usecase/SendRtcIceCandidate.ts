@@ -4,6 +4,7 @@ import { User } from "../domain/entities/User";
 import { UserId } from "../domain/entities/UserId";
 import { NotificationPort } from "./ports/NotificationPort";
 import { UserPort } from "./ports/UserPort";
+import { IceCandidate } from "../domain/entities/IceCandidate";
 
 interface Dependencies {
   notificationPort: NotificationPort;
@@ -24,7 +25,12 @@ export class SendRtcIceCandidate {
     this.currentUser = currentUser;
   }
 
-  async execute(iceCandidate: string, recipientId: string) {
+  async execute(
+    candidate: string,
+    sdpMid: string,
+    sdpMLineIndex: number,
+    recipientId: string
+  ) {
     log("execute");
 
     const recipient = await this.userPort.findUserById(
@@ -32,7 +38,7 @@ export class SendRtcIceCandidate {
     );
 
     this.notificationPort.notifyRtcIceCandidateReceived(
-      iceCandidate,
+      IceCandidate.create(candidate, sdpMid, sdpMLineIndex),
       this.currentUser,
       recipient
     );

@@ -23,9 +23,15 @@ type AnswerReceivedEvent {
   answer: SessionDescription!
 }
 
+type IceCandidate {
+  candidate: String!
+  sdpMid: String!
+  sdpMLineIndex: Int!
+}
+
 type IceCandidateReceivedEvent {
   senderId: String!
-  iceCandidate: String!
+  iceCandidate: IceCandidate!
 }
 
 type OfferReceivedEvent {

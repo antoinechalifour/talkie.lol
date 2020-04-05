@@ -4,7 +4,11 @@ import { SendRtcIceCandidate } from "../../../usecase/SendRtcIceCandidate";
 import { MutationArguments, MutationResolver } from "./types";
 
 interface SendRtcIceCandidateArguments {
-  iceCandidate: string;
+  iceCandidate: {
+    candidate: string;
+    sdpMid: string;
+    sdpMLineIndex: number;
+  };
   recipientId: string;
 }
 
@@ -37,7 +41,12 @@ export class SendRtcIceCandidateResolver
   ): Promise<SendRtcIceCandidateResult> {
     log("resolve");
 
-    await this.sendRtcIceCandidate.execute(args.iceCandidate, args.recipientId);
+    await this.sendRtcIceCandidate.execute(
+      args.iceCandidate.candidate,
+      args.iceCandidate.sdpMid,
+      args.iceCandidate.sdpMLineIndex,
+      args.recipientId
+    );
 
     return { success: true };
   }
