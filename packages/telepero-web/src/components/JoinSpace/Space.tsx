@@ -1,7 +1,17 @@
 import React from "react";
+
+import {
+  ControlsLayout,
+  HeaderLayout,
+  SpaceLayout,
+  MainContent,
+  VideoGrid,
+  LocalVideoBoxLayout,
+  VideoBoxLayout,
+} from "./styles";
 import { UserMedia } from "./UserMedia";
-import { Video } from "./Video";
 import { useRtc } from "./webrtc/useRtc";
+import { MediaStreamBox } from "./MediaStreamBox";
 
 export interface SpaceProps {
   userId: string;
@@ -14,26 +24,39 @@ export const Space: React.FC<SpaceProps> = ({ userId, slug }) => {
   );
 
   return (
-    <main>
-      <h1>Welcome to space "{slug}"</h1>
-      <p>Logged in as user {userId}</p>
+    <SpaceLayout>
+      <HeaderLayout>
+        <h1>WebRTC experiment</h1>
+        <p>
+          {slug} <span>(space)</span>
+        </p>
+        <p>
+          {userId} <span>(user)</span>
+        </p>
+      </HeaderLayout>
 
-      <UserMedia
-        addUserMedia={addUserMedia}
-        removeUserMedia={removeUserMedia}
-      />
+      <MainContent>
+        <VideoGrid>
+          {userMedia && (
+            <LocalVideoBoxLayout>
+              <MediaStreamBox mediaStream={userMedia} />
+              <p>You</p>
+            </LocalVideoBoxLayout>
+          )}
+          {remoteMedia.map((media) => (
+            <VideoBoxLayout key={media.userId}>
+              <MediaStreamBox mediaStream={media.mediaStream} />
+            </VideoBoxLayout>
+          ))}
+        </VideoGrid>
+      </MainContent>
 
-      <section>
-        <h2>Local video</h2>
-        {userMedia && <Video mediaStream={userMedia} />}
-      </section>
-
-      <section>
-        <h2>Peers</h2>
-        {remoteMedia.map((media) => (
-          <Video key={media.userId} mediaStream={media.mediaStream} />
-        ))}
-      </section>
-    </main>
+      <ControlsLayout>
+        <UserMedia
+          addUserMedia={addUserMedia}
+          removeUserMedia={removeUserMedia}
+        />
+      </ControlsLayout>
+    </SpaceLayout>
   );
 };

@@ -13,6 +13,7 @@ export const useRtc = (slug: string) => {
 
   const setRemoteMediaForUser = useCallback(
     (userId: string, mediaStream: MediaStream | null) => {
+      logMedia(`Changing media stream for user ${userId}: `, mediaStream);
       setRemoteMedia((remoteMedias) => {
         const nextState = remoteMedias.filter((x) => x.userId !== userId);
 

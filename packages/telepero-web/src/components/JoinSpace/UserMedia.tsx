@@ -75,7 +75,7 @@ export const UserMedia: React.FC<UserMediaProps> = ({
   }, [state, addUserMedia, removeUserMedia]);
 
   return (
-    <div>
+    <>
       <label htmlFor="rtc-audio">
         <input
           type="checkbox"
@@ -105,6 +105,6 @@ export const UserMedia: React.FC<UserMediaProps> = ({
         />
         <span>Screen sharing</span>
       </label>
-    </div>
+    </>
   );
 };

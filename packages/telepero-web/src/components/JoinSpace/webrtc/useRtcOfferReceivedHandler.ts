@@ -36,8 +36,6 @@ export const useRtcOfferReceivedHandler = ({
     SendRtcIceCandidateVariables
   >(SEND_RTC_ICE_CANDIDATE);
 
-  async function handleNegotiation(peerConnection: RTCPeerConnection) {}
-
   async function handleFirstConnection(
     senderId: string,
     userMedia: MediaStream | null
@@ -94,8 +92,6 @@ export const useRtcOfferReceivedHandler = ({
     if (existingPeerConnection) {
       logRtc(`🏗 Renegotiation for remote user ${senderId}`);
       peerConnection = existingPeerConnection;
-
-      await handleNegotiation(peerConnection);
     } else {
       const connection = await handleFirstConnection(senderId, userMedia);
 
