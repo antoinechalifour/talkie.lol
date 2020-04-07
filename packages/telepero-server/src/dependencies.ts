@@ -18,15 +18,21 @@ export const container = createContainer();
 
 const REDIS_HOST = process.env.REDIS_HOST!;
 const REDIS_PORT = Number(process.env.REDIS_PORT!);
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD ?? undefined;
+const REDIS_USERNAME = process.env.REDIS_USERNAME ?? undefined;
 
 const redis = new Redis({
   host: REDIS_HOST,
   port: REDIS_PORT,
+  password: REDIS_PASSWORD,
+  name: REDIS_USERNAME,
 });
 const pubSub = new RedisPubSub({
   connection: {
-    host: process.env.REDIS_HOST!,
+    host: REDIS_HOST,
     port: REDIS_PORT,
+    password: REDIS_PASSWORD,
+    name: REDIS_USERNAME,
   },
 });
 
