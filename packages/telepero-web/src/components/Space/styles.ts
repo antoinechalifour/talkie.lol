@@ -51,11 +51,7 @@ export const ControlsLayout = styled.footer`
   background: #000;
   color: #fff;
   border-top: 2px solid #373737;
-`;
-
-export const Video = styled.video`
-  width: 100%;
-  display: block;
+  text-align: center;
 `;
 
 export const VideoBoxLayout = styled.div`

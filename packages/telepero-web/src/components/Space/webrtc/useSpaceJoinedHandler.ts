@@ -1,5 +1,10 @@
 import { useMutation } from "urql";
-import {OnConnectedEvent, OnDisconnectedEvent, PeerConnections, User} from "./types";
+import {
+  OnConnectedEvent,
+  OnDisconnectedEvent,
+  PeerConnections,
+  User,
+} from "./types";
 import {
   SEND_RTC_ICE_CANDIDATE,
   SEND_RTC_OFFER,
@@ -61,7 +66,9 @@ export const useSpaceJoinedHandler = ({
     });
 
     onNegotiationNeeded(peerConnection, (offer) => {
-      logSignaling(`🛫 Sending an offer to remote user (as offerer) ${user.id}`);
+      logSignaling(
+        `🛫 Sending an offer to remote user (as offerer) ${user.id}`
+      );
 
       sendRtcOffer({
         offer: offer.sdp!,

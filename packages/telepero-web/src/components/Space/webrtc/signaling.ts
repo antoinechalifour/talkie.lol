@@ -21,7 +21,7 @@ export interface SpaceJoinedEvent {
   spaceJoined: {
     user: {
       id: string;
-      name: string
+      name: string;
     };
   };
 }
@@ -30,7 +30,7 @@ export interface SpaceLeftEvent {
   spaceLeft: {
     user: {
       id: string;
-      name: string
+      name: string;
     };
   };
 }

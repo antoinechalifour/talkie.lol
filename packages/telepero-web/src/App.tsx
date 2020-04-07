@@ -3,7 +3,7 @@ import { Router, Switch, Route, Redirect } from "react-router-dom";
 
 import { history } from "./utils/history";
 import { CreateSpaceView } from "./components/CreateSpace/CreateSpaceView";
-import {JoinSpaceView} from "./components/JoinSpace/JoinSpaceView";
+import { JoinSpace } from "./components/Space/JoinSpace";
 
 export const App: React.FC = () => (
   <Router history={history}>
@@ -11,7 +11,7 @@ export const App: React.FC = () => (
       <Route
         path="/space/:spaceSlug"
         exact
-        render={({ match }) => <JoinSpaceView spaceSlug={match.params.spaceSlug} />}
+        render={({ match }) => <JoinSpace spaceSlug={match.params.spaceSlug} />}
       />
 
       <Route path="/create" exact render={() => <CreateSpaceView />} />

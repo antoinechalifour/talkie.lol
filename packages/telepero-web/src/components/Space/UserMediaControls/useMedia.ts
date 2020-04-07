@@ -1,9 +1,4 @@
-import React, { useEffect, useReducer, useRef } from "react";
-
-export interface UserMediaProps {
-  addUserMedia: (userMedia: MediaStream) => void;
-  removeUserMedia: () => void;
-}
+import { useCallback, useEffect, useReducer, useRef } from "react";
 
 interface ConstraintState {
   audio: boolean;
@@ -38,10 +33,15 @@ const contraintsReducer = (
   }
 };
 
-export const UserMedia: React.FC<UserMediaProps> = ({
+interface UseMediaOptions {
+  addUserMedia: (userMedia: MediaStream) => void;
+  removeUserMedia: () => void;
+}
+
+export const useMedia = ({
   addUserMedia,
   removeUserMedia,
-}) => {
+}: UseMediaOptions) => {
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const [state, dispatch] = useReducer(contraintsReducer, {
     audio: false,
@@ -74,37 +74,22 @@ export const UserMedia: React.FC<UserMediaProps> = ({
     };
   }, [state, addUserMedia, removeUserMedia]);
 
-  return (
-    <>
-      <label htmlFor="rtc-audio">
-        <input
-          type="checkbox"
-          id="rtc-audio"
-          checked={state.audio}
-          onChange={() => dispatch("toggle-audio")}
-        />
-        <span>Audio</span>
-      </label>
+  const toggleAudio = useCallback(() => {
+    dispatch("toggle-audio");
+  }, [dispatch]);
+  const toggleVideo = useCallback(() => {
+    dispatch("toggle-video");
+  }, [dispatch]);
+  const toggleScreen = useCallback(() => {
+    dispatch("toggle-screen");
+  }, [dispatch]);
 
-      <label htmlFor="rtc-video">
-        <input
-          type="checkbox"
-          id="rtc-video"
-          checked={state.video}
-          onChange={() => dispatch("toggle-video")}
-        />
-        <span>Video</span>
-      </label>
-
-      <label htmlFor="rtc-screen">
-        <input
-          type="checkbox"
-          id="rtc-screen"
-          checked={state.screen}
-          onChange={() => dispatch("toggle-screen")}
-        />
-        <span>Screen sharing</span>
-      </label>
-    </>
-  );
+  return {
+    isSharingAudio: state.audio,
+    isSharingVideo: state.video,
+    isSharingScreen: state.screen,
+    toggleAudio,
+    toggleVideo,
+    toggleScreen,
+  };
 };

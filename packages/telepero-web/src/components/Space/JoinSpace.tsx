@@ -26,7 +26,7 @@ export interface SpaceViewProps {
   spaceSlug: string;
 }
 
-export const JoinSpaceView: React.FC<SpaceViewProps> = ({ spaceSlug }) => {
+export const JoinSpace: React.FC<SpaceViewProps> = ({ spaceSlug }) => {
   const [loginResult, login] = useMutation<LoginResult, LoginVariables>(LOGIN);
 
   useEffect(() => {

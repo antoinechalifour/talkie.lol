@@ -9,9 +9,9 @@ import {
   LocalVideoBoxLayout,
   VideoBoxLayout,
 } from "./styles";
-import { UserMedia } from "./UserMedia";
+import { UserMediaControls } from "./UserMediaControls/UserMediaControls";
 import { useRtc } from "./webrtc/useRtc";
-import { MediaStreamBox } from "./MediaStreamBox";
+import { MediaStreamBox } from "./MediaStreamBox/MediaStreamBox";
 
 export interface SpaceProps {
   userName: string;
@@ -53,7 +53,7 @@ export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
       </MainContent>
 
       <ControlsLayout>
-        <UserMedia
+        <UserMediaControls
           addUserMedia={addUserMedia}
           removeUserMedia={removeUserMedia}
         />
