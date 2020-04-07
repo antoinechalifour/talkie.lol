@@ -14,7 +14,7 @@ export class UserMemoryAdapter implements UserPort {
     log(`Finding user ${userId.get()}`);
 
     for (const user of UserMemoryAdapter._users.values()) {
-      if (user.id.equals(userId)) {
+      if (user.id.is(userId)) {
         return Promise.resolve(user);
       }
     }

@@ -3,6 +3,7 @@ import debug from "debug";
 
 import { RtcAnswerReceivedEvent } from "../../../domain/events/RtcAnswerReceivedEvent";
 import { User } from "../../../domain/entities/User";
+import { UserId } from "../../../domain/entities/UserId";
 import { UserPort } from "../../../usecase/ports/UserPort";
 import { SubscriptionResolver } from "./types";
 
@@ -42,12 +43,14 @@ export class RtcAnswerReceivedResolver
   subscribe = withFilter(
     () => this.pubSub.asyncIterator([RtcAnswerReceivedEvent.TYPE]),
     (event: RtcAnswerReceivedEvent) =>
-      this.currentUser.id.equals(event.recipientId)
+      this.currentUser.id.is(UserId.fromString(event.recipientId))
   );
 
   async resolve(event: RtcAnswerReceivedEvent) {
     log("resolve");
-    const sender = await this.userPort.findUserById(event.senderId);
+    const sender = await this.userPort.findUserById(
+      UserId.fromString(event.senderId)
+    );
 
     return {
       sender,

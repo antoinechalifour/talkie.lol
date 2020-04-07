@@ -8,18 +8,18 @@ export class SpaceLeftEvent extends Event {
   static TYPE = "SPACE_LEFT_EVENT";
 
   private constructor(
-    public spaceId: SpaceId,
-    public userId: UserId,
+    public spaceId: string,
+    public userId: string,
     date: Date
   ) {
     super(SpaceLeftEvent.TYPE, date);
   }
 
   format() {
-    return `[${this.type}] ${this.userId.get()} / ${this.spaceId.get()}`;
+    return `[${this.type}] ${this.userId} / ${this.spaceId}`;
   }
 
   static create(space: Space, user: User) {
-    return new SpaceLeftEvent(space.id, user.id, new Date());
+    return new SpaceLeftEvent(space.id.get(), user.id.get(), new Date());
   }
 }

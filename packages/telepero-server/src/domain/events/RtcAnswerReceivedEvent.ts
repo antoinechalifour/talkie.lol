@@ -1,4 +1,3 @@
-import { UserId } from "../entities/UserId";
 import { User } from "../entities/User";
 import { SessionDescription } from "../entities/SessionDescription";
 import { RtcEvent } from "./RtcEvent";
@@ -8,8 +7,8 @@ export class RtcAnswerReceivedEvent extends RtcEvent {
 
   private constructor(
     public answer: SessionDescription,
-    senderId: UserId,
-    recipientId: UserId,
+    senderId: string,
+    recipientId: string,
     date: Date
   ) {
     super(RtcAnswerReceivedEvent.TYPE, senderId, recipientId, date);
@@ -18,8 +17,8 @@ export class RtcAnswerReceivedEvent extends RtcEvent {
   static create(answer: SessionDescription, sender: User, recipient: User) {
     return new RtcAnswerReceivedEvent(
       answer,
-      sender.id,
-      recipient.id,
+      sender.id.get(),
+      recipient.id.get(),
       new Date()
     );
   }

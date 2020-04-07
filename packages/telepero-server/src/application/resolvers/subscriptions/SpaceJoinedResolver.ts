@@ -4,6 +4,8 @@ import debug from "debug";
 import { User } from "../../../domain/entities/User";
 import { Space } from "../../../domain/entities/Space";
 import { SpaceJoinedEvent } from "../../../domain/events/SpaceJoinedEvent";
+import { UserId } from "../../../domain/entities/UserId";
+import { SpaceId } from "../../../domain/entities/SpaceId";
 import { SpacePort } from "../../../usecase/ports/SpacePort";
 import { UserPort } from "../../../usecase/ports/UserPort";
 import { SubscriptionResolver } from "./types";
@@ -46,13 +48,15 @@ export class SpaceJoinedResolver
   }
 
   subscribe = withFilter(
-    () => this.pubSub.asyncIterator([SpaceJoinedEvent.TYPE]),
+    () => this.pubSub.asyncIterator(SpaceJoinedEvent.TYPE),
     async (event: SpaceJoinedEvent, args: SpaceJoinedArguments) => {
-      const space = await this.spacePort.findSpaceById(event.spaceId);
+      const space = await this.spacePort.findSpaceById(
+        SpaceId.fromString(event.spaceId)
+      );
 
       return (
         space.compareBySlug(args.slug) &&
-        !event.userId.equals(this.currentUser.id)
+        !this.currentUser.id.is(UserId.fromString(event.userId))
       );
     }
   );
@@ -61,8 +65,8 @@ export class SpaceJoinedResolver
     log("resolve");
 
     const [space, user] = await Promise.all([
-      this.spacePort.findSpaceById(event.spaceId),
-      this.userPort.findUserById(event.userId),
+      this.spacePort.findSpaceById(SpaceId.fromString(event.spaceId)),
+      this.userPort.findUserById(UserId.fromString(event.userId)),
     ]);
 
     return { space, user };

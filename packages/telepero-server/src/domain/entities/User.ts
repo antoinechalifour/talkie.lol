@@ -7,12 +7,12 @@ import {
 import { UserId } from "./UserId";
 
 export class User {
-  private constructor(public id: UserId, public name: string) {}
+  constructor(public id: UserId, public name: string) {}
 
   static create() {
     const name = uniqueNamesGenerator({
       dictionaries: [adjectives, colors, animals],
-      length: 2
+      length: 2,
     });
 
     return new User(UserId.create(), name);

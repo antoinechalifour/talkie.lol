@@ -4,6 +4,8 @@ import debug from "debug";
 import { Space } from "../../../domain/entities/Space";
 import { SpaceLeftEvent } from "../../../domain/events/SpaceLeftEvent";
 import { User } from "../../../domain/entities/User";
+import { SpaceId } from "../../../domain/entities/SpaceId";
+import { UserId } from "../../../domain/entities/UserId";
 import { SpacePort } from "../../../usecase/ports/SpacePort";
 import { UserPort } from "../../../usecase/ports/UserPort";
 import { SubscriptionResolver } from "./types";
@@ -41,7 +43,9 @@ export class SpaceLeftResolver
   subscribe = withFilter(
     () => this.pubSub.asyncIterator([SpaceLeftEvent.TYPE]),
     async (event: SpaceLeftEvent, args: SpaceLeftArguments) => {
-      const space = await this.spacePort.findSpaceById(event.spaceId);
+      const space = await this.spacePort.findSpaceById(
+        SpaceId.fromString(event.spaceId)
+      );
 
       return space.compareBySlug(args.slug);
     }
@@ -51,8 +55,8 @@ export class SpaceLeftResolver
     log("resolve");
 
     const [space, user] = await Promise.all([
-      this.spacePort.findSpaceById(event.spaceId),
-      this.userPort.findUserById(event.userId),
+      this.spacePort.findSpaceById(SpaceId.fromString(event.spaceId)),
+      this.userPort.findUserById(UserId.fromString(event.userId)),
     ]);
 
     return { space, user };

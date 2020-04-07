@@ -8,8 +8,8 @@ export class RtcIceCandidateReceivedEvent extends RtcEvent {
 
   private constructor(
     public iceCandidate: IceCandidate,
-    senderId: UserId,
-    recipientId: UserId,
+    senderId: string,
+    recipientId: string,
     date: Date
   ) {
     super(RtcIceCandidateReceivedEvent.TYPE, senderId, recipientId, date);
@@ -18,8 +18,8 @@ export class RtcIceCandidateReceivedEvent extends RtcEvent {
   static create(iceCandidate: IceCandidate, sender: User, recipient: User) {
     return new RtcIceCandidateReceivedEvent(
       iceCandidate,
-      sender.id,
-      recipient.id,
+      sender.id.get(),
+      recipient.id.get(),
       new Date()
     );
   }

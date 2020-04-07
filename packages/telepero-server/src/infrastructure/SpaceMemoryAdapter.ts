@@ -22,7 +22,7 @@ export class SpaceMemoryAdapter implements SpacePort {
     log(`Finding space ${spaceId.get()}`);
 
     for (const space of SpaceMemoryAdapter._spaces.values()) {
-      if (space.id.equals(spaceId)) {
+      if (space.id.is(spaceId)) {
         return Promise.resolve(space);
       }
     }

@@ -8,18 +8,18 @@ export class SpaceJoinedEvent extends Event {
   static TYPE = "SPACE_JOINED";
 
   private constructor(
-    public spaceId: SpaceId,
-    public userId: UserId,
+    public spaceId: string,
+    public userId: string,
     date: Date
   ) {
     super(SpaceJoinedEvent.TYPE, date);
   }
 
   format() {
-    return `[${this.type}] ${this.userId.get()} / ${this.spaceId.get()}`;
+    return `[${this.type}] ${this.userId} / ${this.spaceId}`;
   }
 
   static create(space: Space, user: User) {
-    return new SpaceJoinedEvent(space.id, user.id, new Date());
+    return new SpaceJoinedEvent(space.id.get(), user.id.get(), new Date());
   }
 }

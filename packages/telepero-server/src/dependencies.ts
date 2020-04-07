@@ -1,5 +1,6 @@
-import { PubSub } from "apollo-server-koa";
 import { asClass, asValue, createContainer } from "awilix";
+import { RedisPubSub } from "graphql-redis-subscriptions";
+import Redis from "ioredis";
 
 import { CreateSpace } from "./usecase/CreateSpace";
 import { LeaveSpace } from "./usecase/LeaveSpace";
@@ -8,12 +9,26 @@ import { SendRtcOffer } from "./usecase/SendRtcOffer";
 import { SendRtcAnswer } from "./usecase/SendRtcAnswer";
 import { SendRtcIceCandidate } from "./usecase/SendRtcIceCandidate";
 import { Login } from "./usecase/Login";
-import { SpaceMemoryAdapter } from "./infrastructure/SpaceMemoryAdapter";
 import { NotificationAdapter } from "./infrastructure/NotificationAdapter";
-import { UserMemoryAdapter } from "./infrastructure/UserMemoryAdapter";
 import { TokenJwtAdapter } from "./infrastructure/TokenJwtAdapter";
+import { SpaceRedisAdapter } from "./infrastructure/SpaceRedisAdapter";
+import { UserRedisAdapter } from "./infrastructure/UserRedisAdapter";
 
 export const container = createContainer();
+
+const REDIS_HOST = process.env.REDIS_HOST!;
+const REDIS_PORT = Number(process.env.REDIS_PORT!);
+
+const redis = new Redis({
+  host: REDIS_HOST,
+  port: REDIS_PORT,
+});
+const pubSub = new RedisPubSub({
+  connection: {
+    host: process.env.REDIS_HOST!,
+    port: REDIS_PORT,
+  },
+});
 
 container.register({
   // Use cases
@@ -26,13 +41,14 @@ container.register({
   sendRtcIceCandidate: asClass(SendRtcIceCandidate),
 
   // Ports
-  spacePort: asClass(SpaceMemoryAdapter).singleton(),
-  userPort: asClass(UserMemoryAdapter).singleton(),
+  spacePort: asClass(SpaceRedisAdapter).singleton(),
+  userPort: asClass(UserRedisAdapter).singleton(),
   notificationPort: asClass(NotificationAdapter).singleton(),
   tokenPort: asClass(TokenJwtAdapter)
     .inject(() => ({ secret: process.env.SECRET }))
     .singleton(),
 
   // Utils
-  pubSub: asValue(new PubSub()),
+  pubSub: asValue(pubSub),
+  redis: asValue(redis),
 });

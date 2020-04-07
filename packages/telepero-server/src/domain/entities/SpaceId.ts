@@ -7,7 +7,7 @@ export class SpaceId {
     return this.id;
   }
 
-  equals(spaceId: SpaceId) {
+  is(spaceId: SpaceId) {
     return this.id === spaceId.id;
   }
 

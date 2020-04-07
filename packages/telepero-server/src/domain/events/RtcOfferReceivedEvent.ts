@@ -8,8 +8,8 @@ export class RtcOfferReceivedEvent extends RtcEvent {
 
   private constructor(
     public offer: SessionDescription,
-    senderId: UserId,
-    recipientId: UserId,
+    senderId: string,
+    recipientId: string,
     date: Date
   ) {
     super(RtcOfferReceivedEvent.TYPE, senderId, recipientId, date);
@@ -18,8 +18,8 @@ export class RtcOfferReceivedEvent extends RtcEvent {
   static create(offer: SessionDescription, sender: User, recipient: User) {
     return new RtcOfferReceivedEvent(
       offer,
-      sender.id,
-      recipient.id,
+      sender.id.get(),
+      recipient.id.get(),
       new Date()
     );
   }

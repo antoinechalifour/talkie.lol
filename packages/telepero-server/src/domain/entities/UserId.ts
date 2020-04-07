@@ -7,7 +7,7 @@ export class UserId {
     return this.id;
   }
 
-  equals(userId: UserId) {
+  is(userId: UserId) {
     return this.id === userId.id;
   }
 
