@@ -4,6 +4,9 @@ subscription RtcOfferReceived {
       sdp
       type
     }
-    senderId
+    sender {
+      id
+      name
+    }
   }
 }

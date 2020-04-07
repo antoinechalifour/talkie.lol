@@ -3,13 +3,17 @@ import { loader } from "graphql.macro";
 export const SPACE_JOINED = loader("./graphql/SpaceJoined.graphql");
 export const SPACE_LEFT = loader("./graphql/SpaceLeft.graphql");
 export const RTC_OFFER_RECEIVED = loader("./graphql/RtcOfferReceived.graphql");
-export const RTC_ANSWER_RECEIVED = loader("./graphql/RtcAnswerReceived.graphql");
+export const RTC_ANSWER_RECEIVED = loader(
+  "./graphql/RtcAnswerReceived.graphql"
+);
 export const RTC_ICE_CANDIDATE_RECEIVED = loader(
   "./graphql/RtcIceCandidateReceived.graphql"
 );
 export const SEND_RTC_OFFER = loader("./graphql/SendRtcOffer.graphql");
 export const SEND_RTC_ANSWER = loader("./graphql/SendRtcAnswer.graphql");
-export const SEND_RTC_ICE_CANDIDATE = loader("./graphql/SendRtcIceCandidate.graphql");
+export const SEND_RTC_ICE_CANDIDATE = loader(
+  "./graphql/SendRtcIceCandidate.graphql"
+);
 export const JOIN_SPACE = loader("./graphql/JoinSpace.graphql");
 export const LEAVE_SPACE = loader("./graphql/LeaveSpace.graphql");
 
@@ -17,6 +21,7 @@ export interface SpaceJoinedEvent {
   spaceJoined: {
     user: {
       id: string;
+      name: string
     };
   };
 }
@@ -25,6 +30,7 @@ export interface SpaceLeftEvent {
   spaceLeft: {
     user: {
       id: string;
+      name: string
     };
   };
 }
@@ -35,7 +41,10 @@ export interface RtcOfferReceivedEvent {
       type: RTCSdpType;
       sdp: string;
     };
-    senderId: string;
+    sender: {
+      id: string;
+      name: string;
+    };
   };
 }
 
@@ -45,7 +54,10 @@ export interface RtcAnswerReceivedEvent {
       type: RTCSdpType;
       sdp: string;
     };
-    senderId: string;
+    sender: {
+      id: string;
+      name: string;
+    };
   };
 }
 
@@ -56,7 +68,10 @@ export interface RtcIceCandidateReceivedEvent {
       sdpMid: string;
       sdpMLineIndex: number;
     };
-    senderId: string;
+    sender: {
+      id: string;
+      name: string;
+    };
   };
 }
 

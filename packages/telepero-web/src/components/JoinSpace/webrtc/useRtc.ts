@@ -1,9 +1,10 @@
 import { useCallback, useState } from "react";
 import { logMedia } from "./log";
 import { useSignaling } from "./useSignaling";
+import { User } from "./types";
 
 interface UserMediaStream {
-  userId: string;
+  user: User;
   mediaStream: MediaStream;
 }
 
@@ -12,13 +13,13 @@ export const useRtc = (slug: string) => {
   const [userMedia, setUserMedia] = useState<MediaStream | null>(null);
 
   const setRemoteMediaForUser = useCallback(
-    (userId: string, mediaStream: MediaStream | null) => {
-      logMedia(`Changing media stream for user ${userId}: `, mediaStream);
+    (user: User, mediaStream: MediaStream | null) => {
+      logMedia(`Changing media stream for user ${user.id}: `, mediaStream);
       setRemoteMedia((remoteMedias) => {
-        const nextState = remoteMedias.filter((x) => x.userId !== userId);
+        const nextState = remoteMedias.filter((x) => x.user.id !== user.id);
 
         if (mediaStream) {
-          nextState.push({ userId, mediaStream });
+          nextState.push({ user, mediaStream });
         }
 
         return nextState;

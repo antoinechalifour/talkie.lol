@@ -5,6 +5,9 @@ subscription RtcIceCandidateReceived {
       sdpMid
       sdpMLineIndex
     }
-    senderId
+    sender {
+      id
+      name
+    }
   }
 }

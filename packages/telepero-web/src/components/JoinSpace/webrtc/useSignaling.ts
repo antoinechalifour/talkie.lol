@@ -22,15 +22,12 @@ import {
   SpaceLeftEvent,
 } from "./signaling";
 import { logRtc } from "./log";
-import { OnConnectedEvent, OnDisconnectedEvent } from "./types";
+import { OnConnectedEvent, OnDisconnectedEvent, User } from "./types";
 
 interface UseSignalingOptions {
   userMedia: MediaStream | null;
   spaceSlug: string;
-  setRemoteMediaForUser: (
-    userId: string,
-    mediaStream: MediaStream | null
-  ) => void;
+  setRemoteMediaForUser: (user: User, mediaStream: MediaStream | null) => void;
 }
 
 export const useSignaling = ({
@@ -44,14 +41,14 @@ export const useSignaling = ({
 
   const onConnected = useCallback(
     (e: OnConnectedEvent) => {
-      setRemoteMediaForUser(e.userId, e.mediaStream);
+      setRemoteMediaForUser(e.user, e.mediaStream);
     },
     [setRemoteMediaForUser]
   );
 
   const onDisconnected = useCallback(
     (e: OnDisconnectedEvent) => {
-      setRemoteMediaForUser(e.userId, null);
+      setRemoteMediaForUser(e.user, null);
     },
     [setRemoteMediaForUser]
   );
@@ -86,20 +83,20 @@ export const useSignaling = ({
 
   useSubscription<SpaceJoinedEvent, void>(
     { query: SPACE_JOINED, variables: { slug: spaceSlug } },
-    async (_, { spaceJoined }) => spaceJoinedHandler(spaceJoined.user.id)
+    async (_, { spaceJoined }) => spaceJoinedHandler(spaceJoined.user)
   );
 
   useSubscription<RtcOfferReceivedEvent, void>(
     { query: RTC_OFFER_RECEIVED },
     async (_, { offerReceived }) => {
-      const userId = offerReceived.senderId;
+      const userId = offerReceived.sender.id;
       const { mediaStream } = await rtcOfferReceivedHandler(
         userId,
         offerReceived.offer
       );
 
       if (mediaStream) {
-        setRemoteMediaForUser(userId, mediaStream);
+        setRemoteMediaForUser(offerReceived.sender, mediaStream);
       }
     }
   );
@@ -107,14 +104,14 @@ export const useSignaling = ({
   useSubscription<RtcAnswerReceivedEvent, void>(
     { query: RTC_ANSWER_RECEIVED },
     (_, { answerReceived }) =>
-      rtcAnswerReceivedHandler(answerReceived.senderId, answerReceived.answer)
+      rtcAnswerReceivedHandler(answerReceived.sender.id, answerReceived.answer)
   );
 
   useSubscription<RtcIceCandidateReceivedEvent, void>(
     { query: RTC_ICE_CANDIDATE_RECEIVED },
     (_, { iceCandidateReceived }) =>
       rtcIceCandidateReceivedHandler(
-        iceCandidateReceived.senderId,
+        iceCandidateReceived.sender.id,
         iceCandidateReceived.iceCandidate
       )
   );

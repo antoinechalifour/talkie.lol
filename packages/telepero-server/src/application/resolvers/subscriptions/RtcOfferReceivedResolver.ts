@@ -3,18 +3,20 @@ import debug from "debug";
 
 import { RtcOfferReceivedEvent } from "../../../domain/events/RtcOfferReceivedEvent";
 import { User } from "../../../domain/entities/User";
+import { UserPort } from "../../../usecase/ports/UserPort";
 import { SubscriptionResolver } from "./types";
 
 interface Dependencies {
+  userPort: UserPort;
   pubSub: PubSub;
   currentUser: User;
 }
 
 interface RtcOfferReceivedResult {
-  senderId: string;
+  sender: User;
   offer: {
-    type: string
-    sdp: string
+    type: string;
+    sdp: string;
   };
 }
 
@@ -23,10 +25,12 @@ const log = debug("app:resolver:RtcfferReceivedResolver");
 export class RtcOfferReceivedResolver
   implements
     SubscriptionResolver<RtcOfferReceivedEvent, void, RtcOfferReceivedResult> {
+  private readonly userPort: UserPort;
   private readonly pubSub: PubSub;
   private readonly currentUser: User;
 
-  constructor({ pubSub, currentUser }: Dependencies) {
+  constructor({ userPort, pubSub, currentUser }: Dependencies) {
+    this.userPort = userPort;
     this.pubSub = pubSub;
     this.currentUser = currentUser;
   }
@@ -37,11 +41,12 @@ export class RtcOfferReceivedResolver
       this.currentUser.id.equals(event.recipientId)
   );
 
-  resolve(event: RtcOfferReceivedEvent) {
+  async resolve(event: RtcOfferReceivedEvent) {
     log("resolve");
+    const sender = await this.userPort.findUserById(event.senderId);
 
     return {
-      senderId: event.senderId.get(),
+      sender,
       offer: event.offer,
     };
   }

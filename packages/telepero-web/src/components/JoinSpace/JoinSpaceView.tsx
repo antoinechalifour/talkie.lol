@@ -14,9 +14,10 @@ interface LoginResult {
   login: {
     session: {
       token: string;
-    user: {
-      id: string;
-    };
+      user: {
+        id: string;
+        name: string;
+      };
     };
   };
 }
@@ -35,7 +36,10 @@ export const JoinSpaceView: React.FC<SpaceViewProps> = ({ spaceSlug }) => {
   if (loginResult.data) {
     return (
       <AuthenticatedClient token={loginResult.data.login.session.token}>
-        <Space userId={loginResult.data.login.session.user.id} slug={spaceSlug} />
+        <Space
+          userName={loginResult.data.login.session.user.name}
+          slug={spaceSlug}
+        />
       </AuthenticatedClient>
     );
   }

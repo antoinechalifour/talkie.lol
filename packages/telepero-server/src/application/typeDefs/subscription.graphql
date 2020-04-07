@@ -1,5 +1,6 @@
 # import Space from './space.graphql'
 # import SessionDescription from './sessionDescription.graphql'
+# import User from './user.graphql'
 
 type Subscription {
   spaceJoined(args: SpaceJoinedInput!): SpaceJoinedEvent!
@@ -19,7 +20,7 @@ input SpaceJoinedInput {
 }
 
 type AnswerReceivedEvent {
-  senderId: String!
+  sender: User!
   answer: SessionDescription!
 }
 
@@ -30,12 +31,12 @@ type IceCandidate {
 }
 
 type IceCandidateReceivedEvent {
-  senderId: String!
+  sender: User!
   iceCandidate: IceCandidate!
 }
 
 type OfferReceivedEvent {
-  senderId: String!
+  sender: User!
   offer: SessionDescription!
 }
 

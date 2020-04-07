@@ -14,11 +14,11 @@ import { useRtc } from "./webrtc/useRtc";
 import { MediaStreamBox } from "./MediaStreamBox";
 
 export interface SpaceProps {
-  userId: string;
+  userName: string;
   slug: string;
 }
 
-export const Space: React.FC<SpaceProps> = ({ userId, slug }) => {
+export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
   const { remoteMedia, userMedia, addUserMedia, removeUserMedia } = useRtc(
     slug
   );
@@ -31,7 +31,7 @@ export const Space: React.FC<SpaceProps> = ({ userId, slug }) => {
           {slug} <span>(space)</span>
         </p>
         <p>
-          {userId} <span>(user)</span>
+          {userName} <span>(user)</span>
         </p>
       </HeaderLayout>
 
@@ -44,8 +44,9 @@ export const Space: React.FC<SpaceProps> = ({ userId, slug }) => {
             </LocalVideoBoxLayout>
           )}
           {remoteMedia.map((media) => (
-            <VideoBoxLayout key={media.userId}>
+            <VideoBoxLayout key={media.user.id}>
               <MediaStreamBox mediaStream={media.mediaStream} />
+              <p>{media.user.name}</p>
             </VideoBoxLayout>
           ))}
         </VideoGrid>

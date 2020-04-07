@@ -1,9 +1,20 @@
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+  animals,
+} from "unique-names-generator";
 import { UserId } from "./UserId";
 
 export class User {
-  private constructor(public id: UserId) {}
+  private constructor(public id: UserId, public name: string) {}
 
   static create() {
-    return new User(UserId.create());
+    const name = uniqueNamesGenerator({
+      dictionaries: [adjectives, colors, animals],
+      length: 2
+    });
+
+    return new User(UserId.create(), name);
   }
 }

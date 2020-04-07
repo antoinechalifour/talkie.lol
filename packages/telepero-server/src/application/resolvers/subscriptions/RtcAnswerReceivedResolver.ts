@@ -3,18 +3,20 @@ import debug from "debug";
 
 import { RtcAnswerReceivedEvent } from "../../../domain/events/RtcAnswerReceivedEvent";
 import { User } from "../../../domain/entities/User";
+import { UserPort } from "../../../usecase/ports/UserPort";
 import { SubscriptionResolver } from "./types";
 
 interface Dependencies {
+  userPort: UserPort;
   pubSub: PubSub;
   currentUser: User;
 }
 
 interface RtcAnswerReceivedResult {
-  senderId: string;
+  sender: User;
   answer: {
-    type: string,
-    sdp: string
+    type: string;
+    sdp: string;
   };
 }
 
@@ -27,10 +29,12 @@ export class RtcAnswerReceivedResolver
       void,
       RtcAnswerReceivedResult
     > {
+  private readonly userPort: UserPort;
   private readonly pubSub: PubSub;
   private readonly currentUser: User;
 
-  constructor({ pubSub, currentUser }: Dependencies) {
+  constructor({ userPort, pubSub, currentUser }: Dependencies) {
+    this.userPort = userPort;
     this.pubSub = pubSub;
     this.currentUser = currentUser;
   }
@@ -41,11 +45,12 @@ export class RtcAnswerReceivedResolver
       this.currentUser.id.equals(event.recipientId)
   );
 
-  resolve(event: RtcAnswerReceivedEvent) {
+  async resolve(event: RtcAnswerReceivedEvent) {
     log("resolve");
+    const sender = await this.userPort.findUserById(event.senderId);
 
     return {
-      senderId: event.senderId.get(),
+      sender,
       answer: event.answer,
     };
   }

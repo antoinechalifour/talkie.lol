@@ -1,10 +1,15 @@
 export type PeerConnections = Map<string, RTCPeerConnection>;
 
 export interface OnConnectedEvent {
-  userId: string;
+  user: User
   mediaStream: MediaStream;
 }
 
 export interface OnDisconnectedEvent {
-  userId: string;
+  user: User
+}
+
+export interface User {
+  id: string,
+  name: string
 }

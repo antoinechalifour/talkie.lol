@@ -72,10 +72,6 @@ export const VideoBoxLayout = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
   }
-`;
-
-export const LocalVideoBoxLayout = styled(VideoBoxLayout)`
-  border-color: #4fd77e;
 
   > p {
     position: absolute;
@@ -83,10 +79,17 @@ export const LocalVideoBoxLayout = styled(VideoBoxLayout)`
     bottom: 0;
     display: block;
     padding: 0.5rem 3rem 0.5rem 5rem;
-    clip-path: polygon(31% 0%, 100% 0, 100% 100%, 0% 100%);
+    clip-path: polygon(3rem 0%, 100% 0, 100% 100%, 0% 100%);
+    font-weight: bold;
+    background: #e5e5e5;
+  }
+`;
 
+export const LocalVideoBoxLayout = styled(VideoBoxLayout)`
+  border-color: #4fd77e;
+
+  > p {
     background: #4fd77e;
     color: #1e5933;
-    font-weight: bold;
   }
 `;

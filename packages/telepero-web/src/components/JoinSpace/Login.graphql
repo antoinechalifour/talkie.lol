@@ -4,6 +4,7 @@ mutation Login($slug: String!) {
       token
       user {
         id
+        name
       }
     }
   }

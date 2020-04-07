@@ -3,9 +3,11 @@ import debug from "debug";
 
 import { RtcIceCandidateReceivedEvent } from "../../../domain/events/RtcIceCandidateReceivedEvent";
 import { User } from "../../../domain/entities/User";
+import {UserPort} from "../../../usecase/ports/UserPort";
 import { SubscriptionResolver } from "./types";
 
 interface Dependencies {
+  userPort: UserPort
   pubSub: PubSub;
   currentUser: User;
 }
@@ -16,7 +18,7 @@ interface RtcIceCandidateReceivedResult {
     sdpMid: string;
     sdpMLineIndex: number;
   };
-  senderId: string;
+  sender: User;
 }
 
 const log = debug("app:resolver:RtcIceCandidateReceivedResolver");
@@ -28,10 +30,12 @@ export class RtcIceCandidateReceivedResolver
       void,
       RtcIceCandidateReceivedResult
     > {
+  private readonly userPort: UserPort
   private readonly pubSub: PubSub;
   private readonly currentUser: User;
 
-  constructor({ pubSub, currentUser }: Dependencies) {
+  constructor({ userPort, pubSub, currentUser }: Dependencies) {
+    this.userPort = userPort
     this.pubSub = pubSub;
     this.currentUser = currentUser;
   }
@@ -42,11 +46,12 @@ export class RtcIceCandidateReceivedResolver
       this.currentUser.id.equals(event.recipientId)
   );
 
-  resolve(event: RtcIceCandidateReceivedEvent) {
+  async resolve(event: RtcIceCandidateReceivedEvent) {
     log("resolve");
+    const sender = await this.userPort.findUserById(event.senderId)
 
     return {
-      senderId: event.senderId.get(),
+      sender,
       iceCandidate: event.iceCandidate,
     };
   }

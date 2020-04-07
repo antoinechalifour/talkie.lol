@@ -1,3 +1,4 @@
 type User {
-    id: String!
+  id: String!
+  name: String!
 }

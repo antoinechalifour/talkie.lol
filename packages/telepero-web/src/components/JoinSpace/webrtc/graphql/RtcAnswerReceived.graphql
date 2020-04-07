@@ -4,6 +4,9 @@ subscription RtcAnswerReceived {
       sdp
       type
     }
-    senderId
+    sender {
+      id
+      name
+    }
   }
 }
