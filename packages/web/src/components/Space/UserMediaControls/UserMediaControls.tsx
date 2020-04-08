@@ -6,17 +6,17 @@ import {
   faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { useMedia } from "./useMedia";
+import { useCaptureMedia } from "./useCaptureMedia";
 import { ToggleMedia } from "./styles";
 
 export interface UserMediaControlsProps {
-  addUserMedia: (userMedia: MediaStream) => void;
-  removeUserMedia: () => void;
+  onUserMediaAdded: (mediaStream: MediaStream) => void;
+  onUserMediaRemoved: () => void;
 }
 
 export const UserMediaControls: React.FC<UserMediaControlsProps> = ({
-  addUserMedia,
-  removeUserMedia,
+  onUserMediaAdded,
+  onUserMediaRemoved,
 }) => {
   const {
     isSharingAudio,
@@ -25,7 +25,10 @@ export const UserMediaControls: React.FC<UserMediaControlsProps> = ({
     toggleVideo,
     isSharingScreen,
     toggleScreen,
-  } = useMedia({ addUserMedia, removeUserMedia });
+  } = useCaptureMedia({
+    onMediaAdded: onUserMediaAdded,
+    onMediaRemoved: onUserMediaRemoved,
+  });
 
   return (
     <>

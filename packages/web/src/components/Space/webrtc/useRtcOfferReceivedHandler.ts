@@ -1,10 +1,7 @@
 import { useMutation } from "urql";
-import {
-  OnConnectedEvent,
-  OnDisconnectedEvent,
-  PeerConnections,
-  User,
-} from "./types";
+
+import { RemotePeer } from "../RemotePeer";
+import { PeerConnections, User } from "./types";
 import {
   SEND_RTC_ANSWER,
   SEND_RTC_ICE_CANDIDATE,
@@ -13,26 +10,16 @@ import {
   SendRtcIceCandidateVariables,
   SendRtcOfferVariables,
 } from "./signaling";
-import { logMedia, logRtc, logSignaling } from "./log";
-import {
-  createPeerConnection,
-  onIceCandidate,
-  onNegotiationNeeded,
-  onPeerConnectionConnected,
-  onPeerConnectionDisconnected,
-} from "./peerConnection";
-import { createMediaStreamForPeerConnection } from "./mediaStream";
+import { logSignaling } from "./log";
 
 interface UseRtcOfferReceivedHandlerOptions {
   peerConnections: PeerConnections;
-  userMedia: MediaStream | null;
-  onConnected: (e: OnConnectedEvent) => void;
-  onDisconnected: (e: OnDisconnectedEvent) => void;
+  onConnected: (remotePeer: RemotePeer) => void;
+  onDisconnected: (remotePeer: RemotePeer) => void;
 }
 
 export const useRtcOfferReceivedHandler = ({
   peerConnections,
-  userMedia,
   onConnected,
   onDisconnected,
 }: UseRtcOfferReceivedHandlerOptions) => {
@@ -47,19 +34,14 @@ export const useRtcOfferReceivedHandler = ({
     SendRtcIceCandidateVariables
   >(SEND_RTC_ICE_CANDIDATE);
 
-  async function handleFirstConnection(
-    sender: User,
-    userMedia: MediaStream | null
-  ) {
+  async function handleFirstConnection(sender: User) {
     // Create the connection
-    logRtc(`🏗 Creating a peer connection for remote user ${sender.id}`);
-    const peerConnection = createPeerConnection();
-    peerConnections.set(sender.id, peerConnection);
+    const remotePeer = RemotePeer.create(sender);
+    peerConnections.set(sender.id, remotePeer);
+    remotePeer.debugRtc();
 
     // Create the media stream
-    const mediaStream = createMediaStreamForPeerConnection(peerConnection);
-
-    onNegotiationNeeded(peerConnection, (offer) => {
+    remotePeer.onNegociationNeeded((offer) => {
       logSignaling(
         `🛫 Sending an new offer to remote user (as answerer) ${sender.id}`
       );
@@ -71,7 +53,7 @@ export const useRtcOfferReceivedHandler = ({
     });
 
     // Send ice candidate as they arrive
-    onIceCandidate(peerConnection, (candidate) => {
+    remotePeer.onIceCandidate((candidate) => {
       logSignaling(`🛫 Sending an ice candidate to remote user ${sender.id}`);
 
       sendRtcIceCandidate({
@@ -82,49 +64,29 @@ export const useRtcOfferReceivedHandler = ({
       });
     });
 
-    onPeerConnectionConnected(peerConnection, () => {
-      logRtc(`✅ Connection established with remote user ${sender.id}`);
+    remotePeer.onConnected(() => onConnected(remotePeer));
 
-      onConnected({
-        user: sender,
-        mediaStream,
-      });
-    });
+    remotePeer.onDisconnected(() => onDisconnected(remotePeer));
 
-    onPeerConnectionDisconnected(peerConnection, () => {
-      logRtc(`❌ Connection closed with remote user ${sender.id}`);
-
-      onDisconnected({ user: sender });
-    });
-
-    if (userMedia) {
-      userMedia.getTracks().forEach((track) => {
-        logMedia(`🛫 Sending a remote track for user ${sender.id}`);
-
-        peerConnection.addTrack(track, userMedia);
-      });
-    }
-
-    return peerConnection;
+    return remotePeer;
   }
 
   return async (sender: User, offer: RTCSessionDescriptionInit) => {
     logSignaling(`📫 Received an offer from remote user ${sender.id}`);
 
-    const existingPeerConnection = peerConnections.get(sender.id);
-    let peerConnection: RTCPeerConnection;
+    const remotePeerFromCache = peerConnections.get(sender.id);
+    let remotePeer: RemotePeer;
 
-    if (existingPeerConnection) {
-      logRtc(`🏗 Renegotiation for remote user ${sender.id}`);
-      peerConnection = existingPeerConnection;
+    if (remotePeerFromCache) {
+      remotePeer = remotePeerFromCache;
     } else {
-      peerConnection = await handleFirstConnection(sender, userMedia);
+      remotePeer = await handleFirstConnection(sender);
     }
 
     // Create an answer
-    await peerConnection.setRemoteDescription(offer);
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(answer);
+    await remotePeer.setRemoteDescription(offer);
+    const answer = await remotePeer.createAnswer();
+    await remotePeer.setLocalDescription(answer);
 
     // Send the answer
     logSignaling(`🛫 Sending an answer to remote user ${sender.id}`);

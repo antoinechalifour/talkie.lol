@@ -1,5 +1,5 @@
 import { PeerConnections } from "./types";
-import { logRtc, logSignaling } from "./log";
+import { logSignaling } from "./log";
 
 interface UseRtcIceCandidateReceivedHandler {
   peerConnections: PeerConnections;
@@ -11,16 +11,12 @@ export const useRtcIceCandidateReceivedHandler = ({
   return async (senderId: string, iceCandidate: RTCIceCandidateInit) => {
     logSignaling(`📫 Received an ice candidate for remote user ${senderId}`);
 
-    // Get the connection
-    const peerConnection = peerConnections.get(senderId);
+    const remotePeer = peerConnections.get(senderId);
 
-    if (!peerConnection) {
+    if (!remotePeer) {
       return;
     }
 
-    // Set the ice candidate
-    logRtc(`🏗 Setting an ice candidate for remote user ${senderId}`);
-    const candidate = new RTCIceCandidate(iceCandidate);
-    await peerConnection.addIceCandidate(candidate);
+    await remotePeer.addIceCandidate(iceCandidate);
   };
 };

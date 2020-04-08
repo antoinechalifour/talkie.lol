@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { Video } from "./styles";
 
-export interface MediaStreamBoxProps {
+export interface UserStreamBoxProps {
   mediaStream: MediaStream;
 }
 
-export const MediaStreamBox: React.FC<MediaStreamBoxProps> = ({
+export const VideoStreamBox: React.FC<UserStreamBoxProps> = ({
   mediaStream,
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -16,7 +16,6 @@ export const MediaStreamBox: React.FC<MediaStreamBoxProps> = ({
     }
 
     videoRef.current.srcObject = mediaStream;
-    videoRef.current.onloadedmetadata = () => videoRef.current!.play();
   }, [mediaStream]);
 
   return <Video ref={videoRef} autoPlay={true} />;

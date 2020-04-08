@@ -1,35 +1,22 @@
 import { useMutation } from "urql";
-import {
-  OnConnectedEvent,
-  OnDisconnectedEvent,
-  PeerConnections,
-  User,
-} from "./types";
+
+import { RemotePeer } from "../RemotePeer";
+import { PeerConnections, User } from "./types";
 import {
   SEND_RTC_ICE_CANDIDATE,
   SEND_RTC_OFFER,
   SendRtcIceCandidateVariables,
   SendRtcOfferVariables,
 } from "./signaling";
-import { logMedia, logRtc, logSignaling } from "./log";
-import {
-  createPeerConnection,
-  onIceCandidate,
-  onNegotiationNeeded,
-  onPeerConnectionConnected,
-  onPeerConnectionDisconnected,
-} from "./peerConnection";
-import { createMediaStreamForPeerConnection } from "./mediaStream";
+import { logSignaling } from "./log";
 
 interface UseSpaceJoinedHandlerOptions {
-  userMedia: MediaStream | null;
   peerConnections: PeerConnections;
-  onConnected: (e: OnConnectedEvent) => void;
-  onDisconnected: (e: OnDisconnectedEvent) => void;
+  onConnected: (remotePeer: RemotePeer) => void;
+  onDisconnected: (remotePeer: RemotePeer) => void;
 }
 
 export const useSpaceJoinedHandler = ({
-  userMedia,
   peerConnections,
   onConnected,
   onDisconnected,
@@ -46,15 +33,12 @@ export const useSpaceJoinedHandler = ({
     logSignaling(`📫 User ${user.id} joined the space`);
 
     // Create the connection
-    logRtc(`🏗 Creating a peer connection for remote user ${user.id}`);
-    const peerConnection = createPeerConnection();
-    peerConnections.set(user.id, peerConnection);
-
-    // Create the media stream
-    const mediaStream = createMediaStreamForPeerConnection(peerConnection);
+    const remotePeer = RemotePeer.create(user);
+    peerConnections.set(user.id, remotePeer);
+    remotePeer.debugRtc();
 
     // Send ice candidate as they arrive
-    onIceCandidate(peerConnection, (candidate) => {
+    remotePeer.onIceCandidate((candidate) => {
       logSignaling(`🛫 Sending an ice candidate to remote user ${user.id}`);
 
       sendRtcIceCandidate({
@@ -65,7 +49,7 @@ export const useSpaceJoinedHandler = ({
       });
     });
 
-    onNegotiationNeeded(peerConnection, (offer) => {
+    remotePeer.onNegociationNeeded((offer) => {
       logSignaling(
         `🛫 Sending an offer to remote user (as offerer) ${user.id}`
       );
@@ -76,31 +60,13 @@ export const useSpaceJoinedHandler = ({
       });
     });
 
-    onPeerConnectionConnected(peerConnection, () => {
-      logRtc(`✅ Connection established with remote user ${user.id}`);
+    remotePeer.onConnected(() => onConnected(remotePeer));
 
-      onConnected({
-        user,
-        mediaStream,
-      });
-    });
-
-    onPeerConnectionDisconnected(peerConnection, () => {
-      logRtc(`❌ Connection closed with remote user ${user.id}`);
-
-      onDisconnected({ user });
-    });
+    remotePeer.onDisconnected(() => onDisconnected(remotePeer));
 
     // Create an offer
-    const offer = await peerConnection.createOffer();
-    await peerConnection.setLocalDescription(offer);
-
-    if (userMedia) {
-      userMedia.getTracks().forEach((track) => {
-        logMedia(`🏗 Adding a remote track for user ${user.id}`);
-        peerConnection.addTrack(track, userMedia);
-      });
-    }
+    const offer = await remotePeer.createOffer();
+    await remotePeer.setLocalDescription(offer);
 
     // Send the offer
     logSignaling(`🛫 Sending an offer to remote user ${user.id}`);

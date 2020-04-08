@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useMutation, useSubscription } from "urql";
+
+import { RemotePeer } from "../RemotePeer";
 import { useSpaceJoinedHandler } from "./useSpaceJoinedHandler";
 import { useSpaceLeftHandler } from "./useSpaceLeftHandler";
 import { useRtcOfferReceivedHandler } from "./useRtcOfferReceivedHandler";
 import { useRtcAnswerReceivedHandler } from "./useRtcAnswerReceivedHandler";
 import { useRtcIceCandidateReceivedHandler } from "./useRtcIceCandidateReceivedHandler";
-import { useMutation, useSubscription } from "urql";
 import {
   JOIN_SPACE,
   JoinSpaceVariables,
@@ -21,62 +23,65 @@ import {
   SpaceJoinedEvent,
   SpaceLeftEvent,
 } from "./signaling";
-import { logRtc } from "./log";
-import { OnConnectedEvent, OnDisconnectedEvent, User } from "./types";
 
 interface UseSignalingOptions {
-  userMedia: MediaStream | null;
   spaceSlug: string;
-  setRemoteMediaForUser: (user: User, mediaStream: MediaStream | null) => void;
+  remotePeers: RemotePeer[];
+  onRemotePeerConnected: (remotePeer: RemotePeer) => void;
+  onRemotePeerDisconnected: (remotePeer: RemotePeer) => void;
 }
 
 export const useSignaling = ({
-  userMedia,
   spaceSlug,
-  setRemoteMediaForUser,
+  remotePeers,
+  onRemotePeerConnected,
+  onRemotePeerDisconnected,
 }: UseSignalingOptions) => {
-  const { current: peerConnections } = useRef(
-    new Map<string, RTCPeerConnection>()
-  );
+  /*
+  In this hook, we are keeping track of all peer connections in a map, whose
+  keys are the user ids, and whose values are the RTCPeerConnections.
+  This map is persisted in a ref for the lifecycle of this hooks.
+   */
+  const ref = useRef(new Map<string, RemotePeer>());
 
-  // @ts-ignore
-  window.DEBUG = () => console.log(peerConnections.entries());
+  useEffect(() => {
+    remotePeers.forEach((peer) => {
+      if (!ref.current.get(peer.id())) {
+        ref.current.set(peer.id(), peer);
+      }
+    });
+  }, [remotePeers]);
 
-  const onConnected = useCallback(
-    (e: OnConnectedEvent) => {
-      setRemoteMediaForUser(e.user, e.mediaStream);
-    },
-    [setRemoteMediaForUser]
-  );
-
-  const onDisconnected = useCallback(
-    (e: OnDisconnectedEvent) => {
-      setRemoteMediaForUser(e.user, null);
-    },
-    [setRemoteMediaForUser]
-  );
-
+  /*
+                    WebRTC Signaling setup
+  In here we are creating the handlers which will respond to the offer / answer
+  mechanism (which are sent using GraphQL subscriptions)
+   */
   const spaceJoinedHandler = useSpaceJoinedHandler({
-    userMedia,
-    peerConnections,
-    onConnected,
-    onDisconnected,
+    peerConnections: ref.current,
+    onConnected: onRemotePeerConnected,
+    onDisconnected: onRemotePeerDisconnected,
   });
-  const spaceLeftHandler = useSpaceLeftHandler({ peerConnections });
+  const spaceLeftHandler = useSpaceLeftHandler({
+    peerConnections: ref.current,
+  });
+
   const rtcOfferReceivedHandler = useRtcOfferReceivedHandler({
-    peerConnections,
-    userMedia,
-    onConnected,
-    onDisconnected,
+    peerConnections: ref.current,
+    onConnected: onRemotePeerConnected,
+    onDisconnected: onRemotePeerDisconnected,
   });
   const rtcAnswerReceivedHandler = useRtcAnswerReceivedHandler({
-    peerConnections,
+    peerConnections: ref.current,
   });
   const rtcIceCandidateReceivedHandler = useRtcIceCandidateReceivedHandler({
-    peerConnections,
+    peerConnections: ref.current,
   });
 
-  // Mutations setup
+  /*
+                    GraphQL boilerplate
+  Nothing very interesting in here. Just creating mutation and subscriptions
+   */
   const [, joinSpace] = useMutation<unknown, JoinSpaceVariables>(JOIN_SPACE);
   const [, leaveSpace] = useMutation<unknown, LeaveSpaceVariables>(LEAVE_SPACE);
 
@@ -119,33 +124,4 @@ export const useSignaling = ({
       leaveSpace({ slug: spaceSlug });
     };
   }, [joinSpace, leaveSpace, spaceSlug]);
-
-  const sendLocalMedia = useCallback(
-    (mediaStream: MediaStream) => {
-      peerConnections.forEach((peerConnection) => {
-        mediaStream.getTracks().forEach((track) => {
-          logRtc(
-            `🛫 Adding track ${track.id} / ${track.kind} to peerconnection`
-          );
-
-          peerConnection.addTrack(track, mediaStream);
-        });
-      });
-    },
-    [peerConnections]
-  );
-
-  const cancelLocalMedia = useCallback(() => {
-    peerConnections.forEach((peerConnection) => {
-      peerConnection.getSenders().forEach((sender) => {
-        logRtc("🛫 Removing track");
-        peerConnection.removeTrack(sender);
-      });
-    });
-  }, [peerConnections]);
-
-  return {
-    sendLocalMedia,
-    cancelLocalMedia,
-  };
 };

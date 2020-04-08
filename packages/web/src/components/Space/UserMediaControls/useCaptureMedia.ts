@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
+import { logMedia } from "../webrtc/log";
 
 interface ConstraintState {
   audio: boolean;
@@ -34,13 +35,13 @@ const contraintsReducer = (
 };
 
 interface UseMediaOptions {
-  addUserMedia: (userMedia: MediaStream) => void;
-  removeUserMedia: () => void;
+  onMediaAdded: (userMedia: MediaStream) => void;
+  onMediaRemoved: () => void;
 }
 
-export const useMedia = ({
-  addUserMedia,
-  removeUserMedia,
+export const useCaptureMedia = ({
+  onMediaAdded,
+  onMediaRemoved,
 }: UseMediaOptions) => {
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const [state, dispatch] = useReducer(contraintsReducer, {
@@ -54,7 +55,8 @@ export const useMedia = ({
       // @ts-ignore
       navigator.mediaDevices.getDisplayMedia().then((mediaStream) => {
         mediaStreamRef.current = mediaStream;
-        addUserMedia(mediaStream);
+        logMedia("Adding local screen media !");
+        onMediaAdded(mediaStream);
       });
     } else if (state.audio || state.video) {
       const constraints = {
@@ -64,15 +66,16 @@ export const useMedia = ({
 
       navigator.mediaDevices.getUserMedia(constraints).then((mediaStream) => {
         mediaStreamRef.current = mediaStream;
-        addUserMedia(mediaStream);
+        logMedia("Adding local user media !");
+        onMediaAdded(mediaStream);
       });
     }
 
     return () => {
       mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
-      removeUserMedia();
+      onMediaRemoved();
     };
-  }, [state, addUserMedia, removeUserMedia]);
+  }, [state, onMediaAdded, onMediaRemoved]);
 
   const toggleAudio = useCallback(() => {
     dispatch("toggle-audio");

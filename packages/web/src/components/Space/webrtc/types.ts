@@ -1,13 +1,6 @@
-export type PeerConnections = Map<string, RTCPeerConnection>;
+import { RemotePeer } from "../RemotePeer";
 
-export interface OnConnectedEvent {
-  user: User;
-  mediaStream: MediaStream;
-}
-
-export interface OnDisconnectedEvent {
-  user: User;
-}
+export type PeerConnections = Map<string, RemotePeer>;
 
 export interface User {
   id: string;

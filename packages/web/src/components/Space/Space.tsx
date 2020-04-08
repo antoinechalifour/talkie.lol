@@ -8,12 +8,11 @@ import {
   SpaceLayout,
   MainContent,
   VideoGrid,
-  LocalVideoBoxLayout,
-  VideoBoxLayout,
 } from "./styles";
 import { UserMediaControls } from "./UserMediaControls/UserMediaControls";
 import { useRtc } from "./webrtc/useRtc";
-import { MediaStreamBox } from "./MediaStreamBox/MediaStreamBox";
+import { LocalUserBox } from "./UserStreamBox/LocalUserBox";
+import { RemotePeerBox } from "./UserStreamBox/RemotePeerBox";
 
 export interface SpaceProps {
   userName: string;
@@ -21,9 +20,12 @@ export interface SpaceProps {
 }
 
 export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
-  const { remoteMedia, userMedia, addUserMedia, removeUserMedia } = useRtc(
-    slug
-  );
+  const {
+    remotePeers,
+    localStream,
+    addLocalStream,
+    removeLocalStream,
+  } = useRtc(slug);
 
   return (
     <SpaceLayout>
@@ -39,25 +41,18 @@ export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
 
       <MainContent>
         <VideoGrid>
-          {userMedia && (
-            <LocalVideoBoxLayout>
-              <MediaStreamBox mediaStream={userMedia} />
-              <p>You</p>
-            </LocalVideoBoxLayout>
-          )}
-          {remoteMedia.map((media) => (
-            <VideoBoxLayout key={media.user.id}>
-              <MediaStreamBox mediaStream={media.mediaStream} />
-              <p>{media.user.name}</p>
-            </VideoBoxLayout>
+          <LocalUserBox name={userName} mediaStream={localStream} />
+
+          {remotePeers.map((remotePeer) => (
+            <RemotePeerBox key={remotePeer.id()} remotePeer={remotePeer} />
           ))}
         </VideoGrid>
       </MainContent>
 
       <ControlsLayout>
         <UserMediaControls
-          addUserMedia={addUserMedia}
-          removeUserMedia={removeUserMedia}
+          onUserMediaAdded={addLocalStream}
+          onUserMediaRemoved={removeLocalStream}
         />
       </ControlsLayout>
     </SpaceLayout>

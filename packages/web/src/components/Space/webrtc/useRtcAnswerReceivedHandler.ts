@@ -1,5 +1,5 @@
 import { PeerConnections } from "./types";
-import { logRtc, logSignaling } from "./log";
+import { logSignaling } from "./log";
 
 interface UseRtcAnswerReceivedHandlerOptions {
   peerConnections: PeerConnections;
@@ -11,15 +11,12 @@ export const useRtcAnswerReceivedHandler = ({
   return async (senderId: string, answer: RTCSessionDescriptionInit) => {
     logSignaling(`📪 Received an answer from remote user ${senderId}`);
 
-    // Get the connection
-    const peerConnection = peerConnections.get(senderId);
+    const remotePeer = peerConnections.get(senderId);
 
-    if (!peerConnection) {
+    if (!remotePeer) {
       return;
     }
 
-    // Set the remote description
-    logRtc(`🏗 Setting the remote description for remote user ${senderId}`);
-    await peerConnection.setRemoteDescription(answer);
+    await remotePeer.setRemoteDescription(answer);
   };
 };

@@ -1,59 +1,113 @@
-import { useCallback, useState } from "react";
-import { logMedia } from "./log";
-import { useSignaling } from "./useSignaling";
-import { User } from "./types";
+import { useCallback, useReducer } from "react";
 
-interface UserMediaStream {
-  user: User;
-  mediaStream: MediaStream;
+import { RemotePeer } from "../RemotePeer";
+import { useSignaling } from "./useSignaling";
+import { useMedia } from "./useMedia";
+
+interface State {
+  localMediaStream: MediaStream | null;
+  remotePeers: RemotePeer[];
 }
 
+type Action =
+  | {
+      type: "PEER_CONNECTED";
+      peer: RemotePeer;
+    }
+  | {
+      type: "PEER_DISCONNECTED";
+      peer: RemotePeer;
+    }
+  | {
+      type: "LOCAL_MEDIA_STREAM_ADDED";
+      mediaStream: MediaStream;
+    }
+  | {
+      type: "LOCAL_MEDIA_STREAM_REMOVED";
+    };
+
+const initialState: State = {
+  localMediaStream: null,
+  remotePeers: [],
+};
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "PEER_CONNECTED":
+      if (state.remotePeers.find((peer) => peer.id() === action.peer.id())) {
+        return state;
+      }
+
+      return {
+        ...state,
+        remotePeers: [...state.remotePeers, action.peer],
+      };
+
+    case "PEER_DISCONNECTED":
+      return {
+        ...state,
+        remotePeers: state.remotePeers.filter((peer) => !peer.is(action.peer)),
+      };
+
+    case "LOCAL_MEDIA_STREAM_ADDED":
+      return {
+        ...state,
+        localMediaStream: action.mediaStream,
+      };
+
+    case "LOCAL_MEDIA_STREAM_REMOVED":
+      return {
+        ...state,
+        localMediaStream: null,
+      };
+  }
+};
+
 export const useRtc = (slug: string) => {
-  const [remoteMedia, setRemoteMedia] = useState<UserMediaStream[]>([]);
-  const [userMedia, setUserMedia] = useState<MediaStream | null>(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const setRemoteMediaForUser = useCallback(
-    (user: User, mediaStream: MediaStream | null) => {
-      logMedia(`Changing media stream for user ${user.id}: `, mediaStream);
-      setRemoteMedia((remoteMedias) => {
-        const nextState = remoteMedias.filter((x) => x.user.id !== user.id);
+  // @ts-ignore
+  window.DEBUG = () => console.log(state);
 
-        if (mediaStream) {
-          nextState.push({ user, mediaStream });
-        }
-
-        return nextState;
-      });
-    },
+  const addLocalStream = useCallback(
+    (mediaStream: MediaStream) =>
+      dispatch({
+        type: "LOCAL_MEDIA_STREAM_ADDED",
+        mediaStream,
+      }),
     []
   );
 
-  const { sendLocalMedia, cancelLocalMedia } = useSignaling({
-    userMedia,
-    spaceSlug: slug,
-    setRemoteMediaForUser,
-  });
-
-  const addUserMedia = useCallback(
-    (mediaStream: MediaStream) => {
-      logMedia("🎦 Adding local stream");
-      setUserMedia(mediaStream);
-
-      sendLocalMedia(mediaStream);
-    },
-    [sendLocalMedia]
+  const removeLocalStream = useCallback(
+    () => dispatch({ type: "LOCAL_MEDIA_STREAM_REMOVED" }),
+    []
   );
 
-  const removeUserMedia = useCallback(() => {
-    logMedia("🎦 Removing local stream");
-    setUserMedia(null);
-    cancelLocalMedia();
-  }, [cancelLocalMedia]);
+  const onRemotePeerConnected = useCallback(
+    (peer: RemotePeer) => dispatch({ type: "PEER_CONNECTED", peer }),
+    []
+  );
+  const onRemotePeerDisconnected = useCallback(
+    (peer: RemotePeer) => dispatch({ type: "PEER_DISCONNECTED", peer }),
+    []
+  );
+
+  useMedia({
+    remotePeers: state.remotePeers,
+    localMediaStream: state.localMediaStream,
+  });
+
+  useSignaling({
+    spaceSlug: slug,
+    remotePeers: state.remotePeers,
+    onRemotePeerConnected,
+    onRemotePeerDisconnected,
+  });
 
   return {
-    userMedia,
-    remoteMedia,
-    addUserMedia,
-    removeUserMedia,
+    localStream: state.localMediaStream,
+    remotePeers: state.remotePeers,
+    addLocalStream,
+    removeLocalStream,
   };
 };
