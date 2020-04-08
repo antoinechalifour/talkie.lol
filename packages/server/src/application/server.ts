@@ -1,5 +1,5 @@
 import debug from "debug";
-import util from 'util'
+import util from "util";
 import Koa, { Context } from "koa";
 import { ApolloServer } from "apollo-server-koa";
 
@@ -23,7 +23,7 @@ interface ContextFactoryOptions {
 
 const log = debug("app:server");
 
-export class TeleperoApp {
+export class WebRtcExperimentsApp {
   private koa: Koa;
   private container: AwilixContainer;
 

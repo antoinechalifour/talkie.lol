@@ -2,16 +2,16 @@ version: "3"
 
 services:
   redis:
-    container_name: telepero_redis
+    container_name: redis
     image: "redis:5"
     ports:
     - "6379:6379"
 
   server:
-    container_name: telepero_server
+    container_name: server
     build:
       context: .
-      dockerfile: server.Dockerfile
+      dockerfile: Dockerfile
     command: yarn dev
     volumes:
       - .:/app
@@ -19,7 +19,7 @@ services:
       - PORT=4000
       - DEBUG=app:*
       - SECRET=devsecret
-      - REDIS_HOST=telepero_redis
+      - REDIS_HOST=redis
       - REDIS_PORT=6379
     ports:
       - "4000:4000"

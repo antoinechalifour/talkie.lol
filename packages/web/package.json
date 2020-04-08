@@ -1,5 +1,5 @@
 {
-  "name": "@telepero/web",
+  "name": "@webrtc-experiments/web",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
