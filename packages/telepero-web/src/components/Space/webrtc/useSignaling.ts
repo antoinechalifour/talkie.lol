@@ -39,6 +39,9 @@ export const useSignaling = ({
     new Map<string, RTCPeerConnection>()
   );
 
+  // @ts-ignore
+  window.DEBUG = () => console.log(peerConnections.entries());
+
   const onConnected = useCallback(
     (e: OnConnectedEvent) => {
       setRemoteMediaForUser(e.user, e.mediaStream);
@@ -63,6 +66,8 @@ export const useSignaling = ({
   const rtcOfferReceivedHandler = useRtcOfferReceivedHandler({
     peerConnections,
     userMedia,
+    onConnected,
+    onDisconnected,
   });
   const rtcAnswerReceivedHandler = useRtcAnswerReceivedHandler({
     peerConnections,
@@ -88,17 +93,8 @@ export const useSignaling = ({
 
   useSubscription<RtcOfferReceivedEvent, void>(
     { query: RTC_OFFER_RECEIVED },
-    async (_, { offerReceived }) => {
-      const userId = offerReceived.sender.id;
-      const { mediaStream } = await rtcOfferReceivedHandler(
-        userId,
-        offerReceived.offer
-      );
-
-      if (mediaStream) {
-        setRemoteMediaForUser(offerReceived.sender, mediaStream);
-      }
-    }
+    (_, { offerReceived }) =>
+      rtcOfferReceivedHandler(offerReceived.sender, offerReceived.offer)
   );
 
   useSubscription<RtcAnswerReceivedEvent, void>(

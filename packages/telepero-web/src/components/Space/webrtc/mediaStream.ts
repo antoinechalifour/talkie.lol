@@ -6,7 +6,7 @@ export const createMediaStreamForPeerConnection = (
   const mediaStream = new MediaStream();
 
   peerConnection.addEventListener("track", ({ track }) => {
-    logMedia(`📫 Received track event (${track.kind} / ${track.id})`);
+    logMedia(`📫 Received track event (${track.kind} / ${track.id})`, track);
 
     mediaStream.addTrack(track);
   });
