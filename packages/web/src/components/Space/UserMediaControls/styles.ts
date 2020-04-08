@@ -9,7 +9,6 @@ export const ToggleMedia = styled.label`
     height: 1px;
     width: 1px;
     overflow: hidden;
-    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
     clip: rect(1px, 1px, 1px, 1px);
     white-space: nowrap; /* added line */
   }
@@ -18,9 +17,9 @@ export const ToggleMedia = styled.label`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #515151;
+    border: 2px solid var(--color-text-darker);
     border-radius: 50%;
-    color: #515151;
+    color: var(--color-text-darker);
 
     height: 50px;
     width: 50px;
@@ -34,7 +33,7 @@ export const ToggleMedia = styled.label`
   }
 
   input:checked + span {
-    border-color: #4fd77e;
-    color: #4fd77e;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
   }
 `;

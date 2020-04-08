@@ -1,8 +1,25 @@
 html {
   font-size: 62.5%;
+
+  --font-primary: "Arvo", serif;
+  --font-secondary: "Source Sans Pro", sans-serif;
+
+  --color-background-lighter: hsl(245, 21%, 30%);
+  --color-background: hsl(245, 21%, 20%);
+  --color-background-darker: hsl(245, 21%, 10%);
+
+  --color-text: hsl(245, 21%, 95%);
+  --color-text-darker: hsl(245, 21%, 75%);
+
+  --color-accent: #4fd77e;
+  --color-accent-darker: #1e5933;
 }
 
 body {
   font-size: 1.6rem;
-  font-family: "Lato", sans-serif;
+  font-family: var(--font-primary);
+}
+
+* {
+  box-sizing: border-box;
 }

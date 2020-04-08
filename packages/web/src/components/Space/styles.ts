@@ -9,19 +9,24 @@ export const SpaceLayout = styled.div`
 export const HeaderLayout = styled.header`
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto;
   padding: 2rem;
-  background: #000;
-  color: #f5f5f5;
-  border-bottom: 2px solid #373737;
+
+  background: var(--color-background-darker);
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-background-lighter);
 
   h1 {
-    font-weight: bold;
-    color: #e5e5e5;
+    color: var(--color-text-darker);
+
+    span {
+      font-weight: normal;
+      color: var(--color-text);
+    }
   }
 
-  span {
-    color: #e5e5e5;
+  svg {
+    margin-right: 1rem;
   }
 `;
 
@@ -30,7 +35,7 @@ export const MainContent = styled.main`
   height: 100%;
   padding: 10px;
   overflow-y: scroll;
-  background: #121212;
+  background: var(--color-background);
 `;
 
 export const VideoGrid = styled.div`
@@ -48,19 +53,19 @@ export const VideoGrid = styled.div`
 
 export const ControlsLayout = styled.footer`
   padding: 2rem;
-  background: #000;
-  color: #fff;
-  border-top: 2px solid #373737;
+  background: var(--color-background-darker);
+  color: var(--color-text);
+  border-top: 2px solid var(--color-background-lighter);
   text-align: center;
 `;
 
 export const VideoBoxLayout = styled.div`
-  border: 0.5rem solid #e5e5e5;
+  border: 0.5rem solid var(--color-background-lighter);
   border-radius: 0.5rem;
   position: relative;
   box-sizing: border-box;
   padding-bottom: 75%;
-  background: black;
+  background: var(--color-background-darker);
 
   > video {
     position: absolute;
@@ -73,20 +78,20 @@ export const VideoBoxLayout = styled.div`
   > p {
     position: absolute;
     right: -1px;
-    bottom: 0;
+    bottom: -1px;
     display: block;
-    padding: 0.5rem 3rem 0.5rem 5rem;
+    padding: 1rem 3rem 0.5rem 5rem;
     clip-path: polygon(3rem 0%, 100% 0, 100% 100%, 0% 100%);
     font-weight: bold;
-    background: #e5e5e5;
+    background: var(--color-background-lighter);
   }
 `;
 
 export const LocalVideoBoxLayout = styled(VideoBoxLayout)`
-  border-color: #4fd77e;
+  border-color: var(--color-accent);
 
   > p {
-    background: #4fd77e;
-    color: #1e5933;
+    background: var(--color-accent);
+    color: var(--color-accent-darker);
   }
 `;

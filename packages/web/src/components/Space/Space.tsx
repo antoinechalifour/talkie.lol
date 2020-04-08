@@ -1,4 +1,6 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 import {
   ControlsLayout,
@@ -26,12 +28,12 @@ export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
   return (
     <SpaceLayout>
       <HeaderLayout>
-        <h1>WebRTC experiment</h1>
+        <h1>
+          WebRTC Experiments
+          <span> / {slug}</span>
+        </h1>
         <p>
-          {slug} <span>(space)</span>
-        </p>
-        <p>
-          {userName} <span>(user)</span>
+          <FontAwesomeIcon icon={faUser} /> {userName}
         </p>
       </HeaderLayout>
 

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useMutation } from "urql";
 import { loader } from "graphql.macro";
 import { useHistory } from "react-router-dom";
+import { Background, AppTitle, Button } from "./styles";
 
 const CREATE_SPACE = loader("./CreateSpace.graphql");
 
@@ -13,23 +14,41 @@ interface CreateSpaceResponse {
   };
 }
 
-export const CreateSpaceView: React.FC = () => {
+const useCreateSpace = () => {
   const history = useHistory();
-  const [createSpaceResult, createSpace] = useMutation<CreateSpaceResponse>(
-    CREATE_SPACE
+  const [createSpaceResult, createSpaceMutation] = useMutation<
+    CreateSpaceResponse
+  >(CREATE_SPACE);
+
+  const createSpace = useCallback(
+    async function onClick() {
+      const result = await createSpaceMutation();
+
+      if (result.data) {
+        history.push(`/space/${result.data.createSpace.space.slug}`);
+      }
+    },
+    [createSpaceMutation, history]
   );
 
-  async function onClick() {
-    const result = await createSpace();
+  return {
+    isCreating: createSpaceResult.fetching,
+    createSpace,
+  };
+};
 
-    if (result.data) {
-      history.push(`/space/${result.data.createSpace.space.slug}`);
-    }
-  }
+export const CreateSpaceView: React.FC = () => {
+  const { isCreating, createSpace } = useCreateSpace();
 
-  if (createSpaceResult.fetching) {
-    return <p>Creating space...</p>;
-  }
+  return (
+    <Background>
+      <AppTitle>WebRTC Experiments</AppTitle>
 
-  return <button onClick={onClick}>Create a space</button>;
+      {isCreating ? (
+        <p>Creating space</p>
+      ) : (
+        <Button onClick={createSpace}>Create a space</Button>
+      )}
+    </Background>
+  );
 };
