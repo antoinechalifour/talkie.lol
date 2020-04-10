@@ -95,7 +95,7 @@ export class RemotePeer {
 
   onDisconnected(callback: DisconnectedCallback) {
     this.connection.addEventListener("iceconnectionstatechange", () => {
-      if (this.connection.iceConnectionState !== "connected") {
+      if (this.connection.iceConnectionState === "disconnected") {
         logRtc(
           `❌ Connection closed with remote user ${this.id()} (${this.name()})`
         );
