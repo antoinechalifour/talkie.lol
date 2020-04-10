@@ -6,10 +6,12 @@ import { SoundIcon } from "./styles";
 
 export interface AudioStreamBoxProps {
   mediaStream: MediaStream;
+  forceMute?: boolean;
 }
 
 export const AudioStreamBox: React.FC<AudioStreamBoxProps> = ({
   mediaStream,
+  forceMute,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -24,7 +26,7 @@ export const AudioStreamBox: React.FC<AudioStreamBoxProps> = ({
   return (
     <SoundIcon>
       <FontAwesomeIcon icon={faHeadphones} />
-      <audio autoPlay={true} />
+      {!forceMute && <audio autoPlay={true} />}
     </SoundIcon>
   );
 };
