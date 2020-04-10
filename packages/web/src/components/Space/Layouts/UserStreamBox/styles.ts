@@ -82,9 +82,14 @@ export const DebugButton = styled.button`
 
 export const ExpandButton = styled.button`
   all: unset;
+  display: none;
   position: absolute;
   top: 1rem;
   left: 1rem;
   color: var(--color-text-darker);
   cursor: pointer;
+
+  @media (min-width: 860px) {
+    display: block;
+  }
 `;
