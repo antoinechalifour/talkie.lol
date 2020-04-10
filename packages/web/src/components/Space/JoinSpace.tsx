@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { loader } from "graphql.macro";
 import { useMutation } from "urql";
 import { AuthenticatedClient } from "../AuthenticatedClient/AuthenticatedClient";
 import { Space } from "./Space";
+import { Home } from "../Home/Home";
+import { Button } from "../ui/Button";
 
 const LOGIN = loader("./Login.graphql");
 
@@ -27,22 +29,34 @@ export interface SpaceViewProps {
 }
 
 export const JoinSpace: React.FC<SpaceViewProps> = ({ spaceSlug }) => {
-  const [loginResult, login] = useMutation<LoginResult, LoginVariables>(LOGIN);
+  const [loginMutationResult, loginMutation] = useMutation<
+    LoginResult,
+    LoginVariables
+  >(LOGIN);
 
-  useEffect(() => {
-    login({ slug: spaceSlug });
-  }, [login, spaceSlug]);
+  const login = useCallback(() => loginMutation({ slug: spaceSlug }), [
+    loginMutation,
+    spaceSlug,
+  ]);
 
-  if (loginResult.data) {
+  if (loginMutationResult.data) {
     return (
-      <AuthenticatedClient token={loginResult.data.login.session.token}>
+      <AuthenticatedClient token={loginMutationResult.data.login.session.token}>
         <Space
-          userName={loginResult.data.login.session.user.name}
+          userName={loginMutationResult.data.login.session.user.name}
           slug={spaceSlug}
         />
       </AuthenticatedClient>
     );
   }
 
-  return <p>Connecting to space...</p>;
+  return (
+    <Home>
+      {loginMutationResult.fetching ? (
+        <p>Connecting to space...</p>
+      ) : (
+        <Button onClick={login}>Join space {spaceSlug}</Button>
+      )}
+    </Home>
+  );
 };

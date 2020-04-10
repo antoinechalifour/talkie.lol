@@ -64,6 +64,7 @@ export const RemotePeerInfo = styled.div`
   grid-template-columns: 1fr auto;
   grid-gap: 1rem;
   align-items: center;
+  color: var(--color-text);
 `;
 
 export const DebugButton = styled.button`
