@@ -21,7 +21,7 @@ export const VideoBoxLayout = styled.div`
     transform: translate(-50%, -50%);
   }
 
-  > div {
+  > div:last-child {
     position: absolute;
     right: -1px;
     bottom: -1px;
@@ -35,7 +35,7 @@ export const VideoBoxLayout = styled.div`
 export const LocalVideoBoxLayout = styled(VideoBoxLayout)`
   border-color: var(--color-accent);
 
-  > div {
+  > div:last-child {
     background: var(--color-accent);
     color: var(--color-accent-darker);
   }
