@@ -13,6 +13,7 @@ import { UserMediaControls } from "./UserMediaControls/UserMediaControls";
 import { useRtc } from "./webrtc/useRtc";
 import { LocalUserBox } from "./UserStreamBox/LocalUserBox";
 import { RemotePeerBox } from "./UserStreamBox/RemotePeerBox";
+import { SpaceQrCode } from "./SpaceQrCode";
 
 export interface SpaceProps {
   userName: string;
@@ -47,6 +48,8 @@ export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
             <RemotePeerBox key={remotePeer.id()} remotePeer={remotePeer} />
           ))}
         </VideoGrid>
+
+        <SpaceQrCode />
       </MainContent>
 
       <ControlsLayout>

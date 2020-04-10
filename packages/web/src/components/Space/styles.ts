@@ -31,6 +31,7 @@ export const HeaderLayout = styled.header`
 `;
 
 export const MainContent = styled.main`
+  position: relative;
   flex: 1;
   height: 100%;
   padding: 10px;
@@ -57,4 +58,15 @@ export const ControlsLayout = styled.footer`
   color: var(--color-text);
   border-top: 2px solid var(--color-background-lighter);
   text-align: center;
+`;
+
+export const QrCodeWrapper = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  canvas {
+    border-radius: 5px;
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
+  }
 `;

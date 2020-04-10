@@ -2,7 +2,11 @@ import React, { useCallback } from "react";
 import { useMutation } from "urql";
 import { loader } from "graphql.macro";
 import { useHistory } from "react-router-dom";
-import { Background, AppTitle, Button } from "./styles";
+
+import { Home } from "../Home/Home";
+import { Button } from "../ui/Button";
+import { Link } from "../ui/Link";
+import { CreateOrJoin } from "./styles";
 
 const CREATE_SPACE = loader("./CreateSpace.graphql");
 
@@ -37,18 +41,19 @@ const useCreateSpace = () => {
   };
 };
 
-export const CreateSpaceView: React.FC = () => {
+export const CreateSpace: React.FC = () => {
   const { isCreating, createSpace } = useCreateSpace();
 
   return (
-    <Background>
-      <AppTitle>WebRTC Experiments</AppTitle>
-
+    <Home>
       {isCreating ? (
         <p>Creating space</p>
       ) : (
-        <Button onClick={createSpace}>Create a space</Button>
+        <CreateOrJoin>
+          <Button onClick={createSpace}>Create a space</Button>
+          <Link to="/join">... or join an existing space</Link>
+        </CreateOrJoin>
       )}
-    </Background>
+    </Home>
   );
 };
