@@ -113,8 +113,6 @@ export class RemotePeer {
 
     localMediaStream.getTracks().forEach((track) => {
       if (!existingTracks.includes(track.id)) {
-        logRtc("SENDING LOCAL STREAM:", localMediaStream);
-        logRtc("SENDERS:", this.connection.getSenders());
         logRtc(
           `🛫 Sending a remote track to user ${this.id()} (${this.name()})`
         );
