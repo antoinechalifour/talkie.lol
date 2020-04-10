@@ -22,9 +22,9 @@ export const LocalUserBox: React.FC<LocalUserBoxProps> = ({
   return (
     <LocalVideoBoxLayout>
       {isSharingVideo ? (
-        <VideoStreamBox mediaStream={mediaStream!} />
+        <VideoStreamBox forceMute={true} mediaStream={mediaStream!} />
       ) : isSharingAudio ? (
-        <AudioStreamBox mediaStream={mediaStream!} />
+        <AudioStreamBox forceMute={true} mediaStream={mediaStream!} />
       ) : (
         <AllMute>
           <span role="img" aria-label="Your camera is disabled">
