@@ -35,7 +35,10 @@ export const LocalUserBox: React.FC<LocalUserBoxProps> = ({
           </span>
         </AllMute>
       )}
-      <p>{name} (you)</p>
+
+      <div>
+        <p>{name} (you)</p>
+      </div>
     </LocalVideoBoxLayout>
   );
 };

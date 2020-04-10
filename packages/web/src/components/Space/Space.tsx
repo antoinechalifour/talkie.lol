@@ -14,6 +14,7 @@ import { useRtc } from "./webrtc/useRtc";
 import { LocalUserBox } from "./UserStreamBox/LocalUserBox";
 import { RemotePeerBox } from "./UserStreamBox/RemotePeerBox";
 import { SpaceQrCode } from "./SpaceQrCode";
+import { useNotifier } from "./useNotifier";
 
 export interface SpaceProps {
   userName: string;
@@ -27,6 +28,8 @@ export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
     addLocalStream,
     removeLocalStream,
   } = useRtc(slug);
+
+  useNotifier({ remotePeers });
 
   return (
     <SpaceLayout>

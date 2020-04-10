@@ -1,8 +1,10 @@
 import "reset.css";
+import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
 import React from "react";
 import ReactDOM from "react-dom";
+import { toast } from "react-toastify";
 
 import { App } from "./App";
 import * as serviceWorker from "./serviceWorker";
@@ -16,6 +18,15 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
+
+toast.configure({
+  position: "bottom-right",
+  autoClose: 5000,
+  hideProgressBar: true,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+});
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -21,11 +21,10 @@ export const VideoBoxLayout = styled.div`
     transform: translate(-50%, -50%);
   }
 
-  > p {
+  > div {
     position: absolute;
     right: -1px;
     bottom: -1px;
-    display: block;
     padding: 1rem 3rem 0.5rem 5rem;
     clip-path: polygon(3rem 0%, 100% 0, 100% 100%, 0% 100%);
     font-weight: bold;
@@ -36,7 +35,7 @@ export const VideoBoxLayout = styled.div`
 export const LocalVideoBoxLayout = styled(VideoBoxLayout)`
   border-color: var(--color-accent);
 
-  > p {
+  > div {
     background: var(--color-accent);
     color: var(--color-accent-darker);
   }
@@ -58,4 +57,24 @@ export const SoundIcon = styled.div`
   transform: translate(-50%, -50%);
   font-size: 4rem;
   color: var(--color-accent);
+`;
+
+export const RemotePeerInfo = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-gap: 1rem;
+  align-items: center;
+`;
+
+export const DebugButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  color: var(--color-text-darker);
+  transform: scale(1);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    color: var(--color-accent);
+    transform: scale(1.2);
+  }
 `;
