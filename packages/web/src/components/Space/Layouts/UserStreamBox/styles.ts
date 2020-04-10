@@ -79,3 +79,7 @@ export const DebugButton = styled.button`
     transform: scale(1.2);
   }
 `;
+
+export const ExpandButton = styled.button`
+  all: unset;
+`;

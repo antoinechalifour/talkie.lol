@@ -39,19 +39,6 @@ export const MainContent = styled.main`
   background: var(--color-background);
 `;
 
-export const VideoGrid = styled.div`
-  display: grid;
-  grid-gap: 1.5rem;
-
-  @media (min-width: 860px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-`;
-
 export const ControlsLayout = styled.footer`
   padding: 2rem;
   background: var(--color-background-darker);

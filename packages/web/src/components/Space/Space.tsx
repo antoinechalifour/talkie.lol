@@ -7,14 +7,12 @@ import {
   HeaderLayout,
   SpaceLayout,
   MainContent,
-  VideoGrid,
 } from "./styles";
 import { UserMediaControls } from "./UserMediaControls/UserMediaControls";
 import { useRtc } from "./webrtc/useRtc";
-import { LocalUserBox } from "./UserStreamBox/LocalUserBox";
-import { RemotePeerBox } from "./UserStreamBox/RemotePeerBox";
 import { SpaceQrCode } from "./SpaceQrCode";
 import { useNotifier } from "./useNotifier";
+import { Layout } from "./Layouts/Layout";
 
 export interface SpaceProps {
   userName: string;
@@ -44,13 +42,10 @@ export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
       </HeaderLayout>
 
       <MainContent>
-        <VideoGrid>
-          <LocalUserBox name={userName} mediaStream={localStream} />
-
-          {remotePeers.map((remotePeer) => (
-            <RemotePeerBox key={remotePeer.id()} remotePeer={remotePeer} />
-          ))}
-        </VideoGrid>
+        <Layout
+          remotePeers={remotePeers}
+          localUser={{ name: userName, mediaStream: localStream }}
+        />
 
         <SpaceQrCode />
       </MainContent>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { loader } from "graphql.macro";
 import { useMutation } from "urql";
 import { AuthenticatedClient } from "../AuthenticatedClient/AuthenticatedClient";

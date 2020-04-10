@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeMute, faBug } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
-import { RemotePeer } from "../RemotePeer";
+import { RemotePeer } from "../../RemotePeer";
 import { VideoStreamBox } from "./VideoStreamBox";
 import { AllMute, DebugButton, RemotePeerInfo, VideoBoxLayout } from "./styles";
 import { AudioStreamBox } from "./AudioStreamBox";
