@@ -82,4 +82,9 @@ export const DebugButton = styled.button`
 
 export const ExpandButton = styled.button`
   all: unset;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  color: var(--color-text-darker);
+  cursor: pointer;
 `;

@@ -19,31 +19,41 @@ export const Layout: React.FC<LayoutProps> = ({ remotePeers, localUser }) => {
   if (focusedPeer) {
     return (
       <FocusedLayout>
-        <RemotePeerBox remotePeer={focusedPeer} />
+        <RemotePeerBox
+          remotePeer={focusedPeer}
+          onSelect={() => setFocusedPeer(null)}
+        />
 
         <PeerPreviewList>
-          <LocalUserBox
-            name={localUser.name}
-            mediaStream={localUser.mediaStream}
-          />
+          <li>
+            <LocalUserBox
+              name={localUser.name}
+              mediaStream={localUser.mediaStream}
+            />
+          </li>
 
           {remotePeers
             .filter((x) => !x.is(focusedPeer))
             .map((peer) => (
               <li key={peer.id()}>
-                <RemotePeerBox remotePeer={peer} />
+                <RemotePeerBox remotePeer={peer} onSelect={setFocusedPeer} />
               </li>
             ))}
         </PeerPreviewList>
       </FocusedLayout>
     );
   }
+
   return (
     <VideoGrid>
       <LocalUserBox name={localUser.name} mediaStream={localUser.mediaStream} />
 
       {remotePeers.map((remotePeer) => (
-        <RemotePeerBox key={remotePeer.id()} remotePeer={remotePeer} />
+        <RemotePeerBox
+          key={remotePeer.id()}
+          remotePeer={remotePeer}
+          onSelect={setFocusedPeer}
+        />
       ))}
     </VideoGrid>
   );

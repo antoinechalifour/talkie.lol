@@ -1,18 +1,32 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faVolumeMute, faBug } from "@fortawesome/free-solid-svg-icons";
+import {
+  faVolumeMute,
+  faBug,
+  faExpand,
+} from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
 import { RemotePeer } from "../../RemotePeer";
 import { VideoStreamBox } from "./VideoStreamBox";
-import { AllMute, DebugButton, RemotePeerInfo, VideoBoxLayout } from "./styles";
+import {
+  AllMute,
+  DebugButton,
+  ExpandButton,
+  RemotePeerInfo,
+  VideoBoxLayout,
+} from "./styles";
 import { AudioStreamBox } from "./AudioStreamBox";
 
 export interface RemotePeerBoxProps {
   remotePeer: RemotePeer;
+  onSelect: (remotePeer: RemotePeer) => void;
 }
 
-export const RemotePeerBox: React.FC<RemotePeerBoxProps> = ({ remotePeer }) => {
+export const RemotePeerBox: React.FC<RemotePeerBoxProps> = ({
+  remotePeer,
+  onSelect,
+}) => {
   function debug() {
     toast.info(`${remotePeer.name()}'s info has been printed in the console`);
     console.group(remotePeer.id());
@@ -34,6 +48,10 @@ export const RemotePeerBox: React.FC<RemotePeerBoxProps> = ({ remotePeer }) => {
           <FontAwesomeIcon icon={faVolumeMute} />
         </AllMute>
       )}
+
+      <ExpandButton onClick={() => onSelect(remotePeer)}>
+        <FontAwesomeIcon icon={faExpand} />
+      </ExpandButton>
 
       <RemotePeerInfo>
         <p>{remotePeer.name()}</p>

@@ -23,4 +23,10 @@ export const FocusedLayout = styled.div`
 
 export const PeerPreviewList = styled.ul`
   padding: 1rem;
+  height: 100%;
+  overflow-y: auto;
+
+  > li + li {
+    margin-top: 2rem;
+  }
 `;
