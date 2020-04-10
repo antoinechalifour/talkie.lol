@@ -22,7 +22,7 @@ export class RemotePeer {
 
   constructor(
     public user: User,
-    public connection: RTCPeerConnection,
+    private connection: RTCPeerConnection,
     public mediaStream: MediaStream
   ) {
     this.isConnected = false;
