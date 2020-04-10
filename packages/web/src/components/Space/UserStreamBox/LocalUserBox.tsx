@@ -26,7 +26,14 @@ export const LocalUserBox: React.FC<LocalUserBoxProps> = ({
       ) : isSharingAudio ? (
         <AudioStreamBox mediaStream={mediaStream!} />
       ) : (
-        <AllMute>🙈 🤫</AllMute>
+        <AllMute>
+          <span role="img" aria-label="Your camera is disabled">
+            🙈
+          </span>{" "}
+          <span role="img" aria-label="Your microphone is disabled">
+            🤫
+          </span>
+        </AllMute>
       )}
       <p>{name} (you)</p>
     </LocalVideoBoxLayout>
