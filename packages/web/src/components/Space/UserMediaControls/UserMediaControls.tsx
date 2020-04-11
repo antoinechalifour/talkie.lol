@@ -1,10 +1,14 @@
 import React, { useCallback } from "react";
 
-import { ToggleMedia } from "./styles";
 import { useCaptureMedia } from "./useCaptureMedia";
 import { useSelectUserMedia } from "./useSelectUserMedia";
 import { AudioInputSelectOption } from "./AudioInputSelectOption";
 import { VideoInputSelectOption } from "./VideoInputSelectOption";
+import {
+  MediaSourceLabel,
+  MediaSourceSelect,
+  UserMediaControlsWrapper,
+} from "./styles";
 
 export interface UserMediaControlsProps {
   onUserMediaAdded: (mediaStream: MediaStream) => void;
@@ -52,26 +56,30 @@ export const UserMediaControls: React.FC<UserMediaControlsProps> = ({
   );
 
   return (
-    <>
-      <ToggleMedia htmlFor="rtc-audio">
-        <span>Audio source</span>
+    <UserMediaControlsWrapper>
+      <MediaSourceLabel htmlFor="rtc-audio">Audio source</MediaSourceLabel>
 
-        <select name="rtc-audio" id="rtc-audio" onChange={onAudioInputChanged}>
-          {allAudioInputOptions.map((option) => (
-            <AudioInputSelectOption option={option} />
-          ))}
-        </select>
-      </ToggleMedia>
+      <MediaSourceSelect
+        name="rtc-audio"
+        id="rtc-audio"
+        onChange={onAudioInputChanged}
+      >
+        {allAudioInputOptions.map((option) => (
+          <AudioInputSelectOption key={option.id} option={option} />
+        ))}
+      </MediaSourceSelect>
 
-      <ToggleMedia htmlFor="rtc-video">
-        <span>Video source</span>
+      <MediaSourceLabel htmlFor="rtc-video">Video source</MediaSourceLabel>
 
-        <select name="rtc-video" id="rtc-video" onChange={onVideoInputChanged}>
-          {allVideoInputOptions.map((option) => (
-            <VideoInputSelectOption key={option.id} option={option} />
-          ))}
-        </select>
-      </ToggleMedia>
-    </>
+      <MediaSourceSelect
+        name="rtc-video"
+        id="rtc-video"
+        onChange={onVideoInputChanged}
+      >
+        {allVideoInputOptions.map((option) => (
+          <VideoInputSelectOption key={option.id} option={option} />
+        ))}
+      </MediaSourceSelect>
+    </UserMediaControlsWrapper>
   );
 };
