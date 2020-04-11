@@ -3,11 +3,6 @@ import React, { useCallback } from "react";
 import { ToggleMedia } from "./styles";
 import { useCaptureMedia } from "./useCaptureMedia";
 import { useSelectUserMedia } from "./useSelectUserMedia";
-import {
-  DEFAULT_AUDIO_OPTION,
-  DEFAULT_VIDEO_OPTION,
-  SCREEN_SHARING_OPTION,
-} from "./constants";
 
 export interface UserMediaControlsProps {
   onUserMediaAdded: (mediaStream: MediaStream) => void;
@@ -21,10 +16,13 @@ export const UserMediaControls: React.FC<UserMediaControlsProps> = ({
   const {
     audioInputOption,
     allAudioInputOptions,
-    setAudioInputOption,
+    muteAudio,
+    selectAudioDevice,
     videoInputOption,
     allVideoInputOptions,
-    setVideoInputOption,
+    muteVideo,
+    shareScreen,
+    selectVideoDevice,
   } = useSelectUserMedia();
 
   useCaptureMedia({
@@ -36,37 +34,19 @@ export const UserMediaControls: React.FC<UserMediaControlsProps> = ({
 
   const onAudioInputChanged = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      if (e.target.value === "off") {
-        setAudioInputOption(DEFAULT_AUDIO_OPTION);
-        return;
-      }
-
-      const device = allAudioInputOptions.find(
-        (x) => x.type === "device" && x.device.deviceId === e.target.value
-      );
-
-      setAudioInputOption(device!);
+      if (e.target.value === "off") muteAudio();
+      else selectAudioDevice(e.target.value);
     },
-    [allAudioInputOptions, setAudioInputOption]
+    [muteAudio, selectAudioDevice]
   );
 
   const onVideoInputChanged = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      if (e.target.value === "off") {
-        setVideoInputOption(DEFAULT_VIDEO_OPTION);
-        return;
-      } else if (e.target.value === "screen") {
-        setVideoInputOption(SCREEN_SHARING_OPTION);
-        return;
-      }
-
-      const device = allVideoInputOptions.find(
-        (x) => x.type === "device" && x.device.deviceId === e.target.value
-      );
-
-      setVideoInputOption(device!);
+      if (e.target.value === "off") muteVideo();
+      else if (e.target.value === "screen") shareScreen();
+      else selectVideoDevice(e.target.value);
     },
-    [allVideoInputOptions, setVideoInputOption]
+    [muteVideo, selectVideoDevice, shareScreen]
   );
 
   return (
@@ -83,6 +63,7 @@ export const UserMediaControls: React.FC<UserMediaControlsProps> = ({
                 </option>
               );
             }
+
             return (
               <option
                 key={inputOption.device.deviceId}

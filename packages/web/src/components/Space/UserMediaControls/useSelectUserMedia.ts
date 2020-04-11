@@ -1,43 +1,86 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { useEnumerateMediaDevices } from "./useEnumerateMediaDevices";
 import { AudioInputOption, VideoInputOption } from "./types";
 import {
-  DEFAULT_AUDIO_OPTION,
-  DEFAULT_VIDEO_OPTION,
+  AUDIO_DISABLED_OPTION,
+  VIDEO_DISABLED_OPTION,
   SCREEN_SHARING_OPTION,
 } from "./constants";
 
 export const useSelectUserMedia = () => {
   const [audioInputOption, setAudioInputOption] = useState<AudioInputOption>(
-    DEFAULT_AUDIO_OPTION
+    AUDIO_DISABLED_OPTION
   );
   const [videoInputOption, setVideoInputOption] = useState<VideoInputOption>(
-    DEFAULT_VIDEO_OPTION
+    VIDEO_DISABLED_OPTION
   );
-
   const devices = useEnumerateMediaDevices();
-
-  return {
-    audioInputOption,
-    setAudioInputOption,
-    allAudioInputOptions: [
-      DEFAULT_VIDEO_OPTION,
+  const allAudioInputOptions: AudioInputOption[] = useMemo(
+    () => [
+      AUDIO_DISABLED_OPTION,
       ...devices.audioDevices.map((device) => ({
-        type: "device",
+        type: "device" as const,
         device,
       })),
-    ] as AudioInputOption[],
-
-    videoInputOption,
-    setVideoInputOption,
-    allVideoInputOptions: [
-      DEFAULT_VIDEO_OPTION,
+    ],
+    [devices.audioDevices]
+  );
+  const allVideoInputOptions: VideoInputOption[] = useMemo(
+    () => [
+      VIDEO_DISABLED_OPTION,
       ...devices.videoDevices.map((device) => ({
-        type: "device",
+        type: "device" as const,
         device,
       })),
       SCREEN_SHARING_OPTION,
-    ] as VideoInputOption[],
+    ],
+    [devices.videoDevices]
+  );
+
+  const muteAudio = useCallback(
+    () => setAudioInputOption(AUDIO_DISABLED_OPTION),
+    []
+  );
+  const muteVideo = useCallback(
+    () => setVideoInputOption(VIDEO_DISABLED_OPTION),
+    []
+  );
+  const shareScreen = useCallback(
+    () => setVideoInputOption(SCREEN_SHARING_OPTION),
+    []
+  );
+  const selectAudioDevice = useCallback(
+    (deviceId: string) => {
+      const device = allAudioInputOptions.find(
+        (x) => x.type === "device" && x.device.deviceId === deviceId
+      );
+
+      setAudioInputOption(device!);
+    },
+    [allAudioInputOptions]
+  );
+  const selectVideoDevice = useCallback(
+    (deviceId: string) => {
+      const device = allVideoInputOptions.find(
+        (x) => x.type === "device" && x.device.deviceId === deviceId
+      );
+
+      setVideoInputOption(device!);
+    },
+    [allVideoInputOptions]
+  );
+
+  return {
+    audioInputOption,
+    allAudioInputOptions,
+    muteAudio,
+    selectAudioDevice,
+
+    videoInputOption,
+    allVideoInputOptions,
+    muteVideo,
+    shareScreen,
+    selectVideoDevice,
   };
 };
