@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 
-import { logMedia } from "../webrtc/log";
 import { AudioInputOption, VideoInputOption } from "./types";
 
 interface UseCaptureMediaOptions {
@@ -9,6 +8,42 @@ interface UseCaptureMediaOptions {
   onMediaAdded: (mediaStream: MediaStream) => void;
   onMediaRemoved: () => void;
 }
+
+const getAudioConstraintFromOption = (
+  option: AudioInputOption
+): MediaStreamConstraints["audio"] =>
+  option.type === "none"
+    ? false
+    : {
+        deviceId: { exact: option.device.deviceId },
+      };
+
+const getVideoConstaintFromOption = (
+  option: VideoInputOption
+): MediaStreamConstraints["video"] =>
+  option.type === "device"
+    ? {
+        deviceId: { exact: option.device.deviceId },
+      }
+    : false;
+
+const getDisplayMediaStream = (
+  audioInputOption: AudioInputOption
+): Promise<MediaStream> =>
+  // @ts-ignore
+  navigator.mediaDevices.getDisplayMedia({
+    audio: audioInputOption.type === "device",
+    video: true,
+  });
+
+const getUserMediaStream = (
+  audioInputOption: AudioInputOption,
+  videoInputOption: VideoInputOption
+) =>
+  navigator.mediaDevices.getUserMedia({
+    audio: getAudioConstraintFromOption(audioInputOption),
+    video: getVideoConstaintFromOption(videoInputOption),
+  });
 
 export const useCaptureMedia = ({
   audioInputOption,
@@ -19,42 +54,16 @@ export const useCaptureMedia = ({
   const mediaStreamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
-    if (audioInputOption.type === "none" && videoInputOption.type === "none") {
+    if (audioInputOption.type === "none" && videoInputOption.type === "none")
       return;
-    }
 
-    let promise: Promise<MediaStream>;
-
-    if (videoInputOption.type === "screen") {
-      // @ts-ignore
-      promise = navigator.mediaDevices.getDisplayMedia({
-        audio: true,
-        video: true,
-      });
-    } else {
-      const audioConstraints: MediaStreamConstraints["audio"] =
-        audioInputOption.type === "none"
-          ? false
-          : {
-              deviceId: { exact: audioInputOption.device.deviceId },
-            };
-
-      const videoConstraints: MediaStreamConstraints["video"] =
-        videoInputOption.type === "none"
-          ? false
-          : {
-              deviceId: { exact: videoInputOption.device.deviceId },
-            };
-
-      promise = navigator.mediaDevices.getUserMedia({
-        audio: audioConstraints,
-        video: videoConstraints,
-      });
-    }
+    const promise =
+      videoInputOption.type === "screen"
+        ? getDisplayMediaStream(audioInputOption)
+        : getUserMediaStream(audioInputOption, videoInputOption);
 
     promise.then((mediaStream) => {
       mediaStreamRef.current = mediaStream;
-      logMedia("Adding local screen media !");
       onMediaAdded(mediaStream);
     });
 
