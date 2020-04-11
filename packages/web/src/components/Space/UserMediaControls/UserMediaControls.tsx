@@ -3,6 +3,8 @@ import React, { useCallback } from "react";
 import { ToggleMedia } from "./styles";
 import { useCaptureMedia } from "./useCaptureMedia";
 import { useSelectUserMedia } from "./useSelectUserMedia";
+import { AudioInputSelectOption } from "./AudioInputSelectOption";
+import { VideoInputSelectOption } from "./VideoInputSelectOption";
 
 export interface UserMediaControlsProps {
   onUserMediaAdded: (mediaStream: MediaStream) => void;
@@ -55,24 +57,9 @@ export const UserMediaControls: React.FC<UserMediaControlsProps> = ({
         <span>Audio source</span>
 
         <select name="rtc-audio" id="rtc-audio" onChange={onAudioInputChanged}>
-          {allAudioInputOptions.map((inputOption) => {
-            if (inputOption.type === "none") {
-              return (
-                <option key="off" value="off">
-                  Mute input
-                </option>
-              );
-            }
-
-            return (
-              <option
-                key={inputOption.device.deviceId}
-                value={inputOption.device.deviceId}
-              >
-                {inputOption.device.label}
-              </option>
-            );
-          })}
+          {allAudioInputOptions.map((option) => (
+            <AudioInputSelectOption option={option} />
+          ))}
         </select>
       </ToggleMedia>
 
@@ -80,30 +67,9 @@ export const UserMediaControls: React.FC<UserMediaControlsProps> = ({
         <span>Video source</span>
 
         <select name="rtc-video" id="rtc-video" onChange={onVideoInputChanged}>
-          {allVideoInputOptions.map((inputOption) => {
-            if (inputOption.type === "none") {
-              return (
-                <option key="off" value="off">
-                  Do not share video
-                </option>
-              );
-            } else if (inputOption.type === "device") {
-              return (
-                <option
-                  key={inputOption.device.deviceId}
-                  value={inputOption.device.deviceId}
-                >
-                  {inputOption.device.label}
-                </option>
-              );
-            }
-
-            return (
-              <option key="screen" value="screen">
-                Share your screen
-              </option>
-            );
-          })}
+          {allVideoInputOptions.map((option) => (
+            <VideoInputSelectOption key={option.id} option={option} />
+          ))}
         </select>
       </ToggleMedia>
     </>

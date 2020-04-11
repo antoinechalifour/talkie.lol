@@ -20,6 +20,7 @@ export const useSelectUserMedia = () => {
     () => [
       AUDIO_DISABLED_OPTION,
       ...devices.audioDevices.map((device) => ({
+        id: device.deviceId,
         type: "device" as const,
         device,
       })),
@@ -30,6 +31,7 @@ export const useSelectUserMedia = () => {
     () => [
       VIDEO_DISABLED_OPTION,
       ...devices.videoDevices.map((device) => ({
+        id: device.deviceId,
         type: "device" as const,
         device,
       })),
