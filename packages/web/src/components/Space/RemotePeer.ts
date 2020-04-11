@@ -47,12 +47,6 @@ export class RemotePeer {
 
       mediaStream.addTrack(track);
     });
-
-    mediaStream.addEventListener("removetrack", (e) => {
-      console.group("DEBUG");
-      console.log("Track removed:", e);
-      console.groupEnd();
-    });
   }
 
   is(peer: RemotePeer) {
