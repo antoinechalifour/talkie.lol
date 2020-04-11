@@ -1,5 +1,7 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 
+import { createTitle } from "../../utils/html";
 import { AuthenticatedClient } from "../AuthenticatedClient/AuthenticatedClient";
 import { Space } from "./Space";
 import { Home } from "../Home/Home";
@@ -23,6 +25,10 @@ export const JoinSpace: React.FC<SpaceViewProps> = ({ spaceSlug }) => {
 
   return (
     <Home>
+      <Helmet>
+        <title>{createTitle(`Join space ${spaceSlug}`)}</title>
+      </Helmet>
+
       {isFetching ? (
         <p>Connecting to space...</p>
       ) : (

@@ -12,6 +12,10 @@ interface UseNotifierOptions {
 const audio = document.createElement("audio");
 audio.src = notificationSound;
 
+const notifyUserJoined = (userName: string) =>
+  toast.success(`User ${userName} joined.`);
+const playNotificationSound = () => audio.play();
+
 export const useNotifier = ({ remotePeers }: UseNotifierOptions) => {
   const peersRef = useRef<Map<string, RemotePeer>>(new Map());
 
@@ -23,8 +27,8 @@ export const useNotifier = ({ remotePeers }: UseNotifierOptions) => {
         continue;
       }
 
-      toast.success(`User ${remotePeer.name()} joined.`);
-      audio.play();
+      notifyUserJoined(remotePeer.name());
+      playNotificationSound();
 
       remotePeer.onDisconnected(() => {
         toast(`User ${remotePeer.name()} left.`);

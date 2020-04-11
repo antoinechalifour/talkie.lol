@@ -1,7 +1,9 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
+import { createTitle } from "../../utils/html";
 import {
   ControlsLayout,
   HeaderLayout,
@@ -31,6 +33,10 @@ export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
 
   return (
     <SpaceLayout>
+      <Helmet>
+        <title>{createTitle(slug)}</title>
+      </Helmet>
+
       <HeaderLayout>
         <h1>
           WebRTC Experiments
