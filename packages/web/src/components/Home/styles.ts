@@ -8,6 +8,7 @@ export const Background = styled.main`
   align-items: center;
   justify-content: center;
   background: var(--color-background);
+  color: var(--color-text);
 `;
 
 export const AppTitle = styled.h1`
@@ -16,7 +17,6 @@ export const AppTitle = styled.h1`
   font-family: var(--font-secondary);
   margin-bottom: 3rem;
 
-  color: var(--color-text);
   text-shadow: 0 1px 12px #000;
 
   @media (min-width: 860px) {
