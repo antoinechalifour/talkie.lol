@@ -13,6 +13,17 @@ export function useVideoStreamBox({ mediaStream }: UseVideoStreamBoxOptions) {
     }
 
     videoRef.current.srcObject = mediaStream;
+
+    const onAddTrack = () => videoRef.current?.play();
+    const onRemoveTrack = () => videoRef.current?.pause();
+
+    mediaStream.addEventListener("addtrack", onAddTrack);
+    mediaStream.addEventListener("removetrack", onRemoveTrack);
+
+    return () => {
+      mediaStream.removeEventListener("addtrack", onAddTrack);
+      mediaStream.removeEventListener("removetrack", onRemoveTrack);
+    };
   }, [mediaStream]);
 
   return { videoRef };
