@@ -1,39 +1,28 @@
 import styled from "styled-components";
 
-export const ToggleMedia = styled.label`
-  padding: 0.5rem;
-  cursor: pointer;
+export const UserMediaControlsWrapper = styled.div`
+  display: grid;
+  grid-gap: 2rem;
+  grid-template-columns: 1fr minmax(auto, 25%) 1fr minmax(auto, 25%);
+  max-width: 860px;
+  margin: auto;
 
-  input {
-    position: absolute !important;
-    height: 1px;
-    width: 1px;
-    overflow: hidden;
-    clip: rect(1px, 1px, 1px, 1px);
-    white-space: nowrap; /* added line */
+  > * {
+    align-self: center;
+    display: block;
   }
+`;
 
-  span {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--color-text-darker);
-    border-radius: 50%;
-    color: var(--color-text-darker);
+export const MediaSourceLabel = styled.label``;
 
-    height: 50px;
-    width: 50px;
-
-    transform: scale(1);
-    transition: transform 0.3s;
-  }
-
-  input:focus + span {
-    transform: scale(1.05);
-  }
-
-  input:checked + span {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-  }
+export const MediaSourceSelect = styled.select`
+  appearance: none;
+  background: var(--color-background-lighter);
+  padding: 0.5rem 1rem;
+  color: var(--color-text);
+  font-weight: bold;
+  border-color: black;
+  border-radius: 0.5rem;
+  font-family: inherit;
+  font-size: inherit;
 `;
