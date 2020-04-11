@@ -15,6 +15,7 @@ import { useRtc } from "./webrtc/useRtc";
 import { SpaceQrCode } from "./SpaceQrCode";
 import { useNotifier } from "./useNotifier";
 import { Layout } from "./Layouts/Layout";
+import { usePictureInPicture } from "./usePictureInPicture";
 
 export interface SpaceProps {
   userName: string;
@@ -30,6 +31,7 @@ export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
   } = useRtc(slug);
 
   useNotifier({ remotePeers });
+  usePictureInPicture({ remotePeers });
 
   return (
     <SpaceLayout>

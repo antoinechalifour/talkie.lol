@@ -22,7 +22,11 @@ export const LocalUserBox: React.FC<LocalUserBoxProps> = ({
   return (
     <LocalVideoBoxLayout>
       {isSharingVideo ? (
-        <VideoStreamBox forceMute={true} mediaStream={mediaStream!} />
+        <VideoStreamBox
+          id="stream-local"
+          forceMute={true}
+          mediaStream={mediaStream!}
+        />
       ) : isSharingAudio ? (
         <AudioStreamBox forceMute={true} mediaStream={mediaStream!} />
       ) : (

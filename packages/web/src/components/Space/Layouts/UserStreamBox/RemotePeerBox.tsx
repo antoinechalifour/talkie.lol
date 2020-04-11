@@ -40,7 +40,10 @@ export const RemotePeerBox: React.FC<RemotePeerBoxProps> = ({
   return (
     <VideoBoxLayout>
       {remotePeer.isSharingVideo() ? (
-        <VideoStreamBox mediaStream={remotePeer.mediaStream!} />
+        <VideoStreamBox
+          id={`stream-${remotePeer.id()}`}
+          mediaStream={remotePeer.mediaStream!}
+        />
       ) : remotePeer.isSharingAudio() ? (
         <AudioStreamBox mediaStream={remotePeer.mediaStream!} />
       ) : (
