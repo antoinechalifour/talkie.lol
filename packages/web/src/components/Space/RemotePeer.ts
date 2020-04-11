@@ -185,28 +185,28 @@ export class RemotePeer {
       );
     });
 
-    this.connection.addEventListener("icegatheringstatechange", (e) => {
+    this.connection.addEventListener("icegatheringstatechange", () => {
       logRtc(
         `Ice gathering state changed (user ${this.id()}, ${this.name()}):`,
         this.connection.iceGatheringState
       );
     });
 
-    this.connection.addEventListener("connectionstatechange", (e) => {
+    this.connection.addEventListener("connectionstatechange", () => {
       logRtc(
         `Connection state changed (user ${this.id()}, ${this.name()}):`,
         this.connection.connectionState
       );
     });
 
-    this.connection.addEventListener("signalingstatechange", (e) => {
+    this.connection.addEventListener("signalingstatechange", () => {
       logRtc(
         `Signaling state changed (user ${this.id()}, ${this.name()}):`,
         this.connection.signalingState
       );
     });
 
-    this.connection.addEventListener("negotiationneeded", (e) => {
+    this.connection.addEventListener("negotiationneeded", () => {
       logRtc(
         `Negotiation needed (user ${this.id()}, ${this.name()}):`,
         this.connection.connectionState
