@@ -1,98 +1,66 @@
-import { useCallback, useEffect, useReducer, useRef } from "react";
+import { useEffect, useRef } from "react";
+
 import { logMedia } from "../webrtc/log";
+import { AudioInputOption, VideoInputOption } from "./types";
 
-interface ConstraintState {
-  audio: boolean;
-  video: boolean;
-  screen: boolean;
-}
-
-type ConstraintAction = "toggle-audio" | "toggle-video" | "toggle-screen";
-
-const contraintsReducer = (
-  state: ConstraintState,
-  action: ConstraintAction
-): ConstraintState => {
-  switch (action) {
-    case "toggle-audio":
-      return {
-        ...state,
-        audio: !state.audio,
-      };
-    case "toggle-video":
-      return {
-        ...state,
-        video: !state.video,
-        screen: false,
-      };
-    case "toggle-screen":
-      return {
-        ...state,
-        video: false,
-        screen: !state.screen,
-      };
-  }
-};
-
-interface UseMediaOptions {
-  onMediaAdded: (userMedia: MediaStream) => void;
+interface UseCaptureMediaOptions {
+  audioInputOption: AudioInputOption;
+  videoInputOption: VideoInputOption;
+  onMediaAdded: (mediaStream: MediaStream) => void;
   onMediaRemoved: () => void;
 }
 
 export const useCaptureMedia = ({
+  audioInputOption,
+  videoInputOption,
   onMediaAdded,
   onMediaRemoved,
-}: UseMediaOptions) => {
+}: UseCaptureMediaOptions) => {
   const mediaStreamRef = useRef<MediaStream | null>(null);
-  const [state, dispatch] = useReducer(contraintsReducer, {
-    audio: false,
-    video: false,
-    screen: false,
-  });
 
   useEffect(() => {
-    if (state.screen && "getDisplayMedia" in navigator.mediaDevices) {
-      // @ts-ignore
-      navigator.mediaDevices.getDisplayMedia().then((mediaStream) => {
-        mediaStreamRef.current = mediaStream;
-        logMedia("Adding local screen media !");
-        onMediaAdded(mediaStream);
-      });
-    } else if (state.audio || state.video) {
-      const constraints = {
-        audio: state.audio,
-        video: state.video ? { width: 1280, height: 720 } : false,
-      };
+    if (audioInputOption.type === "none" && videoInputOption.type === "none") {
+      return;
+    }
 
-      navigator.mediaDevices.getUserMedia(constraints).then((mediaStream) => {
-        mediaStreamRef.current = mediaStream;
-        logMedia("Adding local user media !");
-        onMediaAdded(mediaStream);
+    let promise: Promise<MediaStream>;
+
+    if (videoInputOption.type === "screen") {
+      // @ts-ignore
+      promise = navigator.mediaDevices.getDisplayMedia({
+        audio: true,
+        video: true,
+      });
+    } else {
+      const audioConstraints: MediaStreamConstraints["audio"] =
+        audioInputOption.type === "none"
+          ? false
+          : {
+              deviceId: { exact: audioInputOption.device.deviceId },
+            };
+
+      const videoConstraints: MediaStreamConstraints["video"] =
+        videoInputOption.type === "none"
+          ? false
+          : {
+              deviceId: { exact: videoInputOption.device.deviceId },
+            };
+
+      promise = navigator.mediaDevices.getUserMedia({
+        audio: audioConstraints,
+        video: videoConstraints,
       });
     }
+
+    promise.then((mediaStream) => {
+      mediaStreamRef.current = mediaStream;
+      logMedia("Adding local screen media !");
+      onMediaAdded(mediaStream);
+    });
 
     return () => {
       mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
       onMediaRemoved();
     };
-  }, [state, onMediaAdded, onMediaRemoved]);
-
-  const toggleAudio = useCallback(() => {
-    dispatch("toggle-audio");
-  }, [dispatch]);
-  const toggleVideo = useCallback(() => {
-    dispatch("toggle-video");
-  }, [dispatch]);
-  const toggleScreen = useCallback(() => {
-    dispatch("toggle-screen");
-  }, [dispatch]);
-
-  return {
-    isSharingAudio: state.audio,
-    isSharingVideo: state.video,
-    isSharingScreen: state.screen,
-    toggleAudio,
-    toggleVideo,
-    toggleScreen,
-  };
+  }, [audioInputOption, videoInputOption, onMediaAdded, onMediaRemoved]);
 };

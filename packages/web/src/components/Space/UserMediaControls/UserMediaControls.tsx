@@ -1,13 +1,13 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faMicrophone,
-  faVideo,
-  faExternalLinkAlt,
-} from "@fortawesome/free-solid-svg-icons";
+import React, { useCallback } from "react";
 
-import { useCaptureMedia } from "./useCaptureMedia";
 import { ToggleMedia } from "./styles";
+import { useCaptureMedia } from "./useCaptureMedia";
+import { useSelectUserMedia } from "./useSelectUserMedia";
+import {
+  DEFAULT_AUDIO_OPTION,
+  DEFAULT_VIDEO_OPTION,
+  SCREEN_SHARING_OPTION,
+} from "./constants";
 
 export interface UserMediaControlsProps {
   onUserMediaAdded: (mediaStream: MediaStream) => void;
@@ -19,56 +19,111 @@ export const UserMediaControls: React.FC<UserMediaControlsProps> = ({
   onUserMediaRemoved,
 }) => {
   const {
-    isSharingAudio,
-    toggleAudio,
-    isSharingVideo,
-    toggleVideo,
-    isSharingScreen,
-    toggleScreen,
-  } = useCaptureMedia({
+    audioInputOption,
+    allAudioInputOptions,
+    setAudioInputOption,
+    videoInputOption,
+    allVideoInputOptions,
+    setVideoInputOption,
+  } = useSelectUserMedia();
+
+  useCaptureMedia({
+    audioInputOption,
+    videoInputOption,
     onMediaAdded: onUserMediaAdded,
     onMediaRemoved: onUserMediaRemoved,
   });
 
+  const onAudioInputChanged = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      if (e.target.value === "off") {
+        setAudioInputOption(DEFAULT_AUDIO_OPTION);
+        return;
+      }
+
+      const device = allAudioInputOptions.find(
+        (x) => x.type === "device" && x.device.deviceId === e.target.value
+      );
+
+      setAudioInputOption(device!);
+    },
+    [allAudioInputOptions, setAudioInputOption]
+  );
+
+  const onVideoInputChanged = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      if (e.target.value === "off") {
+        setVideoInputOption(DEFAULT_VIDEO_OPTION);
+        return;
+      } else if (e.target.value === "screen") {
+        setVideoInputOption(SCREEN_SHARING_OPTION);
+        return;
+      }
+
+      const device = allVideoInputOptions.find(
+        (x) => x.type === "device" && x.device.deviceId === e.target.value
+      );
+
+      setVideoInputOption(device!);
+    },
+    [allVideoInputOptions, setVideoInputOption]
+  );
+
   return (
     <>
       <ToggleMedia htmlFor="rtc-audio">
-        <input
-          type="checkbox"
-          id="rtc-audio"
-          checked={isSharingAudio}
-          onChange={toggleAudio}
-        />
+        <span>Audio source</span>
 
-        <span>
-          <FontAwesomeIcon icon={faMicrophone} />
-        </span>
+        <select name="rtc-audio" id="rtc-audio" onChange={onAudioInputChanged}>
+          {allAudioInputOptions.map((inputOption) => {
+            if (inputOption.type === "none") {
+              return (
+                <option key="off" value="off">
+                  Mute input
+                </option>
+              );
+            }
+            return (
+              <option
+                key={inputOption.device.deviceId}
+                value={inputOption.device.deviceId}
+              >
+                {inputOption.device.label}
+              </option>
+            );
+          })}
+        </select>
       </ToggleMedia>
 
       <ToggleMedia htmlFor="rtc-video">
-        <input
-          type="checkbox"
-          id="rtc-video"
-          checked={isSharingVideo}
-          onChange={toggleVideo}
-        />
+        <span>Video source</span>
 
-        <span>
-          <FontAwesomeIcon icon={faVideo} />
-        </span>
-      </ToggleMedia>
+        <select name="rtc-video" id="rtc-video" onChange={onVideoInputChanged}>
+          {allVideoInputOptions.map((inputOption) => {
+            if (inputOption.type === "none") {
+              return (
+                <option key="off" value="off">
+                  Do not share video
+                </option>
+              );
+            } else if (inputOption.type === "device") {
+              return (
+                <option
+                  key={inputOption.device.deviceId}
+                  value={inputOption.device.deviceId}
+                >
+                  {inputOption.device.label}
+                </option>
+              );
+            }
 
-      <ToggleMedia htmlFor="rtc-screen">
-        <input
-          type="checkbox"
-          id="rtc-screen"
-          checked={isSharingScreen}
-          onChange={toggleScreen}
-        />
-
-        <span>
-          <FontAwesomeIcon icon={faExternalLinkAlt} />
-        </span>
+            return (
+              <option key="screen" value="screen">
+                Share your screen
+              </option>
+            );
+          })}
+        </select>
       </ToggleMedia>
     </>
   );

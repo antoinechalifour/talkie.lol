@@ -41,17 +41,16 @@ export const MainContent = styled.main`
 
 export const ControlsLayout = styled.footer`
   position: fixed;
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 5rem;
+  bottom: 0rem;
+  left: 0;
+  right: 0;
   padding: 1rem 1.5rem;
 
   background: var(--color-background-darker);
   color: var(--color-text);
   text-align: center;
 
-  border: 1px solid var(--color-text-darker);
+  border-top: 1px solid var(--color-background-lighter);
 `;
 
 export const QrCodeWrapper = styled.div`
