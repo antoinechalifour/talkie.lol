@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { RemotePeer } from "../RemotePeer";
-import { LocalUserBox } from "./UserStreamBox/LocalUserBox";
-import { RemotePeerBox } from "./UserStreamBox/RemotePeerBox";
-import { FocusedLayout, PeerPreviewList, VideoGrid } from "./styles";
+import { useLayoutManager } from "./useLayoutManager";
+import { FocusedLayout } from "./FocusedLayout";
+import { VideoGridLayout } from "./VideoGridLayout";
 
 export interface LayoutProps {
   remotePeers: RemotePeer[];
@@ -14,47 +14,25 @@ export interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ remotePeers, localUser }) => {
-  const [focusedPeer, setFocusedPeer] = useState<RemotePeer | null>(null);
+  const { focusedPeer, setFocusedPeer, removeFocusedPeer } = useLayoutManager();
 
   if (focusedPeer) {
     return (
-      <FocusedLayout>
-        <RemotePeerBox
-          remotePeer={focusedPeer}
-          onSelect={() => setFocusedPeer(null)}
-        />
-
-        <PeerPreviewList>
-          <li>
-            <LocalUserBox
-              name={localUser.name}
-              mediaStream={localUser.mediaStream}
-            />
-          </li>
-
-          {remotePeers
-            .filter((x) => !x.is(focusedPeer))
-            .map((peer) => (
-              <li key={peer.id()}>
-                <RemotePeerBox remotePeer={peer} onSelect={setFocusedPeer} />
-              </li>
-            ))}
-        </PeerPreviewList>
-      </FocusedLayout>
+      <FocusedLayout
+        focusedPeer={focusedPeer}
+        localUser={localUser}
+        onFocusPeer={setFocusedPeer}
+        onRemoveFocusedPeer={removeFocusedPeer}
+        otherPeers={remotePeers.filter((x) => !x.is(focusedPeer))}
+      />
     );
   }
 
   return (
-    <VideoGrid>
-      <LocalUserBox name={localUser.name} mediaStream={localUser.mediaStream} />
-
-      {remotePeers.map((remotePeer) => (
-        <RemotePeerBox
-          key={remotePeer.id()}
-          remotePeer={remotePeer}
-          onSelect={setFocusedPeer}
-        />
-      ))}
-    </VideoGrid>
+    <VideoGridLayout
+      localUser={localUser}
+      remotePeers={remotePeers}
+      onFocusPeer={setFocusedPeer}
+    />
   );
 };

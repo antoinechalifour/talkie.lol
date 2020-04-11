@@ -13,16 +13,16 @@ export const VideoGrid = styled.div`
   }
 `;
 
-export const FocusedLayout = styled.div`
+export const FocusedView = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 3fr 2fr;
   grid-gap: 2rem;
 
   height: 100%;
 `;
 
 export const PeerPreviewList = styled.ul`
-  padding: 1rem;
+  padding: 0 1rem;
   height: 100%;
   overflow-y: auto;
 

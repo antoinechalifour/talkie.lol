@@ -48,14 +48,14 @@ export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
         />
 
         <SpaceQrCode />
-      </MainContent>
 
-      <ControlsLayout>
-        <UserMediaControls
-          onUserMediaAdded={addLocalStream}
-          onUserMediaRemoved={removeLocalStream}
-        />
-      </ControlsLayout>
+        <ControlsLayout>
+          <UserMediaControls
+            onUserMediaAdded={addLocalStream}
+            onUserMediaRemoved={removeLocalStream}
+          />
+        </ControlsLayout>
+      </MainContent>
     </SpaceLayout>
   );
 };
