@@ -1,45 +1,10 @@
-import React, { useCallback } from "react";
-import { useMutation } from "urql";
-import { loader } from "graphql.macro";
-import { useHistory } from "react-router-dom";
+import React from "react";
 
 import { Home } from "../Home/Home";
 import { Button } from "../ui/Button";
 import { Link } from "../ui/Link";
 import { CreateOrJoin } from "./styles";
-
-const CREATE_SPACE = loader("./CreateSpace.graphql");
-
-interface CreateSpaceResponse {
-  createSpace: {
-    space: {
-      slug: string;
-    };
-  };
-}
-
-const useCreateSpace = () => {
-  const history = useHistory();
-  const [createSpaceResult, createSpaceMutation] = useMutation<
-    CreateSpaceResponse
-  >(CREATE_SPACE);
-
-  const createSpace = useCallback(
-    async function onClick() {
-      const result = await createSpaceMutation();
-
-      if (result.data) {
-        history.push(`/space/${result.data.createSpace.space.slug}`);
-      }
-    },
-    [createSpaceMutation, history]
-  );
-
-  return {
-    isCreating: createSpaceResult.fetching,
-    createSpace,
-  };
-};
+import { useCreateSpace } from "./useCreateSpace";
 
 export const CreateSpace: React.FC = () => {
   const { isCreating, createSpace } = useCreateSpace();

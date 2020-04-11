@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeadphones } from "@fortawesome/free-solid-svg-icons";
 
 import { SoundIcon } from "./styles";
+import { useAudioStreamBox } from "./useAudioStreamBox";
 
 export interface AudioStreamBoxProps {
   mediaStream: MediaStream;
@@ -13,20 +14,12 @@ export const AudioStreamBox: React.FC<AudioStreamBoxProps> = ({
   mediaStream,
   forceMute,
 }) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    if (!audioRef.current) {
-      return;
-    }
-
-    audioRef.current.srcObject = mediaStream;
-  }, [mediaStream]);
+  const { audioRef } = useAudioStreamBox({ mediaStream });
 
   return (
     <SoundIcon>
       <FontAwesomeIcon icon={faHeadphones} />
-      <audio autoPlay={true} muted={forceMute} />
+      <audio ref={audioRef} autoPlay={true} muted={forceMute} />
     </SoundIcon>
   );
 };

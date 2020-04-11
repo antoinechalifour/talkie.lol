@@ -1,6 +1,7 @@
-import { RemotePeer } from "./RemotePeer";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
+
+import { RemotePeer } from "./RemotePeer";
 
 interface UseNotifierOptions {
   remotePeers: RemotePeer[];
