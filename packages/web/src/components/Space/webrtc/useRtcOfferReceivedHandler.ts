@@ -28,7 +28,7 @@ export const useRtcOfferReceivedHandler = (conference: Conference) => {
   async function handleFirstConnection(sender: User) {
     const remotePeer = RemotePeer.create(sender, {
       onIceCandidate: (candidate) => {
-        logSignaling(`🛫 Sending an ice candidate to remote user ${sender.id}`);
+        logSignaling(`[OUT] Ice Candidate | ${sender.name} ${sender.id}`);
 
         sendRtcIceCandidate({
           candidate: candidate.candidate,
@@ -38,9 +38,7 @@ export const useRtcOfferReceivedHandler = (conference: Conference) => {
         });
       },
       onNegociationNeeded: (offer) => {
-        logSignaling(
-          `🛫 Sending an new offer to remote user (as answerer) ${sender.id}`
-        );
+        logSignaling(`[OUT] Offer (as answerer) | ${sender.name} ${sender.id}`);
 
         sendRtcOffer({
           offer: offer.sdp!,
@@ -55,9 +53,9 @@ export const useRtcOfferReceivedHandler = (conference: Conference) => {
   }
 
   return async (sender: User, offer: RTCSessionDescriptionInit) => {
-    logSignaling(`📫 Received an offer from remote user ${sender.id}`);
+    logSignaling(`[IN] Offer | ${sender.name} ${sender.id}`);
 
-    const remotePeerFromCache = conference.getRemotePeerByUser(sender);
+    const remotePeerFromCache = conference.remotePeerByUser(sender);
     let remotePeer: RemotePeer;
 
     if (remotePeerFromCache) {
@@ -72,7 +70,7 @@ export const useRtcOfferReceivedHandler = (conference: Conference) => {
     await remotePeer.setLocalDescription(answer);
 
     // Send the answer
-    logSignaling(`🛫 Sending an answer to remote user ${sender.id}`);
+    logSignaling(`[OUT] Answer | ${sender.name} ${sender.id}`);
 
     await sendRtcAnswer({
       answer: answer.sdp!,

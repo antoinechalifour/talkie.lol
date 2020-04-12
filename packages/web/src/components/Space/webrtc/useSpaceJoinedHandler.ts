@@ -9,7 +9,7 @@ import {
   SendRtcIceCandidateVariables,
   SendRtcOfferVariables,
 } from "./signaling";
-import { logSignaling } from "./log";
+import { logMedia, logSignaling } from "./log";
 
 export const useSpaceJoinedHandler = (conference: Conference) => {
   const [, sendRtcOffer] = useMutation<unknown, SendRtcOfferVariables>(
@@ -21,12 +21,12 @@ export const useSpaceJoinedHandler = (conference: Conference) => {
   >(SEND_RTC_ICE_CANDIDATE);
 
   return async (user: User) => {
-    logSignaling(`📫 User ${user.id} joined the space`);
+    logSignaling(`[IN] SPACE_JOINED | ${user.name} ${user.id}`);
 
     // Create the connection
     const remotePeer = RemotePeer.create(user, {
       onIceCandidate: (candidate) => {
-        logSignaling(`🛫 Sending an ice candidate to remote user ${user.id}`);
+        logSignaling(`[OUT] Ice Candidate | ${user.name} ${user.id}`);
 
         sendRtcIceCandidate({
           candidate: candidate.candidate,
@@ -36,9 +36,7 @@ export const useSpaceJoinedHandler = (conference: Conference) => {
         });
       },
       onNegociationNeeded: (offer) => {
-        logSignaling(
-          `🛫 Sending an offer to remote user (as offerer) ${user.id}`
-        );
+        logSignaling(`[OUT] Offer (as offerer) | ${user.name} ${user.id}`);
 
         sendRtcOffer({
           offer: offer.sdp!,
@@ -54,7 +52,7 @@ export const useSpaceJoinedHandler = (conference: Conference) => {
     await remotePeer.setLocalDescription(offer);
 
     // Send the offer
-    logSignaling(`🛫 Sending an offer to remote user ${user.id}`);
+    logSignaling(`[OUT] Offer | ${user.name} ${user.id}`);
 
     await sendRtcOffer({
       offer: offer.sdp!,

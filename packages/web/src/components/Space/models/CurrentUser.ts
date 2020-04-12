@@ -1,4 +1,8 @@
+import debug from "debug";
+
 import { RemotePeer } from "./RemotePeer";
+
+const log = debug("app:CurrentUser");
 
 export class CurrentUser {
   private _localMediaStream: MediaStream | null = null;
@@ -22,20 +26,24 @@ export class CurrentUser {
   }
 
   addMediaStream(mediaStream: MediaStream) {
+    log("Adding media stream");
     this._localMediaStream = mediaStream;
   }
 
   removeMediaStream() {
+    log("Removing media stream");
     this._localMediaStream = null;
   }
 
   startStreamingWithRemotePeer(remotePeer: RemotePeer) {
     if (!this._localMediaStream) return;
 
+    log(`Sending local stream to ${remotePeer.name()}`);
     remotePeer.startStreaming(this._localMediaStream);
   }
 
   stopStreamingWithRemotePeer(remotePeer: RemotePeer) {
+    log(`Stopping streaming with ${remotePeer.name()}`);
     remotePeer.stopStreaming();
   }
 

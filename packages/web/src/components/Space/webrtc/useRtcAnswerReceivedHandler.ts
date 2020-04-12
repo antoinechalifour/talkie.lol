@@ -4,10 +4,9 @@ import { Conference } from "../models/Conference";
 
 export const useRtcAnswerReceivedHandler = (conference: Conference) => {
   return async (sender: User, answer: RTCSessionDescriptionInit) => {
-    logSignaling(`📪 Received an answer from remote user ${sender.id}`);
+    logSignaling(`[IN] Answer | ${sender.name} ${sender.id}`);
 
-    // TODO: apply demeter
-    const remotePeer = conference.getRemotePeerByUser(sender);
+    const remotePeer = conference.remotePeerByUser(sender);
 
     if (!remotePeer) return;
 

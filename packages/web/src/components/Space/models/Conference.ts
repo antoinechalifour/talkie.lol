@@ -1,11 +1,15 @@
+import debug from "debug";
+
+import { User } from "../webrtc/types";
 import { RemotePeer } from "./RemotePeer";
 import { CurrentUser } from "./CurrentUser";
-import { User } from "../webrtc/types";
 
 type OnLocalUserChangedListener = (localUser: CurrentUser) => void;
 type OnRemotePeerAddedListener = (newPeer: RemotePeer) => void;
 type OnRemotePeerRemovedListener = (oldPeer: RemotePeer) => void;
 type OnRemotePeersChangedListener = (peers: RemotePeer[]) => void;
+
+const log = debug("app:Conference");
 
 export class Conference {
   private _remotePeers: Set<RemotePeer> = new Set();
@@ -38,6 +42,7 @@ export class Conference {
   }
 
   addLocalUserMediaStream(mediaStream: MediaStream) {
+    log("Adding local user media stream");
     this.localUser().addMediaStream(mediaStream);
     this._notifyLocalUserChanged();
 
@@ -47,6 +52,7 @@ export class Conference {
   }
 
   removeLocalUserMediaStream() {
+    log("Removing local user media stream");
     this.localUser().removeMediaStream();
     this._notifyLocalUserChanged();
 
@@ -56,6 +62,7 @@ export class Conference {
   }
 
   addRemotePeer(newRemotePeer: RemotePeer) {
+    log("Adding remote peer to conference");
     this._remotePeers.add(newRemotePeer);
     this._notifyRemotePeerAdded(newRemotePeer);
 
@@ -73,6 +80,7 @@ export class Conference {
   }
 
   removeRemotePeer(remotePeer: RemotePeer) {
+    log("Removing remote peer from conference");
     this._remotePeers.delete(remotePeer);
     this._notifyRemotePeerRemoved(remotePeer);
   }
@@ -98,14 +106,15 @@ export class Conference {
   }
 
   removeRemoteUser(user: User) {
-    const remotePeer = this.getRemotePeerByUser(user);
+    log("Removing remote peer by user");
+    const remotePeer = this.remotePeerByUser(user);
 
     if (!remotePeer) return;
 
     this.removeRemotePeer(remotePeer);
   }
 
-  getRemotePeerByUser(user: User): RemotePeer | null {
+  remotePeerByUser(user: User): RemotePeer | null {
     return this.allRemotePeers().find((peer) => peer.isUser(user)) || null;
   }
 

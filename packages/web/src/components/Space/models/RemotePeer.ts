@@ -1,5 +1,5 @@
 import { User } from "../webrtc/types";
-import { logMedia, logRtc } from "../webrtc/log";
+import { logRtc } from "../webrtc/log";
 
 type IceCandidateCallback = (iceCandidate: RTCIceCandidate) => void;
 type OfferCallback = (offer: RTCSessionDescriptionInit) => void;
@@ -60,26 +60,24 @@ export class RemotePeer {
   // Media stuff
   // -------------------------------------------------- //
 
-  startStreaming(localMediaStream: MediaStream) {
+  startStreaming(mediaStream: MediaStream) {
     const existingTracks = this.connection
       .getSenders()
       .map((sender) => sender.track)
       .filter(Boolean)
       .map((track) => track!.id);
 
-    localMediaStream.getTracks().forEach((track) => {
+    mediaStream.getTracks().forEach((track) => {
       if (!existingTracks.includes(track.id)) {
-        logRtc(
-          `🛫 Sending a remote track to user ${this.id()} (${this.name()})`
-        );
-        this.connection.addTrack(track, localMediaStream);
+        logRtc(`[OUT] Track | ${this.name()} ${this.id()}`);
+        this.connection.addTrack(track, mediaStream);
       }
     });
   }
 
   stopStreaming() {
     this.connection.getSenders().forEach((sender) => {
-      logRtc(`🛫 Removing track from user ${this.id()} (${this.name()})`);
+      logRtc(`[OUT] Track | ${this.name()} ${this.id()}`);
       this.connection.removeTrack(sender);
     });
   }
@@ -113,16 +111,10 @@ export class RemotePeer {
   }
 
   setRemoteDescription(sessionDescription: RTCSessionDescriptionInit) {
-    logRtc(
-      `🏗 Setting the remote description for user ${this.id()} (${this.name()})`
-    );
     return this.connection.setRemoteDescription(sessionDescription);
   }
 
   addIceCandidate(iceCandidate: RTCIceCandidateInit) {
-    logRtc(
-      `🏗 Setting an ice candidate for remote user ${this.id()} (${this.name()})`
-    );
     return this.connection.addIceCandidate(iceCandidate);
   }
 
@@ -140,8 +132,6 @@ export class RemotePeer {
 
   onNegociationNeeded(callback: OfferCallback) {
     this.connection.addEventListener("negotiationneeded", async () => {
-      logRtc(`⚠️ Negociation needed for user ${this.id()} (${this.name()})`);
-
       const offer = await this.connection.createOffer();
       await this.connection.setLocalDescription(offer);
 
@@ -154,9 +144,6 @@ export class RemotePeer {
   onConnected(callback: ConnectedCallback) {
     this.connection.addEventListener("signalingstatechange", () => {
       if (this.connection.signalingState === "stable") {
-        logRtc(
-          `✅ Connection established with remote user ${this.id()} (${this.name()})`
-        );
         callback();
       }
     });
@@ -167,9 +154,6 @@ export class RemotePeer {
   onDisconnected(callback: DisconnectedCallback) {
     this.connection.addEventListener("iceconnectionstatechange", () => {
       if (this.connection.iceConnectionState === "disconnected") {
-        logRtc(
-          `❌ Connection closed with remote user ${this.id()} (${this.name()})`
-        );
         callback();
       }
     });
@@ -178,10 +162,6 @@ export class RemotePeer {
   }
 
   static create(user: User, options: RemotePeerOptions) {
-    logRtc(
-      `🏗 Creating a peer connection for remote user ${user.id} (${user.name})`
-    );
-
     const connection = new RTCPeerConnection(peerConnectionConfiguration);
     const mediaStream = new MediaStream();
 
@@ -196,36 +176,44 @@ export class RemotePeer {
   private debugRtc() {
     this.connection.addEventListener("icecandidateerror", (e) => {
       logRtc(
-        `Ice candidate error (user ${this.id()}, ${this.name()}):`,
+        `🛑 Ice candidate error (user ${this.id()}, ${this.name()}):`,
         this.connection.iceConnectionState
       );
     });
 
     this.connection.addEventListener("icegatheringstatechange", () => {
       logRtc(
-        `Ice gathering state changed (user ${this.id()}, ${this.name()}):`,
+        `♻️ Ice gathering state changed (user ${this.id()}, ${this.name()}):`,
         this.connection.iceGatheringState
       );
     });
 
     this.connection.addEventListener("connectionstatechange", () => {
       logRtc(
-        `Connection state changed (user ${this.id()}, ${this.name()}):`,
+        `️️♻️ Connection state changed (user ${this.id()}, ${this.name()}):`,
         this.connection.connectionState
       );
     });
 
     this.connection.addEventListener("signalingstatechange", () => {
       logRtc(
-        `Signaling state changed (user ${this.id()}, ${this.name()}):`,
+        `♻️ Signaling state changed (user ${this.id()}, ${this.name()}):`,
         this.connection.signalingState
       );
     });
 
     this.connection.addEventListener("negotiationneeded", () => {
       logRtc(
-        `Negotiation needed (user ${this.id()}, ${this.name()}):`,
+        `⚠️ Negotiation needed (user ${this.id()}, ${this.name()}):`,
         this.connection.connectionState
+      );
+    });
+
+    this.connection.addEventListener("track", ({ track }) => {
+      logRtc(
+        `[IN] Track | (${track.kind} / ${
+          track.id
+        }) from user ${this.id()} (${this.name()})`
       );
     });
 
@@ -234,12 +222,6 @@ export class RemotePeer {
 
   private _listenForTracks() {
     this.connection.addEventListener("track", ({ track }) => {
-      logMedia(
-        `📫 Received track event (${track.kind} / ${
-          track.id
-        }) from user ${this.id()} (${this.name()})`
-      );
-
       const tracksToRemove =
         track.kind === "video"
           ? this.mediaStream.getVideoTracks()

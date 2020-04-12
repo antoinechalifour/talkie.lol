@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { logMedia } from "../webrtc/log";
 
 interface Devices {
   audio: MediaDeviceInfo[];
@@ -14,8 +13,6 @@ export const useEnumerateMediaDevices = () => {
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then((mediaDevices) => {
-      logMedia("Done enumerating devices:", mediaDevices);
-
       const audio = mediaDevices.filter((x) => x.kind === "audioinput");
       const video = mediaDevices.filter((x) => x.kind === "videoinput");
 
