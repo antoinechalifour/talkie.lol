@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
-import { RemotePeer } from "../../RemotePeer";
+import { RemotePeer } from "../../models/RemotePeer";
 import { VideoStreamBox } from "./VideoStreamBox";
 import {
   AllMute,

@@ -13,12 +13,12 @@ export interface SpaceViewProps {
 }
 
 export const JoinSpace: React.FC<SpaceViewProps> = ({ spaceSlug }) => {
-  const { session, isFetching, login } = useJoinSpace({ slug: spaceSlug });
+  const { conference, isFetching, login } = useJoinSpace({ slug: spaceSlug });
 
-  if (session) {
+  if (conference) {
     return (
-      <AuthenticatedClient token={session.token}>
-        <Space userName={session.user.name} slug={spaceSlug} />
+      <AuthenticatedClient token={conference.localUser().token()}>
+        <Space conference={conference} />
       </AuthenticatedClient>
     );
   }

@@ -1,38 +1,29 @@
 import React from "react";
 
-import { RemotePeer } from "../RemotePeer";
 import { useLayoutManager } from "./useLayoutManager";
 import { FocusedLayout } from "./FocusedLayout";
 import { VideoGridLayout } from "./VideoGridLayout";
+import { Conference } from "../models/Conference";
 
 export interface LayoutProps {
-  remotePeers: RemotePeer[];
-  localUser: {
-    name: string;
-    mediaStream: MediaStream | null;
-  };
+  conference: Conference;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ remotePeers, localUser }) => {
+export const Layout: React.FC<LayoutProps> = ({ conference }) => {
   const { focusedPeer, setFocusedPeer, removeFocusedPeer } = useLayoutManager();
 
   if (focusedPeer) {
     return (
       <FocusedLayout
+        conference={conference}
         focusedPeer={focusedPeer}
-        localUser={localUser}
         onFocusPeer={setFocusedPeer}
         onRemoveFocusedPeer={removeFocusedPeer}
-        otherPeers={remotePeers.filter((x) => !x.is(focusedPeer))}
       />
     );
   }
 
   return (
-    <VideoGridLayout
-      localUser={localUser}
-      remotePeers={remotePeers}
-      onFocusPeer={setFocusedPeer}
-    />
+    <VideoGridLayout conference={conference} onFocusPeer={setFocusedPeer} />
   );
 };

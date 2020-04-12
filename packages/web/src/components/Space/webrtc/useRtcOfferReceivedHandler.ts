@@ -1,7 +1,7 @@
 import { useMutation } from "urql";
 
-import { RemotePeer } from "../RemotePeer";
-import { PeerConnections, User } from "./types";
+import { RemotePeer } from "../models/RemotePeer";
+import { User } from "./types";
 import {
   SEND_RTC_ANSWER,
   SEND_RTC_ICE_CANDIDATE,
@@ -11,18 +11,9 @@ import {
   SendRtcOfferVariables,
 } from "./signaling";
 import { logSignaling } from "./log";
+import { Conference } from "../models/Conference";
 
-interface UseRtcOfferReceivedHandlerOptions {
-  peerConnections: PeerConnections;
-  onConnected: (remotePeer: RemotePeer) => void;
-  onDisconnected: (remotePeer: RemotePeer) => void;
-}
-
-export const useRtcOfferReceivedHandler = ({
-  peerConnections,
-  onConnected,
-  onDisconnected,
-}: UseRtcOfferReceivedHandlerOptions) => {
+export const useRtcOfferReceivedHandler = (conference: Conference) => {
   const [, sendRtcOffer] = useMutation<unknown, SendRtcOfferVariables>(
     SEND_RTC_OFFER
   );
@@ -35,38 +26,30 @@ export const useRtcOfferReceivedHandler = ({
   >(SEND_RTC_ICE_CANDIDATE);
 
   async function handleFirstConnection(sender: User) {
-    // Create the connection
-    const remotePeer = RemotePeer.create(sender);
-    peerConnections.set(sender.id, remotePeer);
-    remotePeer.debugRtc();
+    const remotePeer = RemotePeer.create(sender, {
+      onIceCandidate: (candidate) => {
+        logSignaling(`🛫 Sending an ice candidate to remote user ${sender.id}`);
 
-    // Create the media stream
-    remotePeer.onNegociationNeeded((offer) => {
-      logSignaling(
-        `🛫 Sending an new offer to remote user (as answerer) ${sender.id}`
-      );
+        sendRtcIceCandidate({
+          candidate: candidate.candidate,
+          sdpMid: candidate.sdpMid!,
+          sdpMLineIndex: candidate.sdpMLineIndex!,
+          recipientId: sender.id,
+        });
+      },
+      onNegociationNeeded: (offer) => {
+        logSignaling(
+          `🛫 Sending an new offer to remote user (as answerer) ${sender.id}`
+        );
 
-      sendRtcOffer({
-        offer: offer.sdp!,
-        recipientId: sender.id,
-      });
+        sendRtcOffer({
+          offer: offer.sdp!,
+          recipientId: sender.id,
+        });
+      },
+      onConnected: () => conference.addRemotePeer(remotePeer),
+      onDisconnected: () => conference.removeRemotePeer(remotePeer),
     });
-
-    // Send ice candidate as they arrive
-    remotePeer.onIceCandidate((candidate) => {
-      logSignaling(`🛫 Sending an ice candidate to remote user ${sender.id}`);
-
-      sendRtcIceCandidate({
-        candidate: candidate.candidate,
-        sdpMid: candidate.sdpMid!,
-        sdpMLineIndex: candidate.sdpMLineIndex!,
-        recipientId: sender.id,
-      });
-    });
-
-    remotePeer.onConnected(() => onConnected(remotePeer));
-
-    remotePeer.onDisconnected(() => onDisconnected(remotePeer));
 
     return remotePeer;
   }
@@ -74,7 +57,7 @@ export const useRtcOfferReceivedHandler = ({
   return async (sender: User, offer: RTCSessionDescriptionInit) => {
     logSignaling(`📫 Received an offer from remote user ${sender.id}`);
 
-    const remotePeerFromCache = peerConnections.get(sender.id);
+    const remotePeerFromCache = conference.getRemotePeerByUser(sender);
     let remotePeer: RemotePeer;
 
     if (remotePeerFromCache) {

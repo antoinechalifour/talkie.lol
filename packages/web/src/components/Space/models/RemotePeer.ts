@@ -1,5 +1,5 @@
-import { User } from "./webrtc/types";
-import { logMedia, logRtc } from "./webrtc/log";
+import { User } from "../webrtc/types";
+import { logMedia, logRtc } from "../webrtc/log";
 
 type IceCandidateCallback = (iceCandidate: RTCIceCandidate) => void;
 type OfferCallback = (offer: RTCSessionDescriptionInit) => void;
@@ -16,6 +16,13 @@ const peerConnectionConfiguration: RTCConfiguration = {
     },
   ],
 };
+
+interface RemotePeerOptions {
+  onIceCandidate: (candidate: RTCIceCandidate) => void;
+  onNegociationNeeded: (offer: RTCSessionDescriptionInit) => void;
+  onConnected: () => void;
+  onDisconnected: () => void;
+}
 
 export class RemotePeer {
   public isConnected: boolean;
@@ -53,6 +60,10 @@ export class RemotePeer {
     return this.id() === peer.id();
   }
 
+  isUser(user: User) {
+    return this.user.id === user.id;
+  }
+
   id() {
     return this.user.id;
   }
@@ -69,6 +80,8 @@ export class RemotePeer {
 
       callback(e.candidate);
     });
+
+    return this;
   }
 
   onNegociationNeeded(callback: OfferCallback) {
@@ -80,6 +93,8 @@ export class RemotePeer {
 
       callback(offer);
     });
+
+    return this;
   }
 
   onConnected(callback: ConnectedCallback) {
@@ -91,6 +106,8 @@ export class RemotePeer {
         callback();
       }
     });
+
+    return this;
   }
 
   onDisconnected(callback: DisconnectedCallback) {
@@ -102,9 +119,12 @@ export class RemotePeer {
         callback();
       }
     });
+
+    return this;
   }
 
-  sendLocalStream(localMediaStream: MediaStream) {
+  // TODO: rename to sendStream
+  startStreaming(localMediaStream: MediaStream) {
     const existingTracks = this.connection
       .getSenders()
       .map((sender) => sender.track)
@@ -121,7 +141,7 @@ export class RemotePeer {
     });
   }
 
-  removeLocalStream() {
+  stopStreaming() {
     this.connection.getSenders().forEach((sender) => {
       logRtc(`🛫 Removing track from user ${this.id()} (${this.name()})`);
       this.connection.removeTrack(sender);
@@ -166,7 +186,7 @@ export class RemotePeer {
     return videoTracks.length > 0;
   }
 
-  static create(user: User) {
+  static create(user: User, options: RemotePeerOptions) {
     logRtc(
       `🏗 Creating a peer connection for remote user ${user.id} (${user.name})`
     );
@@ -174,10 +194,15 @@ export class RemotePeer {
     const connection = new RTCPeerConnection(peerConnectionConfiguration);
     const mediaStream = new MediaStream();
 
-    return new RemotePeer(user, connection, mediaStream);
+    return new RemotePeer(user, connection, mediaStream)
+      .onIceCandidate(options.onIceCandidate)
+      .onNegociationNeeded(options.onNegociationNeeded)
+      .onConnected(options.onConnected)
+      .onDisconnected(options.onDisconnected)
+      .debugRtc();
   }
 
-  debugRtc() {
+  private debugRtc() {
     this.connection.addEventListener("icecandidateerror", (e) => {
       logRtc(
         `Ice candidate error (user ${this.id()}, ${this.name()}):`,
@@ -212,5 +237,7 @@ export class RemotePeer {
         this.connection.connectionState
       );
     });
+
+    return this;
   }
 }

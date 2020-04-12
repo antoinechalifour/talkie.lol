@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Helmet } from "react-helmet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
@@ -11,54 +11,58 @@ import {
   MainContent,
 } from "./styles";
 import { UserMediaControls } from "./UserMediaControls/UserMediaControls";
-import { useRtc } from "./webrtc/useRtc";
 import { SpaceQrCode } from "./SpaceQrCode";
 import { useNotifier } from "./useNotifier";
 import { Layout } from "./Layouts/Layout";
+import { Conference } from "./models/Conference";
+import { useConference } from "./webrtc/useConference";
+import { useLocalUser } from "./useLocalUser";
 
 export interface SpaceProps {
-  userName: string;
-  slug: string;
+  conference: Conference;
 }
 
-export const Space: React.FC<SpaceProps> = ({ userName, slug }) => {
-  const {
-    remotePeers,
-    localStream,
-    addLocalStream,
-    removeLocalStream,
-  } = useRtc(slug);
+export const Space: React.FC<SpaceProps> = ({ conference }) => {
+  const localUser = useLocalUser(conference);
 
-  useNotifier({ remotePeers });
+  useConference(conference);
+  useNotifier(conference);
+
+  const onUserMediaAdded = useCallback(
+    (mediaStream: MediaStream) =>
+      conference.addLocalUserMediaStream(mediaStream),
+    [conference]
+  );
+  const onUserMediaRemoved = useCallback(
+    () => conference.removeLocalUserMediaStream(),
+    [conference]
+  );
 
   return (
     <SpaceLayout>
       <Helmet>
-        <title>{createTitle(slug)}</title>
+        <title>{createTitle(conference.name())}</title>
       </Helmet>
 
       <HeaderLayout>
         <h1>
           WebRTC Experiments
-          <span> / {slug}</span>
+          <span> / {conference.name()}</span>
         </h1>
         <p>
-          <FontAwesomeIcon icon={faUser} /> {userName}
+          <FontAwesomeIcon icon={faUser} /> {localUser.name()}
         </p>
       </HeaderLayout>
 
       <MainContent>
-        <Layout
-          remotePeers={remotePeers}
-          localUser={{ name: userName, mediaStream: localStream }}
-        />
+        <Layout conference={conference} />
 
         <SpaceQrCode />
 
         <ControlsLayout>
           <UserMediaControls
-            onUserMediaAdded={addLocalStream}
-            onUserMediaRemoved={removeLocalStream}
+            onUserMediaAdded={onUserMediaAdded}
+            onUserMediaRemoved={onUserMediaRemoved}
           />
         </ControlsLayout>
       </MainContent>

@@ -1,21 +1,15 @@
-import { PeerConnections } from "./types";
+import { User } from "./types";
 import { logSignaling } from "./log";
+import { Conference } from "../models/Conference";
 
-interface UseRtcIceCandidateReceivedHandler {
-  peerConnections: PeerConnections;
-}
+export const useRtcIceCandidateReceivedHandler = (conference: Conference) => {
+  return async (sender: User, iceCandidate: RTCIceCandidateInit) => {
+    logSignaling(`📫 Received an ice candidate for remote user ${sender.id}`);
 
-export const useRtcIceCandidateReceivedHandler = ({
-  peerConnections,
-}: UseRtcIceCandidateReceivedHandler) => {
-  return async (senderId: string, iceCandidate: RTCIceCandidateInit) => {
-    logSignaling(`📫 Received an ice candidate for remote user ${senderId}`);
+    // TODO: apply demeter
+    const remotePeer = conference.getRemotePeerByUser(sender);
 
-    const remotePeer = peerConnections.get(senderId);
-
-    if (!remotePeer) {
-      return;
-    }
+    if (!remotePeer) return;
 
     await remotePeer.addIceCandidate(iceCandidate);
   };

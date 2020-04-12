@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import { RemotePeer } from "../RemotePeer";
+import { RemotePeer } from "../models/RemotePeer";
 
 export const useLayoutManager = () => {
   const [focusedPeer, setFocusedPeer] = useState<RemotePeer | null>(null);

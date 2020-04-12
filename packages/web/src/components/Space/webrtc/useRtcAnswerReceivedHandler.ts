@@ -1,21 +1,15 @@
-import { PeerConnections } from "./types";
+import { User } from "./types";
 import { logSignaling } from "./log";
+import { Conference } from "../models/Conference";
 
-interface UseRtcAnswerReceivedHandlerOptions {
-  peerConnections: PeerConnections;
-}
+export const useRtcAnswerReceivedHandler = (conference: Conference) => {
+  return async (sender: User, answer: RTCSessionDescriptionInit) => {
+    logSignaling(`📪 Received an answer from remote user ${sender.id}`);
 
-export const useRtcAnswerReceivedHandler = ({
-  peerConnections,
-}: UseRtcAnswerReceivedHandlerOptions) => {
-  return async (senderId: string, answer: RTCSessionDescriptionInit) => {
-    logSignaling(`📪 Received an answer from remote user ${senderId}`);
+    // TODO: apply demeter
+    const remotePeer = conference.getRemotePeerByUser(sender);
 
-    const remotePeer = peerConnections.get(senderId);
-
-    if (!remotePeer) {
-      return;
-    }
+    if (!remotePeer) return;
 
     await remotePeer.setRemoteDescription(answer);
   };

@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useMutation, useSubscription } from "urql";
 
-import { RemotePeer } from "../RemotePeer";
+import { Conference } from "../models/Conference";
 import { useSpaceJoinedHandler } from "./useSpaceJoinedHandler";
 import { useSpaceLeftHandler } from "./useSpaceLeftHandler";
 import { useRtcOfferReceivedHandler } from "./useRtcOfferReceivedHandler";
@@ -24,59 +24,19 @@ import {
   SpaceLeftEvent,
 } from "./signaling";
 
-interface UseSignalingOptions {
-  spaceSlug: string;
-  remotePeers: RemotePeer[];
-  onRemotePeerConnected: (remotePeer: RemotePeer) => void;
-  onRemotePeerDisconnected: (remotePeer: RemotePeer) => void;
-}
-
-export const useSignaling = ({
-  spaceSlug,
-  remotePeers,
-  onRemotePeerConnected,
-  onRemotePeerDisconnected,
-}: UseSignalingOptions) => {
-  /*
-  In this hook, we are keeping track of all peer connections in a map, whose
-  keys are the user ids, and whose values are the RTCPeerConnections.
-  This map is persisted in a ref for the lifecycle of this hooks.
-   */
-  const ref = useRef(new Map<string, RemotePeer>());
-
-  useEffect(() => {
-    remotePeers.forEach((peer) => {
-      if (!ref.current.get(peer.id())) {
-        ref.current.set(peer.id(), peer);
-      }
-    });
-  }, [remotePeers]);
-
+export const useConference = (conference: Conference) => {
   /*
                     WebRTC Signaling setup
   In here we are creating the handlers which will respond to the offer / answer
   mechanism (which are sent using GraphQL subscriptions)
    */
-  const spaceJoinedHandler = useSpaceJoinedHandler({
-    peerConnections: ref.current,
-    onConnected: onRemotePeerConnected,
-    onDisconnected: onRemotePeerDisconnected,
-  });
-  const spaceLeftHandler = useSpaceLeftHandler({
-    peerConnections: ref.current,
-  });
-
-  const rtcOfferReceivedHandler = useRtcOfferReceivedHandler({
-    peerConnections: ref.current,
-    onConnected: onRemotePeerConnected,
-    onDisconnected: onRemotePeerDisconnected,
-  });
-  const rtcAnswerReceivedHandler = useRtcAnswerReceivedHandler({
-    peerConnections: ref.current,
-  });
-  const rtcIceCandidateReceivedHandler = useRtcIceCandidateReceivedHandler({
-    peerConnections: ref.current,
-  });
+  const spaceJoinedHandler = useSpaceJoinedHandler(conference);
+  const spaceLeftHandler = useSpaceLeftHandler(conference);
+  const rtcOfferReceivedHandler = useRtcOfferReceivedHandler(conference);
+  const rtcAnswerReceivedHandler = useRtcAnswerReceivedHandler(conference);
+  const rtcIceCandidateReceivedHandler = useRtcIceCandidateReceivedHandler(
+    conference
+  );
 
   /*
                     GraphQL boilerplate
@@ -87,12 +47,12 @@ export const useSignaling = ({
 
   // Subscriptions setup
   useSubscription<SpaceLeftEvent, void>(
-    { query: SPACE_LEFT, variables: { slug: spaceSlug } },
-    (_, { spaceLeft }) => spaceLeftHandler(spaceLeft.user.id)
+    { query: SPACE_LEFT, variables: { slug: conference.name() } },
+    (_, { spaceLeft }) => spaceLeftHandler(spaceLeft.user)
   );
 
   useSubscription<SpaceJoinedEvent, void>(
-    { query: SPACE_JOINED, variables: { slug: spaceSlug } },
+    { query: SPACE_JOINED, variables: { slug: conference.name() } },
     async (_, { spaceJoined }) => spaceJoinedHandler(spaceJoined.user)
   );
 
@@ -105,23 +65,23 @@ export const useSignaling = ({
   useSubscription<RtcAnswerReceivedEvent, void>(
     { query: RTC_ANSWER_RECEIVED },
     (_, { answerReceived }) =>
-      rtcAnswerReceivedHandler(answerReceived.sender.id, answerReceived.answer)
+      rtcAnswerReceivedHandler(answerReceived.sender, answerReceived.answer)
   );
 
   useSubscription<RtcIceCandidateReceivedEvent, void>(
     { query: RTC_ICE_CANDIDATE_RECEIVED },
     (_, { iceCandidateReceived }) =>
       rtcIceCandidateReceivedHandler(
-        iceCandidateReceived.sender.id,
+        iceCandidateReceived.sender,
         iceCandidateReceived.iceCandidate
       )
   );
 
   useEffect(() => {
-    joinSpace({ slug: spaceSlug });
+    joinSpace({ slug: conference.name() });
 
     return () => {
-      leaveSpace({ slug: spaceSlug });
+      leaveSpace({ slug: conference.name() });
     };
-  }, [joinSpace, leaveSpace, spaceSlug]);
+  }, [joinSpace, leaveSpace, conference]);
 };

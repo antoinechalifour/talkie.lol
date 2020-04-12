@@ -1,33 +1,39 @@
 import React from "react";
 
-import { RemotePeer } from "../RemotePeer";
+import { RemotePeer } from "../models/RemotePeer";
+import { Conference } from "../models/Conference";
+import { useRemotePeers } from "../useRemotePeers";
 import { LocalUserBox } from "./UserStreamBox/LocalUserBox";
 import { RemotePeerBox } from "./UserStreamBox/RemotePeerBox";
 import { VideoGrid } from "./styles";
+import { useLocalUser } from "../useLocalUser";
 
 export interface VideoGridLayoutProps {
-  localUser: {
-    name: string;
-    mediaStream: MediaStream | null;
-  };
-  remotePeers: RemotePeer[];
+  conference: Conference;
   onFocusPeer: (peer: RemotePeer) => void;
 }
 
 export const VideoGridLayout: React.FC<VideoGridLayoutProps> = ({
-  localUser,
-  remotePeers,
+  conference,
   onFocusPeer,
-}) => (
-  <VideoGrid>
-    <LocalUserBox name={localUser.name} mediaStream={localUser.mediaStream} />
+}) => {
+  const localUser = useLocalUser(conference);
+  const remotePeers = useRemotePeers(conference);
 
-    {remotePeers.map((remotePeer) => (
-      <RemotePeerBox
-        key={remotePeer.id()}
-        remotePeer={remotePeer}
-        onSelect={onFocusPeer}
+  return (
+    <VideoGrid>
+      <LocalUserBox
+        name={localUser.name()}
+        mediaStream={localUser.mediaStream()}
       />
-    ))}
-  </VideoGrid>
-);
+
+      {remotePeers.map((remotePeer) => (
+        <RemotePeerBox
+          key={remotePeer.id()}
+          remotePeer={remotePeer}
+          onSelect={onFocusPeer}
+        />
+      ))}
+    </VideoGrid>
+  );
+};

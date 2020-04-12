@@ -1,44 +1,49 @@
 import React from "react";
 
+import { RemotePeer } from "../models/RemotePeer";
+import { Conference } from "../models/Conference";
+import { useRemotePeers } from "../useRemotePeers";
 import { LocalUserBox } from "./UserStreamBox/LocalUserBox";
 import { RemotePeerBox } from "./UserStreamBox/RemotePeerBox";
-import { RemotePeer } from "../RemotePeer";
 import { FocusedView, PeerPreviewList } from "./styles";
+import { useLocalUser } from "../useLocalUser";
 
 export interface FocusedLayoutProps {
+  conference: Conference;
   focusedPeer: RemotePeer;
-  localUser: {
-    name: string;
-    mediaStream: MediaStream | null;
-  };
-  otherPeers: RemotePeer[];
   onFocusPeer: (remotePeer: RemotePeer) => void;
   onRemoveFocusedPeer: () => void;
 }
 
 export const FocusedLayout: React.FC<FocusedLayoutProps> = ({
+  conference,
   focusedPeer,
-  otherPeers,
-  localUser,
   onFocusPeer,
   onRemoveFocusedPeer,
-}) => (
-  <FocusedView>
-    <RemotePeerBox remotePeer={focusedPeer} onSelect={onRemoveFocusedPeer} />
+}) => {
+  const localUser = useLocalUser(conference);
+  const remotePeers = useRemotePeers(conference);
 
-    <PeerPreviewList>
-      <li>
-        <LocalUserBox
-          name={localUser.name}
-          mediaStream={localUser.mediaStream}
-        />
-      </li>
+  return (
+    <FocusedView>
+      <RemotePeerBox remotePeer={focusedPeer} onSelect={onRemoveFocusedPeer} />
 
-      {otherPeers.map((peer) => (
-        <li key={peer.id()}>
-          <RemotePeerBox remotePeer={peer} onSelect={onFocusPeer} />
+      <PeerPreviewList>
+        <li>
+          <LocalUserBox
+            name={localUser.name()}
+            mediaStream={localUser.mediaStream()}
+          />
         </li>
-      ))}
-    </PeerPreviewList>
-  </FocusedView>
-);
+
+        {remotePeers
+          .filter((x) => !x.is(focusedPeer))
+          .map((peer) => (
+            <li key={peer.id()}>
+              <RemotePeerBox remotePeer={peer} onSelect={onFocusPeer} />
+            </li>
+          ))}
+      </PeerPreviewList>
+    </FocusedView>
+  );
+};

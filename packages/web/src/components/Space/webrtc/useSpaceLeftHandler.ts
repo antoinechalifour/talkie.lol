@@ -1,14 +1,9 @@
-import { PeerConnections } from "./types";
+import { Conference } from "../models/Conference";
 import { logSignaling } from "./log";
+import { User } from "./types";
 
-interface UseSpaceLeftHandlerOptions {
-  peerConnections: PeerConnections;
-}
+export const useSpaceLeftHandler = (conference: Conference) => (user: User) => {
+  logSignaling(`📫 User ${user.id} left the space`);
 
-export const useSpaceLeftHandler = ({
-  peerConnections,
-}: UseSpaceLeftHandlerOptions) => (userId: string) => {
-  logSignaling(`📫 User ${userId} left the space`);
-
-  peerConnections.delete(userId);
+  conference.removeRemoteUser(user);
 };
