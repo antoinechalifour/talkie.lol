@@ -37,23 +37,7 @@ export class RemotePeer {
     this.onConnected(() => (this.isConnected = true));
     this.onDisconnected(() => (this.isConnected = false));
 
-    connection.addEventListener("track", ({ track }) => {
-      logMedia(
-        `📫 Received track event (${track.kind} / ${
-          track.id
-        }) from user ${this.id()} (${this.name()})`
-      );
-
-      const tracksToRemove =
-        track.kind === "video"
-          ? mediaStream.getVideoTracks()
-          : mediaStream.getAudioTracks();
-      tracksToRemove.forEach((trackToRemove) =>
-        mediaStream.removeTrack(trackToRemove)
-      );
-
-      mediaStream.addTrack(track);
-    });
+    this._listenForTracks();
   }
 
   is(peer: RemotePeer) {
@@ -70,6 +54,76 @@ export class RemotePeer {
 
   name() {
     return this.user.name;
+  }
+
+  // -------------------------------------------------- //
+  // Media stuff
+  // -------------------------------------------------- //
+
+  startStreaming(localMediaStream: MediaStream) {
+    const existingTracks = this.connection
+      .getSenders()
+      .map((sender) => sender.track)
+      .filter(Boolean)
+      .map((track) => track!.id);
+
+    localMediaStream.getTracks().forEach((track) => {
+      if (!existingTracks.includes(track.id)) {
+        logRtc(
+          `🛫 Sending a remote track to user ${this.id()} (${this.name()})`
+        );
+        this.connection.addTrack(track, localMediaStream);
+      }
+    });
+  }
+
+  stopStreaming() {
+    this.connection.getSenders().forEach((sender) => {
+      logRtc(`🛫 Removing track from user ${this.id()} (${this.name()})`);
+      this.connection.removeTrack(sender);
+    });
+  }
+
+  isSharingAudio() {
+    const audioTracks = this.mediaStream?.getAudioTracks() || [];
+
+    return audioTracks.length > 0;
+  }
+
+  isSharingVideo() {
+    const videoTracks = this.mediaStream?.getVideoTracks() || [];
+
+    return videoTracks.length > 0;
+  }
+
+  // -------------------------------------------------- //
+  // WebRTC stuff
+  // -------------------------------------------------- //
+
+  createOffer() {
+    return this.connection.createOffer();
+  }
+
+  createAnswer() {
+    return this.connection.createAnswer();
+  }
+
+  setLocalDescription(sessionDescription: RTCSessionDescriptionInit) {
+    return this.connection.setLocalDescription(sessionDescription);
+  }
+
+  setRemoteDescription(sessionDescription: RTCSessionDescriptionInit) {
+    logRtc(
+      `🏗 Setting the remote description for user ${this.id()} (${this.name()})`
+    );
+    return this.connection.setRemoteDescription(sessionDescription);
+  }
+
+  addIceCandidate(iceCandidate: RTCIceCandidateInit) {
+    logRtc(
+      `🏗 Setting an ice candidate for remote user ${this.id()} (${this.name()})`
+    );
+    return this.connection.addIceCandidate(iceCandidate);
   }
 
   onIceCandidate(callback: IceCandidateCallback) {
@@ -121,69 +175,6 @@ export class RemotePeer {
     });
 
     return this;
-  }
-
-  // TODO: rename to sendStream
-  startStreaming(localMediaStream: MediaStream) {
-    const existingTracks = this.connection
-      .getSenders()
-      .map((sender) => sender.track)
-      .filter(Boolean)
-      .map((track) => track!.id);
-
-    localMediaStream.getTracks().forEach((track) => {
-      if (!existingTracks.includes(track.id)) {
-        logRtc(
-          `🛫 Sending a remote track to user ${this.id()} (${this.name()})`
-        );
-        this.connection.addTrack(track, localMediaStream);
-      }
-    });
-  }
-
-  stopStreaming() {
-    this.connection.getSenders().forEach((sender) => {
-      logRtc(`🛫 Removing track from user ${this.id()} (${this.name()})`);
-      this.connection.removeTrack(sender);
-    });
-  }
-
-  createOffer() {
-    return this.connection.createOffer();
-  }
-
-  createAnswer() {
-    return this.connection.createAnswer();
-  }
-
-  setLocalDescription(sessionDescription: RTCSessionDescriptionInit) {
-    return this.connection.setLocalDescription(sessionDescription);
-  }
-
-  setRemoteDescription(sessionDescription: RTCSessionDescriptionInit) {
-    logRtc(
-      `🏗 Setting the remote description for user ${this.id()} (${this.name()})`
-    );
-    return this.connection.setRemoteDescription(sessionDescription);
-  }
-
-  addIceCandidate(iceCandidate: RTCIceCandidateInit) {
-    logRtc(
-      `🏗 Setting an ice candidate for remote user ${this.id()} (${this.name()})`
-    );
-    return this.connection.addIceCandidate(iceCandidate);
-  }
-
-  isSharingAudio() {
-    const audioTracks = this.mediaStream?.getAudioTracks() || [];
-
-    return audioTracks.length > 0;
-  }
-
-  isSharingVideo() {
-    const videoTracks = this.mediaStream?.getVideoTracks() || [];
-
-    return videoTracks.length > 0;
   }
 
   static create(user: User, options: RemotePeerOptions) {
@@ -239,5 +230,25 @@ export class RemotePeer {
     });
 
     return this;
+  }
+
+  private _listenForTracks() {
+    this.connection.addEventListener("track", ({ track }) => {
+      logMedia(
+        `📫 Received track event (${track.kind} / ${
+          track.id
+        }) from user ${this.id()} (${this.name()})`
+      );
+
+      const tracksToRemove =
+        track.kind === "video"
+          ? this.mediaStream.getVideoTracks()
+          : this.mediaStream.getAudioTracks();
+      tracksToRemove.forEach((trackToRemove) =>
+        this.mediaStream.removeTrack(trackToRemove)
+      );
+
+      this.mediaStream.addTrack(track);
+    });
   }
 }
