@@ -1,5 +1,5 @@
-mutation JoinSpace($slug: String!) {
-  joinSpace(args: { slug: $slug }) {
+mutation JoinSpace {
+  joinSpace {
     success
 
   }

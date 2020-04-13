@@ -4,10 +4,6 @@ import { User } from "../../../domain/entities/User";
 import { LeaveSpace } from "../../../usecase/LeaveSpace";
 import { MutationArguments, MutationResolver } from "./types";
 
-interface LeaveSpaceArguments {
-  slug: string;
-}
-
 interface LeaveSpaceResult {
   success: boolean;
   user: User;
@@ -20,7 +16,7 @@ interface Dependencies {
 const log = debug("app:resolver:LeaveSpaceResolver");
 
 export class LeaveSpaceResolver
-  implements MutationResolver<unknown, LeaveSpaceArguments, LeaveSpaceResult> {
+  implements MutationResolver<unknown, {}, LeaveSpaceResult> {
   private readonly leaveSpace: LeaveSpace;
 
   constructor({ leaveSpace }: Dependencies) {
@@ -29,11 +25,11 @@ export class LeaveSpaceResolver
 
   async resolve(
     obj: unknown,
-    { args }: MutationArguments<LeaveSpaceArguments>
+    args: MutationArguments<{}>
   ): Promise<LeaveSpaceResult> {
     log("resolve");
 
-    const user = await this.leaveSpace.execute(args.slug);
+    const user = await this.leaveSpace.execute();
 
     return { success: true, user };
   }

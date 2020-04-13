@@ -1,9 +1,10 @@
 import { Redis } from "ioredis";
 
-import { SpacePort } from "../usecase/ports/SpacePort";
 import { Space } from "../domain/entities/Space";
 import { SpaceId } from "../domain/entities/SpaceId";
 import { SpaceNotFoundError } from "../domain/errors/SpaceNotFoundError";
+import { UserId } from "../domain/entities/UserId";
+import { SpacePort } from "../usecase/ports/SpacePort";
 
 interface Dependencies {
   redis: Redis;

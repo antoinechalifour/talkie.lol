@@ -1,15 +1,15 @@
 import debug from "debug";
-import util from "util";
 import Koa, { Context } from "koa";
 import { ApolloServer } from "apollo-server-koa";
-
-import { typeDefs } from "./typeDefs";
-import { resolvers } from "./resolvers";
 import { asValue, AwilixContainer } from "awilix";
-import { GraphQLContext } from "./types";
+
+import { Token } from "../domain/entities/Token";
 import { UserPort } from "../usecase/ports/UserPort";
 import { TokenPort } from "../usecase/ports/TokenPort";
-import { Token } from "../domain/entities/Token";
+import { typeDefs } from "./typeDefs";
+import { resolvers } from "./resolvers";
+import { GraphQLContext } from "./types";
+import { LeaveSpace } from "../usecase/LeaveSpace";
 
 export interface AppOptions {
   port: string;
@@ -83,9 +83,17 @@ export class WebRtcExperimentsApp {
     return { currentUser };
   };
 
-  private onSubscriptionDisconnect = () => {
+  private onSubscriptionDisconnect = async (_: unknown, connection: any) => {
     log("Handling subscription disconnection");
-    // TODO: clear the app
+
+    const wsContext = await connection.initPromise;
+    const container = this.getScopedContainer();
+
+    container.register("currentUser", asValue(wsContext.currentUser));
+
+    const leaveSpace = container.resolve<LeaveSpace>("leaveSpace");
+
+    await leaveSpace.execute();
   };
 
   private getScopedContainer() {

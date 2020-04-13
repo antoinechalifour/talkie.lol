@@ -9,9 +9,7 @@ import { useRtcAnswerReceivedHandler } from "./useRtcAnswerReceivedHandler";
 import { useRtcIceCandidateReceivedHandler } from "./useRtcIceCandidateReceivedHandler";
 import {
   JOIN_SPACE,
-  JoinSpaceVariables,
   LEAVE_SPACE,
-  LeaveSpaceVariables,
   RTC_ANSWER_RECEIVED,
   RTC_ICE_CANDIDATE_RECEIVED,
   RTC_OFFER_RECEIVED,
@@ -42,8 +40,8 @@ export const useConference = (conference: Conference) => {
                     GraphQL boilerplate
   Nothing very interesting in here. Just creating mutation and subscriptions
    */
-  const [, joinSpace] = useMutation<unknown, JoinSpaceVariables>(JOIN_SPACE);
-  const [, leaveSpace] = useMutation<unknown, LeaveSpaceVariables>(LEAVE_SPACE);
+  const [, joinSpace] = useMutation<unknown, {}>(JOIN_SPACE);
+  const [, leaveSpace] = useMutation<unknown, {}>(LEAVE_SPACE);
 
   // Subscriptions setup
   useSubscription<SpaceLeftEvent, void>(
@@ -78,10 +76,10 @@ export const useConference = (conference: Conference) => {
   );
 
   useEffect(() => {
-    joinSpace({ slug: conference.name() });
+    joinSpace();
 
     return () => {
-      leaveSpace({ slug: conference.name() });
+      leaveSpace();
     };
-  }, [joinSpace, leaveSpace, conference]);
+  }, [joinSpace, leaveSpace]);
 };

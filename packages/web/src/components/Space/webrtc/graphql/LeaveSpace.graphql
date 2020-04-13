@@ -1,5 +1,5 @@
-mutation LeaveSpace($slug: String!) {
-  leaveSpace(args: { slug: $slug }) {
+mutation LeaveSpace {
+  leaveSpace {
     success
   }
 }

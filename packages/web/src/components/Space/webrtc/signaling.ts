@@ -75,14 +75,6 @@ export interface RtcIceCandidateReceivedEvent {
   };
 }
 
-export interface JoinSpaceVariables {
-  slug: string;
-}
-
-export interface LeaveSpaceVariables {
-  slug: string;
-}
-
 export interface SendRtcOfferVariables {
   offer: string;
   recipientId: string;
