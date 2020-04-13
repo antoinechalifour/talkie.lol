@@ -9,7 +9,7 @@ import {
   SendRtcIceCandidateVariables,
   SendRtcOfferVariables,
 } from "./signaling";
-import { logMedia, logSignaling } from "./log";
+import { logSignaling } from "./log";
 
 export const useSpaceJoinedHandler = (conference: Conference) => {
   const [, sendRtcOffer] = useMutation<unknown, SendRtcOfferVariables>(

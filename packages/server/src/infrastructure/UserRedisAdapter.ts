@@ -3,8 +3,8 @@ import { Redis } from "ioredis";
 import { UserId } from "../domain/entities/UserId";
 import { SpaceId } from "../domain/entities/SpaceId";
 import { User } from "../domain/entities/User";
-import { UserPort } from "../usecase/ports/UserPort";
 import { UserNotFoundError } from "../domain/errors/UserNotFoundError";
+import { UserPort } from "../usecase/ports/UserPort";
 
 interface Dependencies {
   redis: Redis;

@@ -4,19 +4,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 import { createTitle } from "../../utils/html";
+import { Conference } from "./models/Conference";
+import { useConference } from "./webrtc/useConference";
+import { useLocalUser } from "./useLocalUser";
+import { useNotifier } from "./useNotifier";
+import { SpaceQrCode } from "./SpaceQrCode";
+import { UserMediaControls } from "./UserMediaControls/UserMediaControls";
+import { Layout } from "./Layouts/Layout";
 import {
   ControlsLayout,
   HeaderLayout,
   SpaceLayout,
   MainContent,
 } from "./styles";
-import { UserMediaControls } from "./UserMediaControls/UserMediaControls";
-import { SpaceQrCode } from "./SpaceQrCode";
-import { useNotifier } from "./useNotifier";
-import { Layout } from "./Layouts/Layout";
-import { Conference } from "./models/Conference";
-import { useConference } from "./webrtc/useConference";
-import { useLocalUser } from "./useLocalUser";
 
 export interface SpaceProps {
   conference: Conference;

@@ -1,9 +1,9 @@
 import React from "react";
 
+import { Conference } from "../models/Conference";
 import { useLayoutManager } from "./useLayoutManager";
 import { FocusedLayout } from "./FocusedLayout";
 import { VideoGridLayout } from "./VideoGridLayout";
-import { Conference } from "../models/Conference";
 
 export interface LayoutProps {
   conference: Conference;

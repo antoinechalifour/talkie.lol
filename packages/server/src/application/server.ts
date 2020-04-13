@@ -6,10 +6,10 @@ import { asValue, AwilixContainer } from "awilix";
 import { Token } from "../domain/entities/Token";
 import { UserPort } from "../usecase/ports/UserPort";
 import { TokenPort } from "../usecase/ports/TokenPort";
+import { LeaveSpace } from "../usecase/LeaveSpace";
 import { typeDefs } from "./typeDefs";
 import { resolvers } from "./resolvers";
 import { GraphQLContext } from "./types";
-import { LeaveSpace } from "../usecase/LeaveSpace";
 
 export interface AppOptions {
   port: string;

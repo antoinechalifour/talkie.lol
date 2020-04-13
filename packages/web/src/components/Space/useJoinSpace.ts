@@ -1,6 +1,7 @@
+import { useCallback, useState } from "react";
 import { loader } from "graphql.macro";
 import { useMutation } from "urql";
-import { useCallback, useState } from "react";
+
 import { Conference } from "./models/Conference";
 import { CurrentUser } from "./models/CurrentUser";
 
