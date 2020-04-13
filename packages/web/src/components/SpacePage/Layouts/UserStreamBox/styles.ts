@@ -6,8 +6,7 @@ export const Video = styled.video`
 `;
 
 export const VideoBoxLayout = styled.div`
-  border: 0.5rem solid var(--color-background-lighter);
-  border-radius: 0.5rem;
+  border: 0.2rem solid var(--color-background-lighter);
   position: relative;
   box-sizing: border-box;
   padding-bottom: 75%;
@@ -23,18 +22,16 @@ export const VideoBoxLayout = styled.div`
 
   > div:last-child {
     position: absolute;
-    right: -1px;
-    bottom: -1px;
-    padding: 1rem 3rem 0.5rem 5rem;
-    clip-path: polygon(3rem 0%, 100% 0, 100% 100%, 0% 100%);
+    left: -1px;
+    top: -1px;
+    padding: 1rem 5rem 1rem 3rem;
+    clip-path: polygon(0% 0%, 100% 0, calc(100% - 3rem) 100%, 0% 100%);
     font-weight: bold;
     background: var(--color-background-lighter);
   }
 `;
 
 export const LocalVideoBoxLayout = styled(VideoBoxLayout)`
-  border-color: var(--color-accent);
-
   > div:last-child {
     background: var(--color-accent);
     color: var(--color-accent-darker);
@@ -85,7 +82,7 @@ export const ExpandButton = styled.button`
   display: none;
   position: absolute;
   top: 1rem;
-  left: 1rem;
+  right: 1rem;
   color: var(--color-text-darker);
   cursor: pointer;
 

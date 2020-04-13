@@ -33,17 +33,20 @@ export const HeaderLayout = styled.header`
 export const MainContent = styled.main`
   position: relative;
   flex: 1;
+  display: flex;
+  width: 100%;
+  place-items: center;
   height: 100%;
   padding: 10px;
   overflow-y: scroll;
   background: var(--color-background);
+
+  > :first-child {
+    width: 100%;
+  }
 `;
 
 export const ControlsLayout = styled.footer`
-  position: fixed;
-  bottom: 0rem;
-  left: 0;
-  right: 0;
   padding: 1rem 1.5rem;
 
   background: var(--color-background-darker);

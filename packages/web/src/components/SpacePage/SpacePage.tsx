@@ -58,14 +58,14 @@ export const SpacePage: React.FC<SpacePageProps> = ({ conference }) => {
         <Layout conference={conference} />
 
         <SpaceQrCode />
-
-        <ControlsLayout>
-          <UserMediaControls
-            onUserMediaAdded={onUserMediaAdded}
-            onUserMediaRemoved={onUserMediaRemoved}
-          />
-        </ControlsLayout>
       </MainContent>
+
+      <ControlsLayout>
+        <UserMediaControls
+          onUserMediaAdded={onUserMediaAdded}
+          onUserMediaRemoved={onUserMediaRemoved}
+        />
+      </ControlsLayout>
     </SpaceLayout>
   );
 };
