@@ -1,5 +1,6 @@
 import React from "react";
 import { Provider } from "urql";
+
 import { useAuthenticatedClient } from "./useAuthenticatedClient";
 
 interface AuthenticatedClientProps {
