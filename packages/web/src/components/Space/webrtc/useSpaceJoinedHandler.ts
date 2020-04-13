@@ -43,9 +43,10 @@ export const useSpaceJoinedHandler = (conference: Conference) => {
           recipientId: user.id,
         });
       },
-      onConnected: () => conference.addRemotePeer(remotePeer),
       onDisconnected: () => conference.removeRemotePeer(remotePeer),
     });
+
+    conference.addRemotePeer(remotePeer);
 
     // Create an offer
     const offer = await remotePeer.createOffer();

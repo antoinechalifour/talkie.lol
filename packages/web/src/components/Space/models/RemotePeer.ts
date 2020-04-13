@@ -20,7 +20,6 @@ const peerConnectionConfiguration: RTCConfiguration = {
 interface RemotePeerOptions {
   onIceCandidate: (candidate: RTCIceCandidate) => void;
   onNegociationNeeded: (offer: RTCSessionDescriptionInit) => void;
-  onConnected: () => void;
   onDisconnected: () => void;
 }
 
@@ -168,7 +167,6 @@ export class RemotePeer {
     return new RemotePeer(user, connection, mediaStream)
       .onIceCandidate(options.onIceCandidate)
       .onNegociationNeeded(options.onNegociationNeeded)
-      .onConnected(options.onConnected)
       .onDisconnected(options.onDisconnected)
       .debugRtc();
   }

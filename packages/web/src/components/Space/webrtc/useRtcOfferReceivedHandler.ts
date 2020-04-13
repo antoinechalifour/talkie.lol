@@ -45,9 +45,10 @@ export const useRtcOfferReceivedHandler = (conference: Conference) => {
           recipientId: sender.id,
         });
       },
-      onConnected: () => conference.addRemotePeer(remotePeer),
       onDisconnected: () => conference.removeRemotePeer(remotePeer),
     });
+
+    conference.addRemotePeer(remotePeer);
 
     return remotePeer;
   }
