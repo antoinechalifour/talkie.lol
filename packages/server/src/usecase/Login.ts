@@ -30,7 +30,7 @@ export class Login {
     log("execute");
 
     const space = await this.spacePort.findSpaceBySlug(slug);
-    const user = User.create();
+    const user = User.create(space.id);
 
     await this.userPort.saveUser(user);
 

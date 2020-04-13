@@ -3,10 +3,6 @@ import debug from "debug";
 import { JoinSpace } from "../../../usecase/JoinSpace";
 import { MutationArguments, MutationResolver } from "./types";
 
-interface JoinSpaceArguments {
-  slug: string;
-}
-
 interface JoinSpaceResult {
   success: boolean;
 }
@@ -18,7 +14,7 @@ interface Dependencies {
 const log = debug("app:resolver:JoinSpaceResolver");
 
 export class JoinSpaceResolver
-  implements MutationResolver<unknown, JoinSpaceArguments, JoinSpaceResult> {
+  implements MutationResolver<unknown, {}, JoinSpaceResult> {
   private readonly joinSpace: JoinSpace;
 
   constructor({ joinSpace }: Dependencies) {
@@ -27,11 +23,11 @@ export class JoinSpaceResolver
 
   async resolve(
     obj: unknown,
-    { args }: MutationArguments<JoinSpaceArguments>
+    args: MutationArguments<{}>
   ): Promise<JoinSpaceResult> {
     log("resolve");
 
-    await this.joinSpace.execute(args.slug);
+    await this.joinSpace.execute();
 
     return { success: true };
   }

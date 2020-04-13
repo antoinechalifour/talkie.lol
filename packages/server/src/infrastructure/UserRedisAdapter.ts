@@ -1,9 +1,10 @@
 import { Redis } from "ioredis";
 
 import { UserId } from "../domain/entities/UserId";
+import { SpaceId } from "../domain/entities/SpaceId";
 import { User } from "../domain/entities/User";
-import { UserPort } from "../usecase/ports/UserPort";
 import { UserNotFoundError } from "../domain/errors/UserNotFoundError";
+import { UserPort } from "../usecase/ports/UserPort";
 
 interface Dependencies {
   redis: Redis;
@@ -13,12 +14,17 @@ const toRedisUser = (user: User) =>
   JSON.stringify({
     id: user.id.get(),
     name: user.name,
+    spaceId: user.spaceId.get(),
   });
 
 const fromRedisUser = (redisUser: string) => {
   const json = JSON.parse(redisUser);
 
-  return new User(UserId.fromString(json.id), json.name);
+  return new User(
+    UserId.fromString(json.id),
+    json.name,
+    SpaceId.fromString(json.spaceId)
+  );
 };
 
 export class UserRedisAdapter implements UserPort {

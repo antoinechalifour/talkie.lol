@@ -2,9 +2,9 @@ import React from "react";
 import { Router, Switch, Route, Redirect } from "react-router-dom";
 
 import { history } from "./utils/history";
-import { CreateSpace } from "./components/CreateSpace/CreateSpace";
-import { JoinSpace } from "./components/Space/JoinSpace";
-import { ScanSpace } from "./components/ScanSpace/ScanSpace";
+import { JoinSpacePage } from "./components/JoinSpacePage/JoinSpacePage";
+import { CreateSpacePage } from "./components/CreateSpacePage/CreateSpacePage";
+import { ScanSpacePage } from "./components/ScanSpacePage/ScanSpacePage";
 
 export const App: React.FC = () => (
   <Router history={history}>
@@ -12,12 +12,14 @@ export const App: React.FC = () => (
       <Route
         path="/space/:spaceSlug"
         exact
-        render={({ match }) => <JoinSpace spaceSlug={match.params.spaceSlug} />}
+        render={({ match }) => (
+          <JoinSpacePage spaceSlug={match.params.spaceSlug} />
+        )}
       />
 
-      <Route path="/create" exact render={() => <CreateSpace />} />
+      <Route path="/create" exact render={() => <CreateSpacePage />} />
 
-      <Route path="/join" exact render={() => <ScanSpace />} />
+      <Route path="/join" exact render={() => <ScanSpacePage />} />
 
       <Redirect to="/create" />
     </Switch>

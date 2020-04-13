@@ -23,10 +23,10 @@ export class JoinSpace {
     this.currentUser = currentUser;
   }
 
-  async execute(slug: string) {
+  async execute() {
     log("execute");
 
-    const space = await this.spacePort.findSpaceBySlug(slug);
+    const space = await this.spacePort.findSpaceById(this.currentUser.spaceId);
 
     this.notificationPort.notifySpaceJoined(space, this.currentUser);
 
