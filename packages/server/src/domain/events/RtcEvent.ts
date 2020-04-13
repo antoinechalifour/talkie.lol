@@ -1,7 +1,7 @@
 import { Event } from "./Event";
 
 export abstract class RtcEvent extends Event {
-  constructor(
+  protected constructor(
     type: string,
     public senderId: string,
     public recipientId: string,
@@ -10,7 +10,7 @@ export abstract class RtcEvent extends Event {
     super(type, date);
   }
 
-  format() {
+  format(): string {
     return `[${this.type}] ${this.senderId} -> ${this.recipientId}`;
   }
 }

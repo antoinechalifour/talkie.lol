@@ -6,6 +6,7 @@ import { User } from "../../../domain/entities/User";
 import { UserId } from "../../../domain/entities/UserId";
 import { UserPort } from "../../../usecase/ports/UserPort";
 import { SubscriptionResolver } from "./types";
+import { IceCandidate } from "../../../domain/entities/IceCandidate";
 
 interface Dependencies {
   userPort: UserPort;
@@ -47,7 +48,12 @@ export class RtcIceCandidateReceivedResolver
       this.currentUser.id.is(UserId.fromString(event.recipientId))
   );
 
-  async resolve(event: RtcIceCandidateReceivedEvent) {
+  async resolve(
+    event: RtcIceCandidateReceivedEvent
+  ): Promise<{
+    sender: User;
+    iceCandidate: IceCandidate;
+  }> {
     log("resolve");
     const sender = await this.userPort.findUserById(
       UserId.fromString(event.senderId)

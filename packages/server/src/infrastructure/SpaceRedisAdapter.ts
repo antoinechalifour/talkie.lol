@@ -3,20 +3,19 @@ import { Redis } from "ioredis";
 import { Space } from "../domain/entities/Space";
 import { SpaceId } from "../domain/entities/SpaceId";
 import { SpaceNotFoundError } from "../domain/errors/SpaceNotFoundError";
-import { UserId } from "../domain/entities/UserId";
 import { SpacePort } from "../usecase/ports/SpacePort";
 
 interface Dependencies {
   redis: Redis;
 }
 
-const toRedisSpace = (space: Space) =>
+const toRedisSpace = (space: Space): string =>
   JSON.stringify({
     id: space.id.get(),
     slug: space.slug,
   });
 
-const fromRedisSpace = (redisSpace: string) => {
+const fromRedisSpace = (redisSpace: string): Space => {
   const json = JSON.parse(redisSpace);
 
   return new Space(SpaceId.fromString(json.id), json.slug);

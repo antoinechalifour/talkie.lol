@@ -4,7 +4,7 @@ import { User } from "../domain/entities/User";
 import { UserId } from "../domain/entities/UserId";
 import { NotificationPort } from "./ports/NotificationPort";
 import { UserPort } from "./ports/UserPort";
-import {SessionDescription} from "../domain/entities/SessionDescription";
+import { SessionDescription } from "../domain/entities/SessionDescription";
 
 interface Dependencies {
   notificationPort: NotificationPort;
@@ -25,13 +25,13 @@ export class SendRtcAnswer {
     this.currentUser = currentUser;
   }
 
-  async execute(answer: string, recipientId: string) {
+  async execute(answer: string, recipientId: string): Promise<void> {
     log("execute");
 
     const recipient = await this.userPort.findUserById(
       UserId.fromString(recipientId)
     );
-    const sessionDescription = SessionDescription.answer(answer)
+    const sessionDescription = SessionDescription.answer(answer);
 
     this.notificationPort.notifyRtcAnswerReceived(
       sessionDescription,

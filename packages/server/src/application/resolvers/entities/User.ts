@@ -1,5 +1,5 @@
 import { User } from "../../../domain/entities/User";
 
 export const UserResolver = {
-  id: (user: User) => user.id.get(),
+  id: (user: User): string => user.id.get(),
 };

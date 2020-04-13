@@ -16,7 +16,7 @@ export class CreateSpace {
     this.spacePort = spacePort;
   }
 
-  async execute() {
+  async execute(): Promise<Space> {
     log("execute");
 
     const space = Space.createSpace();

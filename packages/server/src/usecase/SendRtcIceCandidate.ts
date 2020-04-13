@@ -30,7 +30,7 @@ export class SendRtcIceCandidate {
     sdpMid: string,
     sdpMLineIndex: number,
     recipientId: string
-  ) {
+  ): Promise<void> {
     log("execute");
 
     const recipient = await this.userPort.findUserById(

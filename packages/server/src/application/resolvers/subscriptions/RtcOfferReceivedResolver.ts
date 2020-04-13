@@ -6,6 +6,7 @@ import { User } from "../../../domain/entities/User";
 import { UserId } from "../../../domain/entities/UserId";
 import { UserPort } from "../../../usecase/ports/UserPort";
 import { SubscriptionResolver } from "./types";
+import { SessionDescription } from "../../../domain/entities/SessionDescription";
 
 interface Dependencies {
   userPort: UserPort;
@@ -42,7 +43,12 @@ export class RtcOfferReceivedResolver
       this.currentUser.id.is(UserId.fromString(event.recipientId))
   );
 
-  async resolve(event: RtcOfferReceivedEvent) {
+  async resolve(
+    event: RtcOfferReceivedEvent
+  ): Promise<{
+    sender: User;
+    offer: SessionDescription;
+  }> {
     log("resolve");
     const sender = await this.userPort.findUserById(
       UserId.fromString(event.senderId)

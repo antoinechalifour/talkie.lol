@@ -23,7 +23,7 @@ export class JoinSpace {
     this.currentUser = currentUser;
   }
 
-  async execute() {
+  async execute(): Promise<void> {
     log("execute");
 
     const space = await this.spacePort.findSpaceById(this.currentUser.spaceId);

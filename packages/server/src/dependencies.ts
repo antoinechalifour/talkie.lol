@@ -16,7 +16,9 @@ import { UserRedisAdapter } from "./infrastructure/UserRedisAdapter";
 
 export const container = createContainer();
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const REDIS_HOST = process.env.REDIS_HOST!;
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const REDIS_PORT = Number(process.env.REDIS_PORT!);
 const REDIS_PASSWORD = process.env.REDIS_PASSWORD ?? undefined;
 const REDIS_USERNAME = process.env.REDIS_USERNAME ?? undefined;

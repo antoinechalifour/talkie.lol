@@ -1,5 +1,4 @@
 import { User } from "../entities/User";
-import { UserId } from "../entities/UserId";
 import { SessionDescription } from "../entities/SessionDescription";
 import { RtcEvent } from "./RtcEvent";
 
@@ -15,7 +14,11 @@ export class RtcOfferReceivedEvent extends RtcEvent {
     super(RtcOfferReceivedEvent.TYPE, senderId, recipientId, date);
   }
 
-  static create(offer: SessionDescription, sender: User, recipient: User) {
+  static create(
+    offer: SessionDescription,
+    sender: User,
+    recipient: User
+  ): RtcOfferReceivedEvent {
     return new RtcOfferReceivedEvent(
       offer,
       sender.id.get(),

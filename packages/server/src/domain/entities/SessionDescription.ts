@@ -4,11 +4,11 @@ export class SessionDescription {
     public readonly sdp: string
   ) {}
 
-  static offer(sdp: string) {
+  static offer(sdp: string): SessionDescription {
     return new SessionDescription("offer", sdp);
   }
 
-  static answer(sdp: string) {
+  static answer(sdp: string): SessionDescription {
     return new SessionDescription("answer", sdp);
   }
 }

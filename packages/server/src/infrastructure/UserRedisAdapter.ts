@@ -10,14 +10,14 @@ interface Dependencies {
   redis: Redis;
 }
 
-const toRedisUser = (user: User) =>
+const toRedisUser = (user: User): string =>
   JSON.stringify({
     id: user.id.get(),
     name: user.name,
     spaceId: user.spaceId.get(),
   });
 
-const fromRedisUser = (redisUser: string) => {
+const fromRedisUser = (redisUser: string): User => {
   const json = JSON.parse(redisUser);
 
   return new User(

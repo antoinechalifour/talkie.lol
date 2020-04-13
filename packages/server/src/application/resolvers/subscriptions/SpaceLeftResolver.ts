@@ -51,7 +51,7 @@ export class SpaceLeftResolver
     }
   );
 
-  async resolve(event: SpaceLeftEvent) {
+  async resolve(event: SpaceLeftEvent): Promise<{ space: Space; user: User }> {
     log("resolve");
 
     const [space, user] = await Promise.all([

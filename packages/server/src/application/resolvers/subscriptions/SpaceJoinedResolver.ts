@@ -61,7 +61,9 @@ export class SpaceJoinedResolver
     }
   );
 
-  async resolve(event: SpaceJoinedEvent) {
+  async resolve(
+    event: SpaceJoinedEvent
+  ): Promise<{ space: Space; user: User }> {
     log("resolve");
 
     const [space, user] = await Promise.all([

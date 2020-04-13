@@ -15,7 +15,7 @@ export class User {
     public spaceId: SpaceId
   ) {}
 
-  static create(spaceId: SpaceId) {
+  static create(spaceId: SpaceId): User {
     const name = uniqueNamesGenerator({
       dictionaries: [adjectives, colors, animals],
       length: 2,

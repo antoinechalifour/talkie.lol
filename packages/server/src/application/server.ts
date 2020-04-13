@@ -4,6 +4,7 @@ import { ApolloServer } from "apollo-server-koa";
 import { asValue, AwilixContainer } from "awilix";
 
 import { Token } from "../domain/entities/Token";
+import { User } from "../domain/entities/User";
 import { UserPort } from "../usecase/ports/UserPort";
 import { TokenPort } from "../usecase/ports/TokenPort";
 import { LeaveSpace } from "../usecase/LeaveSpace";
@@ -16,23 +17,28 @@ export interface AppOptions {
   container: AwilixContainer;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SubscriptionConnection = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SubscriptionParams = any;
+
 interface ContextFactoryOptions {
   ctx: Context;
-  connection: any;
+  connection: SubscriptionConnection;
 }
 
 const log = debug("app:server");
 
 export class WebRtcExperimentsApp {
-  private koa: Koa;
-  private container: AwilixContainer;
+  private readonly koa: Koa;
+  private readonly container: AwilixContainer;
 
   constructor(private options: AppOptions) {
     this.koa = new Koa();
     this.container = options.container;
   }
 
-  run() {
+  run(): Promise<void> {
     return new Promise((resolve) => {
       log(`Starting server on port ${this.options.port}`);
       const server = this.koa.listen(this.options.port, resolve);
@@ -43,7 +49,7 @@ export class WebRtcExperimentsApp {
     });
   }
 
-  private getGraphQLServer() {
+  private getGraphQLServer(): ApolloServer {
     return new ApolloServer({
       typeDefs,
       resolvers,
@@ -52,7 +58,7 @@ export class WebRtcExperimentsApp {
         onConnect: this.onSubscriptionConnect,
         onDisconnect: this.onSubscriptionDisconnect,
       },
-      formatError: (e) => {
+      formatError: (e): never => {
         console.error(e.originalError);
 
         throw e;
@@ -71,7 +77,9 @@ export class WebRtcExperimentsApp {
     }
   };
 
-  private onSubscriptionConnect = async (params: any) => {
+  private onSubscriptionConnect = async (
+    params: SubscriptionParams
+  ): Promise<{ currentUser: User }> => {
     log("Handling subscription connection");
 
     if (!params.authToken) {
@@ -83,7 +91,10 @@ export class WebRtcExperimentsApp {
     return { currentUser };
   };
 
-  private onSubscriptionDisconnect = async (_: unknown, connection: any) => {
+  private onSubscriptionDisconnect = async (
+    _: unknown,
+    connection: SubscriptionConnection
+  ): Promise<void> => {
     log("Handling subscription disconnection");
 
     const wsContext = await connection.initPromise;
@@ -96,11 +107,13 @@ export class WebRtcExperimentsApp {
     await leaveSpace.execute();
   };
 
-  private getScopedContainer() {
+  private getScopedContainer(): AwilixContainer {
     return this.container.createScope();
   }
 
-  private getSubscriptionContext(connection: any) {
+  private getSubscriptionContext(
+    connection: SubscriptionConnection
+  ): GraphQLContext {
     log("Creating GraphQL context for subscription");
 
     const container = this.getScopedContainer();
@@ -110,7 +123,7 @@ export class WebRtcExperimentsApp {
     return { container };
   }
 
-  private async getDefaultContext(ctx: Context) {
+  private async getDefaultContext(ctx: Context): Promise<GraphQLContext> {
     log("Creating GraphQL context");
     const container = this.getScopedContainer();
     const authorizationHeader = ctx.header.authorization;
@@ -128,14 +141,16 @@ export class WebRtcExperimentsApp {
   private async setAuthenticatedUser(
     authorizationHeader: string,
     container: AwilixContainer
-  ) {
+  ): Promise<void> {
     const currentUser = await this.getAuthenticatedUser(authorizationHeader);
 
     log(`Setting current user to ${currentUser.id.get()}`);
     container.register("currentUser", asValue(currentUser));
   }
 
-  private async getAuthenticatedUser(authorizationHeader: string) {
+  private async getAuthenticatedUser(
+    authorizationHeader: string
+  ): Promise<User> {
     const tokenPort = this.container.resolve<TokenPort<Token>>("tokenPort");
     const userPort = this.container.resolve<UserPort>("userPort");
 

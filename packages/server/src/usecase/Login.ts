@@ -26,7 +26,7 @@ export class Login {
     this.tokenPort = tokenPort;
   }
 
-  async execute(slug: string) {
+  async execute(slug: string): Promise<Session> {
     log("execute");
 
     const space = await this.spacePort.findSpaceBySlug(slug);
@@ -35,8 +35,7 @@ export class Login {
     await this.userPort.saveUser(user);
 
     const token = await this.tokenPort.sign(Token.create(user.id, space.id));
-    const session = Session.create(token, user.id, space.id);
 
-    return session;
+    return Session.create(token, user.id, space.id);
   }
 }

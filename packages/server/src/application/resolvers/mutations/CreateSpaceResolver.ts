@@ -2,7 +2,7 @@ import debug from "debug";
 
 import { Space } from "../../../domain/entities/Space";
 import { CreateSpace } from "../../../usecase/CreateSpace";
-import { MutationArguments, MutationResolver } from "./types";
+import { MutationResolver } from "./types";
 
 interface CreateSpaceResult {
   success: boolean;
@@ -23,10 +23,7 @@ export class CreateSpaceResolver
     this.createSpace = createSpace;
   }
 
-  async resolve(
-    obj: unknown,
-    args: MutationArguments<null>
-  ): Promise<CreateSpaceResult> {
+  async resolve(): Promise<CreateSpaceResult> {
     log("resolve");
 
     const space = await this.createSpace.execute();

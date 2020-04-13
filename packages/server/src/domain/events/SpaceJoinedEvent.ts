@@ -1,6 +1,4 @@
-import { SpaceId } from "../entities/SpaceId";
 import { Event } from "./Event";
-import { UserId } from "../entities/UserId";
 import { User } from "../entities/User";
 import { Space } from "../entities/Space";
 
@@ -15,11 +13,11 @@ export class SpaceJoinedEvent extends Event {
     super(SpaceJoinedEvent.TYPE, date);
   }
 
-  format() {
+  format(): string {
     return `[${this.type}] ${this.userId} / ${this.spaceId}`;
   }
 
-  static create(space: Space, user: User) {
+  static create(space: Space, user: User): SpaceJoinedEvent {
     return new SpaceJoinedEvent(space.id.get(), user.id.get(), new Date());
   }
 }

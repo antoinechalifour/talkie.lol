@@ -17,6 +17,7 @@ export class TokenJwtAdapter implements TokenPort<Token> {
   }
 
   decode(token: string): Promise<Token> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const payload: any = jwt.verify(token, this.secret);
 
     return Promise.resolve(

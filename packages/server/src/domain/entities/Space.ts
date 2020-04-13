@@ -5,11 +5,11 @@ import { SpaceId } from "./SpaceId";
 export class Space {
   constructor(public id: SpaceId, public slug: string) {}
 
-  compareBySlug(slug: string) {
+  compareBySlug(slug: string): boolean {
     return this.slug === slug;
   }
 
-  static createSpace() {
+  static createSpace(): Space {
     const slug = humanId({
       separator: "-",
       capitalize: false,

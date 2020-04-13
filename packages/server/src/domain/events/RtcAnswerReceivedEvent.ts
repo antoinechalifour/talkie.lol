@@ -14,7 +14,11 @@ export class RtcAnswerReceivedEvent extends RtcEvent {
     super(RtcAnswerReceivedEvent.TYPE, senderId, recipientId, date);
   }
 
-  static create(answer: SessionDescription, sender: User, recipient: User) {
+  static create(
+    answer: SessionDescription,
+    sender: User,
+    recipient: User
+  ): RtcAnswerReceivedEvent {
     return new RtcAnswerReceivedEvent(
       answer,
       sender.id.get(),

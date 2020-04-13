@@ -23,6 +23,7 @@ export class AuthenticatedSubscriptionResolver<Parent, Arguments, Result>
     this.currentUser = currentUser;
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   subscribe(parent: Parent, args: Arguments) {
     if (!this.currentUser) {
       log("Cannot subscribe, user is not authenticated");
@@ -32,7 +33,7 @@ export class AuthenticatedSubscriptionResolver<Parent, Arguments, Result>
     return this.resolver.subscribe(parent, args);
   }
 
-  resolve(obj: Parent, args: Arguments): any {
+  resolve(obj: Parent, args: Arguments): undefined | Result | Promise<Result> {
     if (!this.resolver.resolve) {
       return undefined;
     }

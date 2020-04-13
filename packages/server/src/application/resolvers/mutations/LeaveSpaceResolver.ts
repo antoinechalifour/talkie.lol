@@ -2,7 +2,7 @@ import debug from "debug";
 
 import { User } from "../../../domain/entities/User";
 import { LeaveSpace } from "../../../usecase/LeaveSpace";
-import { MutationArguments, MutationResolver } from "./types";
+import { MutationResolver } from "./types";
 
 interface LeaveSpaceResult {
   success: boolean;
@@ -23,10 +23,7 @@ export class LeaveSpaceResolver
     this.leaveSpace = leaveSpace;
   }
 
-  async resolve(
-    obj: unknown,
-    args: MutationArguments<{}>
-  ): Promise<LeaveSpaceResult> {
+  async resolve(): Promise<LeaveSpaceResult> {
     log("resolve");
 
     const user = await this.leaveSpace.execute();

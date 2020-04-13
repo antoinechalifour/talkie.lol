@@ -23,7 +23,7 @@ export class LeaveSpace {
     this.currentUser = currentUser;
   }
 
-  async execute() {
+  async execute(): Promise<User> {
     log("execute");
 
     const space = await this.spacePort.findSpaceById(this.currentUser.spaceId);

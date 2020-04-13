@@ -13,7 +13,7 @@ export function makeMutationInvoker<Parent, Arguments, Result>(
     obj: Parent,
     args: MutationArguments<Arguments>,
     context: GraphQLContext
-  ) {
+  ): Result | Promise<Result> {
     log(`Building resolver ${Resolver.name}`);
 
     const resolver = context.container.build(Resolver);

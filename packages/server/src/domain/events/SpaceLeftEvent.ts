@@ -1,7 +1,5 @@
-import { SpaceId } from "../entities/SpaceId";
 import { User } from "../entities/User";
 import { Space } from "../entities/Space";
-import { UserId } from "../entities/UserId";
 import { Event } from "./Event";
 
 export class SpaceLeftEvent extends Event {
@@ -15,11 +13,11 @@ export class SpaceLeftEvent extends Event {
     super(SpaceLeftEvent.TYPE, date);
   }
 
-  format() {
+  format(): string {
     return `[${this.type}] ${this.userId} / ${this.spaceId}`;
   }
 
-  static create(space: Space, user: User) {
+  static create(space: Space, user: User): SpaceLeftEvent {
     return new SpaceLeftEvent(space.id.get(), user.id.get(), new Date());
   }
 }

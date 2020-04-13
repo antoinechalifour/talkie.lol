@@ -4,7 +4,7 @@ import { UserId } from "./UserId";
 export class Token {
   private constructor(public userId: UserId, public spaceId: SpaceId) {}
 
-  static create(userId: UserId, spaceId: SpaceId) {
+  static create(userId: UserId, spaceId: SpaceId): Token {
     return new Token(userId, spaceId);
   }
 }

@@ -5,7 +5,11 @@ export class IceCandidate {
     public sdpMLineIndex: number
   ) {}
 
-  static create(candidate: string, sdpMid: string, sdpMLineIndex: number) {
+  static create(
+    candidate: string,
+    sdpMid: string,
+    sdpMLineIndex: number
+  ): IceCandidate {
     return new IceCandidate(candidate, sdpMid, sdpMLineIndex);
   }
 }

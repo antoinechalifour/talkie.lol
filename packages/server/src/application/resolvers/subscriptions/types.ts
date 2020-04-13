@@ -5,6 +5,6 @@ export type SubscriptionArguments<Arguments> = {
 };
 
 export interface SubscriptionResolver<Parent, Arguments, Result> {
-  resolve?(obj: Parent, args: Arguments): Result | Promise<Result>;
+  resolve?(obj: Parent, args: Arguments): undefined | Result | Promise<Result>;
   subscribe: ResolverFn;
 }

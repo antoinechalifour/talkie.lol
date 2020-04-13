@@ -1,7 +1,7 @@
 import debug from "debug";
 
 import { JoinSpace } from "../../../usecase/JoinSpace";
-import { MutationArguments, MutationResolver } from "./types";
+import { MutationResolver } from "./types";
 
 interface JoinSpaceResult {
   success: boolean;
@@ -21,10 +21,7 @@ export class JoinSpaceResolver
     this.joinSpace = joinSpace;
   }
 
-  async resolve(
-    obj: unknown,
-    args: MutationArguments<{}>
-  ): Promise<JoinSpaceResult> {
+  async resolve(): Promise<JoinSpaceResult> {
     log("resolve");
 
     await this.joinSpace.execute();

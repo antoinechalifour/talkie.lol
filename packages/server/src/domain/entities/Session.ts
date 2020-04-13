@@ -8,7 +8,7 @@ export class Session {
     public spaceId: SpaceId
   ) {}
 
-  static create(token: string, userId: UserId, spaceId: SpaceId) {
+  static create(token: string, userId: UserId, spaceId: SpaceId): Session {
     return new Session(token, userId, spaceId);
   }
 }

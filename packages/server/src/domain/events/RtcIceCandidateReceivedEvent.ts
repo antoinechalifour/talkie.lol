@@ -1,4 +1,3 @@
-import { UserId } from "../entities/UserId";
 import { User } from "../entities/User";
 import { IceCandidate } from "../entities/IceCandidate";
 import { RtcEvent } from "./RtcEvent";
@@ -15,7 +14,11 @@ export class RtcIceCandidateReceivedEvent extends RtcEvent {
     super(RtcIceCandidateReceivedEvent.TYPE, senderId, recipientId, date);
   }
 
-  static create(iceCandidate: IceCandidate, sender: User, recipient: User) {
+  static create(
+    iceCandidate: IceCandidate,
+    sender: User,
+    recipient: User
+  ): RtcIceCandidateReceivedEvent {
     return new RtcIceCandidateReceivedEvent(
       iceCandidate,
       sender.id.get(),
