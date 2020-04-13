@@ -20,8 +20,15 @@ export const HeaderLayout = styled.header`
     color: var(--color-text-darker);
 
     span {
-      font-weight: normal;
-      color: var(--color-text);
+      display: none;
+    }
+
+    @media (min-width: 860px) {
+      span {
+        display: inline;
+        font-weight: normal;
+        color: var(--color-text);
+      }
     }
   }
 
@@ -34,10 +41,8 @@ export const MainContent = styled.main`
   position: relative;
   flex: 1;
   display: flex;
-  width: 100%;
   place-items: center;
-  height: 100%;
-  padding: 10px;
+  padding: 1rem;
   overflow-y: scroll;
   background: var(--color-background);
 

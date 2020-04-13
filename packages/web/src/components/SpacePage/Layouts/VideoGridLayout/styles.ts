@@ -8,5 +8,9 @@ export const VideoGrid = styled.div`
 
   @media (min-width: 860px) {
     grid-template-columns: repeat(2, 1fr);
+
+    > *:only-child {
+      grid-column: 1 / span 2;
+    }
   }
 `;
