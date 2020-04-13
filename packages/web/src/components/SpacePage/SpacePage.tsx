@@ -6,7 +6,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { createTitle } from "../../utils/html";
 import { ConferenceViewModel } from "../../viewmodels/ConferenceViewModel";
 import { useConference } from "./webrtc/useConference";
-import { useLocalUser } from "./useLocalUser";
+import { useLocalUser } from "../../hooks/useLocalUser";
 import { useNotifier } from "./useNotifier";
 import { UserMediaControls } from "./UserMediaControls/UserMediaControls";
 import { Layout } from "./Layouts/Layout";

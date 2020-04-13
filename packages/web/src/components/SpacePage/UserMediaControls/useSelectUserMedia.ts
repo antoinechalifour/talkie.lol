@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { useEnumerateMediaDevices } from "./useEnumerateMediaDevices";
+import { useEnumerateMediaDevices } from "../../../hooks/useEnumerateMediaDevices";
 import { AudioInputOption, VideoInputOption } from "./types";
 import {
   AUDIO_DISABLED_OPTION,

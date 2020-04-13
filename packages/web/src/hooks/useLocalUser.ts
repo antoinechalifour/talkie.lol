@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { ConferenceViewModel } from "../../viewmodels/ConferenceViewModel";
+import { ConferenceViewModel } from "../viewmodels/ConferenceViewModel";
 
 export const useLocalUser = (conference: ConferenceViewModel) => {
   const [{ value }, setLocalUser] = useState({

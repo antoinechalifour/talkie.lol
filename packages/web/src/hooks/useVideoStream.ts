@@ -4,7 +4,7 @@ interface UseVideoStreamBoxOptions {
   mediaStream: MediaStream;
 }
 
-export function useVideoStreamBox({ mediaStream }: UseVideoStreamBoxOptions) {
+export function useVideoStream({ mediaStream }: UseVideoStreamBoxOptions) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {

@@ -2,8 +2,8 @@ import React from "react";
 
 import { RemotePeer } from "../../../models/RemotePeer";
 import { ConferenceViewModel } from "../../../viewmodels/ConferenceViewModel";
-import { useRemotePeers } from "../useRemotePeers";
-import { useLocalUser } from "../useLocalUser";
+import { useRemotePeers } from "../../../hooks/useRemotePeers";
+import { useLocalUser } from "../../../hooks/useLocalUser";
 import { LocalUserBox } from "./UserStreamBox/LocalUserBox";
 import { RemotePeerBox } from "./UserStreamBox/RemotePeerBox";
 import { FocusedView, PeerPreviewList } from "./styles";

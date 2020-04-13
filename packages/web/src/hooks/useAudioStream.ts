@@ -4,9 +4,7 @@ interface UseAudioStreamBoxOptions {
   mediaStream: MediaStream;
 }
 
-export const useAudioStreamBox = ({
-  mediaStream,
-}: UseAudioStreamBoxOptions) => {
+export const useAudioStream = ({ mediaStream }: UseAudioStreamBoxOptions) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
