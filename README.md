@@ -7,9 +7,11 @@
 
 This app is a side-project for experimenting with WebRTC. I am planning on integrating as many features as possible, such as :
 
-- audio sharing
-- video sharing
-- screen sharing
+- audio sharing ✅
+- video sharing ✅
+- screen sharing ✅
+- picture in picture ✅
+- select media input sources ✅
 - filters on videos
 - volume controls
 - ... and so on
