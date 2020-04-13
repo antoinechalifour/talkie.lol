@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Conference } from "../models/Conference";
+import { ConferenceViewModel } from "../viewmodels/ConferenceViewModel";
 import { useLayoutManager } from "./useLayoutManager";
 import { FocusedLayout } from "./FocusedLayout";
 import { VideoGridLayout } from "./VideoGridLayout";
 
 export interface LayoutProps {
-  conference: Conference;
+  conference: ConferenceViewModel;
 }
 
 export const Layout: React.FC<LayoutProps> = ({ conference }) => {

@@ -1,8 +1,8 @@
 import { useMutation } from "urql";
 
+import { ConferenceViewModel } from "../viewmodels/ConferenceViewModel";
 import { RemotePeer } from "../models/RemotePeer";
 import { RemoteUser } from "../models/RemoteUser";
-import { Conference } from "../models/Conference";
 import { UserPayload } from "./types";
 import {
   SEND_RTC_ANSWER,
@@ -14,7 +14,7 @@ import {
 } from "./signaling";
 import { logSignaling } from "./log";
 
-export const useRtcOfferReceivedHandler = (conference: Conference) => {
+export const useRtcOfferReceivedHandler = (conference: ConferenceViewModel) => {
   const [, sendRtcOffer] = useMutation<unknown, SendRtcOfferVariables>(
     SEND_RTC_OFFER
   );

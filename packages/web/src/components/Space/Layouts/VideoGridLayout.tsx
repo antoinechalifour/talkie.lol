@@ -1,7 +1,7 @@
 import React from "react";
 
+import { ConferenceViewModel } from "../viewmodels/ConferenceViewModel";
 import { RemotePeer } from "../models/RemotePeer";
-import { Conference } from "../models/Conference";
 import { useRemotePeers } from "../useRemotePeers";
 import { useLocalUser } from "../useLocalUser";
 import { LocalUserBox } from "./UserStreamBox/LocalUserBox";
@@ -9,7 +9,7 @@ import { RemotePeerBox } from "./UserStreamBox/RemotePeerBox";
 import { VideoGrid } from "./styles";
 
 export interface VideoGridLayoutProps {
-  conference: Conference;
+  conference: ConferenceViewModel;
   onFocusPeer: (peer: RemotePeer) => void;
 }
 

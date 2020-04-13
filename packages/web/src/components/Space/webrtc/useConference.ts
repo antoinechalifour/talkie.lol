@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMutation, useSubscription } from "urql";
 
-import { Conference } from "../models/Conference";
+import { ConferenceViewModel } from "../viewmodels/ConferenceViewModel";
 import { useSpaceJoinedHandler } from "./useSpaceJoinedHandler";
 import { useSpaceLeftHandler } from "./useSpaceLeftHandler";
 import { useRtcOfferReceivedHandler } from "./useRtcOfferReceivedHandler";
@@ -22,7 +22,7 @@ import {
   SpaceLeftEvent,
 } from "./signaling";
 
-export const useConference = (conference: Conference) => {
+export const useConference = (conference: ConferenceViewModel) => {
   /*
                     WebRTC Signaling setup
   In here we are creating the handlers which will respond to the offer / answer

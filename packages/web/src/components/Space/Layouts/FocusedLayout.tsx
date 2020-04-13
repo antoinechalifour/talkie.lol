@@ -1,7 +1,7 @@
 import React from "react";
 
 import { RemotePeer } from "../models/RemotePeer";
-import { Conference } from "../models/Conference";
+import { ConferenceViewModel } from "../viewmodels/ConferenceViewModel";
 import { useRemotePeers } from "../useRemotePeers";
 import { useLocalUser } from "../useLocalUser";
 import { LocalUserBox } from "./UserStreamBox/LocalUserBox";
@@ -9,7 +9,7 @@ import { RemotePeerBox } from "./UserStreamBox/RemotePeerBox";
 import { FocusedView, PeerPreviewList } from "./styles";
 
 export interface FocusedLayoutProps {
-  conference: Conference;
+  conference: ConferenceViewModel;
   focusedPeer: RemotePeer;
   onFocusPeer: (remotePeer: RemotePeer) => void;
   onRemoveFocusedPeer: () => void;

@@ -1,8 +1,8 @@
 import { useMutation } from "urql";
 
+import { ConferenceViewModel } from "../viewmodels/ConferenceViewModel";
 import { RemotePeer } from "../models/RemotePeer";
 import { RemoteUser } from "../models/RemoteUser";
-import { Conference } from "../models/Conference";
 import { UserPayload } from "./types";
 import {
   SEND_RTC_ICE_CANDIDATE,
@@ -12,7 +12,7 @@ import {
 } from "./signaling";
 import { logSignaling } from "./log";
 
-export const useSpaceJoinedHandler = (conference: Conference) => {
+export const useSpaceJoinedHandler = (conference: ConferenceViewModel) => {
   const [, sendRtcOffer] = useMutation<unknown, SendRtcOfferVariables>(
     SEND_RTC_OFFER
   );

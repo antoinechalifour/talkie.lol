@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 import { createTitle } from "../../utils/html";
-import { Conference } from "./models/Conference";
+import { ConferenceViewModel } from "./viewmodels/ConferenceViewModel";
 import { useConference } from "./webrtc/useConference";
 import { useLocalUser } from "./useLocalUser";
 import { useNotifier } from "./useNotifier";
@@ -19,7 +19,7 @@ import {
 } from "./styles";
 
 export interface SpaceProps {
-  conference: Conference;
+  conference: ConferenceViewModel;
 }
 
 export const Space: React.FC<SpaceProps> = ({ conference }) => {
