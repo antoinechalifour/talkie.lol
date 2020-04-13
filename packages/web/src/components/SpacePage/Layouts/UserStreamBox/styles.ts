@@ -76,17 +76,3 @@ export const DebugButton = styled.button`
     transform: scale(1.2);
   }
 `;
-
-export const ExpandButton = styled.button`
-  all: unset;
-  display: none;
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  color: var(--color-text-darker);
-  cursor: pointer;
-
-  @media (min-width: 860px) {
-    display: block;
-  }
-`;

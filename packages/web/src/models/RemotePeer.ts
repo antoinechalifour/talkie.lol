@@ -42,8 +42,8 @@ export class RemotePeer {
     this._listenForTracks();
   }
 
-  is(peer: RemotePeer) {
-    return this.id() === peer.id();
+  is(peer: RemotePeer | null) {
+    return !!peer && this.id() === peer.id();
   }
 
   isUser(user: RemoteUser) {

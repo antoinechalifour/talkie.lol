@@ -2,28 +2,35 @@ import React from "react";
 
 import { ConferenceViewModel } from "../../../viewmodels/ConferenceViewModel";
 import { useLayoutManager } from "./useLayoutManager";
-import { FocusedLayout } from "./FocusedLayout";
-import { VideoGridLayout } from "./VideoGridLayout";
+import { VideoGridLayout } from "./VideoGridLayout/VideoGridLayout";
+import { PresenterLayout } from "./PresenterLayout/PresenterLayout";
 
 export interface LayoutProps {
   conference: ConferenceViewModel;
 }
 
 export const Layout: React.FC<LayoutProps> = ({ conference }) => {
-  const { focusedPeer, setFocusedPeer, removeFocusedPeer } = useLayoutManager();
+  const {
+    presenterPeer,
+    setPresenterPeer,
+    removePresenterPeer,
+  } = useLayoutManager();
 
-  if (focusedPeer) {
+  if (presenterPeer) {
     return (
-      <FocusedLayout
+      <PresenterLayout
         conference={conference}
-        focusedPeer={focusedPeer}
-        onFocusPeer={setFocusedPeer}
-        onRemoveFocusedPeer={removeFocusedPeer}
+        presenterPeer={presenterPeer}
+        onPresenterPeerChanged={setPresenterPeer}
+        onRemovePresenterPeer={removePresenterPeer}
       />
     );
   }
 
   return (
-    <VideoGridLayout conference={conference} onFocusPeer={setFocusedPeer} />
+    <VideoGridLayout
+      conference={conference}
+      onPresenterPeerSelected={setPresenterPeer}
+    />
   );
 };
