@@ -1,7 +1,9 @@
 import { useMutation } from "urql";
 
 import { RemotePeer } from "../models/RemotePeer";
-import { User } from "./types";
+import { RemoteUser } from "../models/RemoteUser";
+import { Conference } from "../models/Conference";
+import { UserPayload } from "./types";
 import {
   SEND_RTC_ANSWER,
   SEND_RTC_ICE_CANDIDATE,
@@ -11,7 +13,6 @@ import {
   SendRtcOfferVariables,
 } from "./signaling";
 import { logSignaling } from "./log";
-import { Conference } from "../models/Conference";
 
 export const useRtcOfferReceivedHandler = (conference: Conference) => {
   const [, sendRtcOffer] = useMutation<unknown, SendRtcOfferVariables>(
@@ -25,24 +26,28 @@ export const useRtcOfferReceivedHandler = (conference: Conference) => {
     SendRtcIceCandidateVariables
   >(SEND_RTC_ICE_CANDIDATE);
 
-  async function handleFirstConnection(sender: User) {
-    const remotePeer = RemotePeer.create(sender, {
+  async function handleFirstConnection(remoteUser: RemoteUser) {
+    const remotePeer = RemotePeer.create(remoteUser, {
       onIceCandidate: (candidate) => {
-        logSignaling(`[OUT] Ice Candidate | ${sender.name} ${sender.id}`);
+        logSignaling(
+          `[OUT] Ice Candidate | ${remoteUser.name()} ${remoteUser.id()}`
+        );
 
         sendRtcIceCandidate({
           candidate: candidate.candidate,
           sdpMid: candidate.sdpMid!,
           sdpMLineIndex: candidate.sdpMLineIndex!,
-          recipientId: sender.id,
+          recipientId: remoteUser.id(),
         });
       },
       onNegociationNeeded: (offer) => {
-        logSignaling(`[OUT] Offer (as answerer) | ${sender.name} ${sender.id}`);
+        logSignaling(
+          `[OUT] Offer (as answerer) | ${remoteUser.name()} ${remoteUser.id()}`
+        );
 
         sendRtcOffer({
           offer: offer.sdp!,
-          recipientId: sender.id,
+          recipientId: remoteUser.id(),
         });
       },
       onDisconnected: () => conference.removeRemotePeer(remotePeer),
@@ -53,16 +58,17 @@ export const useRtcOfferReceivedHandler = (conference: Conference) => {
     return remotePeer;
   }
 
-  return async (sender: User, offer: RTCSessionDescriptionInit) => {
+  return async (sender: UserPayload, offer: RTCSessionDescriptionInit) => {
     logSignaling(`[IN] Offer | ${sender.name} ${sender.id}`);
 
-    const remotePeerFromCache = conference.remotePeerByUser(sender);
+    const remoteUser = RemoteUser.create(sender.id, sender.name);
+    const remotePeerFromCache = conference.remotePeerByUser(remoteUser);
     let remotePeer: RemotePeer;
 
     if (remotePeerFromCache) {
       remotePeer = remotePeerFromCache;
     } else {
-      remotePeer = await handleFirstConnection(sender);
+      remotePeer = await handleFirstConnection(remoteUser);
     }
 
     // Create an answer

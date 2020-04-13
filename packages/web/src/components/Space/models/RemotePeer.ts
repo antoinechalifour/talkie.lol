@@ -1,5 +1,5 @@
-import { User } from "../webrtc/types";
 import { logRtc } from "../webrtc/log";
+import { RemoteUser } from "./RemoteUser";
 
 type IceCandidateCallback = (iceCandidate: RTCIceCandidate) => void;
 type OfferCallback = (offer: RTCSessionDescriptionInit) => void;
@@ -27,8 +27,8 @@ export class RemotePeer {
   public isConnected: boolean;
 
   constructor(
-    public user: User,
-    private connection: RTCPeerConnection,
+    private _user: RemoteUser,
+    private _connection: RTCPeerConnection,
     public mediaStream: MediaStream
   ) {
     this.isConnected = false;
@@ -43,16 +43,16 @@ export class RemotePeer {
     return this.id() === peer.id();
   }
 
-  isUser(user: User) {
-    return this.user.id === user.id;
+  isUser(user: RemoteUser) {
+    return this._user.is(user);
   }
 
   id() {
-    return this.user.id;
+    return this._user.id();
   }
 
   name() {
-    return this.user.name;
+    return this._user.name();
   }
 
   // -------------------------------------------------- //
@@ -60,7 +60,7 @@ export class RemotePeer {
   // -------------------------------------------------- //
 
   startStreaming(mediaStream: MediaStream) {
-    const existingTracks = this.connection
+    const existingTracks = this._connection
       .getSenders()
       .map((sender) => sender.track)
       .filter(Boolean)
@@ -69,15 +69,15 @@ export class RemotePeer {
     mediaStream.getTracks().forEach((track) => {
       if (!existingTracks.includes(track.id)) {
         logRtc(`[OUT] Track | ${this.name()} ${this.id()}`);
-        this.connection.addTrack(track, mediaStream);
+        this._connection.addTrack(track, mediaStream);
       }
     });
   }
 
   stopStreaming() {
-    this.connection.getSenders().forEach((sender) => {
+    this._connection.getSenders().forEach((sender) => {
       logRtc(`[OUT] Track | ${this.name()} ${this.id()}`);
-      this.connection.removeTrack(sender);
+      this._connection.removeTrack(sender);
     });
   }
 
@@ -98,27 +98,27 @@ export class RemotePeer {
   // -------------------------------------------------- //
 
   createOffer() {
-    return this.connection.createOffer();
+    return this._connection.createOffer();
   }
 
   createAnswer() {
-    return this.connection.createAnswer();
+    return this._connection.createAnswer();
   }
 
   setLocalDescription(sessionDescription: RTCSessionDescriptionInit) {
-    return this.connection.setLocalDescription(sessionDescription);
+    return this._connection.setLocalDescription(sessionDescription);
   }
 
   setRemoteDescription(sessionDescription: RTCSessionDescriptionInit) {
-    return this.connection.setRemoteDescription(sessionDescription);
+    return this._connection.setRemoteDescription(sessionDescription);
   }
 
   addIceCandidate(iceCandidate: RTCIceCandidateInit) {
-    return this.connection.addIceCandidate(iceCandidate);
+    return this._connection.addIceCandidate(iceCandidate);
   }
 
   onIceCandidate(callback: IceCandidateCallback) {
-    this.connection.addEventListener("icecandidate", (e) => {
+    this._connection.addEventListener("icecandidate", (e) => {
       if (!e.candidate) {
         return;
       }
@@ -130,9 +130,9 @@ export class RemotePeer {
   }
 
   onNegociationNeeded(callback: OfferCallback) {
-    this.connection.addEventListener("negotiationneeded", async () => {
-      const offer = await this.connection.createOffer();
-      await this.connection.setLocalDescription(offer);
+    this._connection.addEventListener("negotiationneeded", async () => {
+      const offer = await this._connection.createOffer();
+      await this._connection.setLocalDescription(offer);
 
       callback(offer);
     });
@@ -141,8 +141,8 @@ export class RemotePeer {
   }
 
   onConnected(callback: ConnectedCallback) {
-    this.connection.addEventListener("signalingstatechange", () => {
-      if (this.connection.signalingState === "stable") {
+    this._connection.addEventListener("signalingstatechange", () => {
+      if (this._connection.signalingState === "stable") {
         callback();
       }
     });
@@ -151,8 +151,8 @@ export class RemotePeer {
   }
 
   onDisconnected(callback: DisconnectedCallback) {
-    this.connection.addEventListener("iceconnectionstatechange", () => {
-      if (this.connection.iceConnectionState === "disconnected") {
+    this._connection.addEventListener("iceconnectionstatechange", () => {
+      if (this._connection.iceConnectionState === "disconnected") {
         callback();
       }
     });
@@ -160,7 +160,7 @@ export class RemotePeer {
     return this;
   }
 
-  static create(user: User, options: RemotePeerOptions) {
+  static create(user: RemoteUser, options: RemotePeerOptions) {
     const connection = new RTCPeerConnection(peerConnectionConfiguration);
     const mediaStream = new MediaStream();
 
@@ -172,42 +172,42 @@ export class RemotePeer {
   }
 
   private debugRtc() {
-    this.connection.addEventListener("icecandidateerror", (e) => {
+    this._connection.addEventListener("icecandidateerror", (e) => {
       logRtc(
         `🛑 Ice candidate error (user ${this.id()}, ${this.name()}):`,
-        this.connection.iceConnectionState
+        this._connection.iceConnectionState
       );
     });
 
-    this.connection.addEventListener("icegatheringstatechange", () => {
+    this._connection.addEventListener("icegatheringstatechange", () => {
       logRtc(
         `♻️ Ice gathering state changed (user ${this.id()}, ${this.name()}):`,
-        this.connection.iceGatheringState
+        this._connection.iceGatheringState
       );
     });
 
-    this.connection.addEventListener("connectionstatechange", () => {
+    this._connection.addEventListener("connectionstatechange", () => {
       logRtc(
         `️️♻️ Connection state changed (user ${this.id()}, ${this.name()}):`,
-        this.connection.connectionState
+        this._connection.connectionState
       );
     });
 
-    this.connection.addEventListener("signalingstatechange", () => {
+    this._connection.addEventListener("signalingstatechange", () => {
       logRtc(
         `♻️ Signaling state changed (user ${this.id()}, ${this.name()}):`,
-        this.connection.signalingState
+        this._connection.signalingState
       );
     });
 
-    this.connection.addEventListener("negotiationneeded", () => {
+    this._connection.addEventListener("negotiationneeded", () => {
       logRtc(
         `⚠️ Negotiation needed (user ${this.id()}, ${this.name()}):`,
-        this.connection.connectionState
+        this._connection.connectionState
       );
     });
 
-    this.connection.addEventListener("track", ({ track }) => {
+    this._connection.addEventListener("track", ({ track }) => {
       logRtc(
         `[IN] Track | (${track.kind} / ${
           track.id
@@ -219,7 +219,7 @@ export class RemotePeer {
   }
 
   private _listenForTracks() {
-    this.connection.addEventListener("track", ({ track }) => {
+    this._connection.addEventListener("track", ({ track }) => {
       const tracksToRemove =
         track.kind === "video"
           ? this.mediaStream.getVideoTracks()

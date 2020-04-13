@@ -30,10 +30,10 @@ export const RemotePeerBox: React.FC<RemotePeerBoxProps> = ({
   function debug() {
     toast.info(`${remotePeer.name()}'s info has been printed in the console`);
     console.group(remotePeer.id());
-    console.table(remotePeer.user);
+    console.table(remotePeer.name());
     console.table(remotePeer.mediaStream);
     // @ts-ignore
-    console.table(remotePeer.connection);
+    console.table(remotePeer._connection);
     console.groupEnd();
   }
 

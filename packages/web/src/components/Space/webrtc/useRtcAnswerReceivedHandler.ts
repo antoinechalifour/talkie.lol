@@ -1,12 +1,15 @@
 import { Conference } from "../models/Conference";
-import { User } from "./types";
+import { RemoteUser } from "../models/RemoteUser";
+import { UserPayload } from "./types";
 import { logSignaling } from "./log";
 
 export const useRtcAnswerReceivedHandler = (conference: Conference) => {
-  return async (sender: User, answer: RTCSessionDescriptionInit) => {
+  return async (sender: UserPayload, answer: RTCSessionDescriptionInit) => {
     logSignaling(`[IN] Answer | ${sender.name} ${sender.id}`);
 
-    const remotePeer = conference.remotePeerByUser(sender);
+    const remotePeer = conference.remotePeerByUser(
+      RemoteUser.create(sender.id, sender.name)
+    );
 
     if (!remotePeer) return;
 

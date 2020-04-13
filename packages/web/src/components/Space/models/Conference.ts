@@ -1,8 +1,8 @@
 import debug from "debug";
 
-import { User } from "../webrtc/types";
 import { RemotePeer } from "./RemotePeer";
 import { CurrentUser } from "./CurrentUser";
+import { RemoteUser } from "./RemoteUser";
 
 type OnLocalUserChangedListener = (localUser: CurrentUser) => void;
 type OnRemotePeerAddedListener = (newPeer: RemotePeer) => void;
@@ -107,7 +107,7 @@ export class Conference {
     };
   }
 
-  removeRemoteUser(user: User) {
+  removeRemoteUser(user: RemoteUser) {
     log("Removing remote peer by user");
     const remotePeer = this.remotePeerByUser(user);
 
@@ -116,7 +116,7 @@ export class Conference {
     this.removeRemotePeer(remotePeer);
   }
 
-  remotePeerByUser(user: User): RemotePeer | null {
+  remotePeerByUser(user: RemoteUser): RemotePeer | null {
     return this.allRemotePeers().find((peer) => peer.isUser(user)) || null;
   }
 

@@ -1,12 +1,16 @@
-import { User } from "./types";
-import { logSignaling } from "./log";
 import { Conference } from "../models/Conference";
+import { RemoteUser } from "../models/RemoteUser";
+
+import { UserPayload } from "./types";
+import { logSignaling } from "./log";
 
 export const useRtcIceCandidateReceivedHandler = (conference: Conference) => {
-  return async (sender: User, iceCandidate: RTCIceCandidateInit) => {
+  return async (sender: UserPayload, iceCandidate: RTCIceCandidateInit) => {
     logSignaling(`[IN] Ice Candidate | ${sender.name} ${sender.id}`);
 
-    const remotePeer = conference.remotePeerByUser(sender);
+    const remotePeer = conference.remotePeerByUser(
+      RemoteUser.create(sender.id, sender.name)
+    );
 
     if (!remotePeer) return;
 
