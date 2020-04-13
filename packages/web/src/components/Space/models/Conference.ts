@@ -62,6 +62,8 @@ export class Conference {
   }
 
   addRemotePeer(newRemotePeer: RemotePeer) {
+    if (this._remotePeers.has(newRemotePeer)) return;
+
     log("Adding remote peer to conference");
     this._remotePeers.add(newRemotePeer);
     this._notifyRemotePeerAdded(newRemotePeer);
