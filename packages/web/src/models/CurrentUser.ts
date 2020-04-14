@@ -10,7 +10,8 @@ export class CurrentUser {
   private constructor(
     private _id: string,
     private _token: string,
-    private _name: string
+    private _name: string,
+    private _rtcConfiguration: RTCConfiguration
   ) {}
 
   name() {
@@ -19,6 +20,10 @@ export class CurrentUser {
 
   token() {
     return this._token;
+  }
+
+  rtcConfiguration() {
+    return this._rtcConfiguration;
   }
 
   mediaStream() {
@@ -47,7 +52,12 @@ export class CurrentUser {
     remotePeer.stopStreaming();
   }
 
-  static create(id: string, token: string, name: string) {
-    return new CurrentUser(id, token, name);
+  static create(
+    id: string,
+    token: string,
+    name: string,
+    rtcConfiguration: RTCConfiguration
+  ) {
+    return new CurrentUser(id, token, name, rtcConfiguration);
   }
 }

@@ -28,6 +28,7 @@ export const useSpaceJoinedHandler = (conference: ConferenceViewModel) => {
 
     // Create the connection
     const remotePeer = RemotePeer.create(remoteUser, {
+      rtcConfiguration: conference.localUser().rtcConfiguration(),
       onIceCandidate: (candidate) => {
         logSignaling(
           `[OUT] Ice Candidate | ${remoteUser.name()} ${remoteUser.id()}`

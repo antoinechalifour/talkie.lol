@@ -9,18 +9,8 @@ type OfferCallback = (offer: RTCSessionDescriptionInit) => void;
 type ConnectedCallback = () => void;
 type DisconnectedCallback = () => void;
 
-const peerConnectionConfiguration: RTCConfiguration = {
-  iceServers: [
-    {
-      urls: ["stun:stun.l.google.com:19302"],
-    },
-    {
-      urls: ["stun:stun1.l.google.com:19302"],
-    },
-  ],
-};
-
 interface RemotePeerOptions {
+  rtcConfiguration: RTCConfiguration;
   onIceCandidate: (candidate: RTCIceCandidate) => void;
   onNegociationNeeded: (offer: RTCSessionDescriptionInit) => void;
   onDisconnected: () => void;
@@ -164,7 +154,7 @@ export class RemotePeer {
   }
 
   static create(user: RemoteUser, options: RemotePeerOptions) {
-    const connection = new RTCPeerConnection(peerConnectionConfiguration);
+    const connection = new RTCPeerConnection(options.rtcConfiguration);
     const mediaStream = new MediaStream();
 
     return new RemotePeer(user, connection, mediaStream)
