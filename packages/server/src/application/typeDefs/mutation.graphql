@@ -17,6 +17,15 @@ type Mutation {
 type LoginResult {
   success: Boolean!
   session: Session!
+  rtcConfiguration: RtcConfiguration!
+}
+
+type RtcConfiguration {
+  iceServers: [IceServer!]!
+}
+
+type IceServer {
+  urls: [String!]!
 }
 
 input LoginInput {

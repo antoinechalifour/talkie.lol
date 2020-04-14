@@ -13,6 +13,7 @@ import { NotificationAdapter } from "./infrastructure/NotificationAdapter";
 import { TokenJwtAdapter } from "./infrastructure/TokenJwtAdapter";
 import { SpaceRedisAdapter } from "./infrastructure/SpaceRedisAdapter";
 import { UserRedisAdapter } from "./infrastructure/UserRedisAdapter";
+import rtcConfiguration from "./application/config/rtcConfig.json";
 
 export const container = createContainer();
 
@@ -59,4 +60,5 @@ container.register({
   // Utils
   pubSub: asValue(pubSub),
   redis: asValue(redis),
+  rtcConfiguration: asValue(rtcConfiguration),
 });

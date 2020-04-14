@@ -18,12 +18,14 @@ interface LoginResult {
     user: User;
     space: Space;
   };
+  rtcConfiguration: RTCConfiguration;
 }
 
 interface Dependencies {
   login: Login;
   userPort: UserPort;
   spacePort: SpacePort;
+  rtcConfiguration: RTCConfiguration;
 }
 
 const log = debug("app:resolver:login");
@@ -33,11 +35,13 @@ export class LoginResolver
   private readonly login: Login;
   private readonly userPort: UserPort;
   private readonly spacePort: SpacePort;
+  private readonly rtcConfiguration: RTCConfiguration;
 
-  constructor({ login, userPort, spacePort }: Dependencies) {
+  constructor({ login, userPort, spacePort, rtcConfiguration }: Dependencies) {
     this.login = login;
     this.userPort = userPort;
     this.spacePort = spacePort;
+    this.rtcConfiguration = rtcConfiguration;
   }
 
   async resolve(
@@ -59,6 +63,7 @@ export class LoginResolver
         user,
         space,
       },
+      rtcConfiguration: this.rtcConfiguration,
     };
   }
 }

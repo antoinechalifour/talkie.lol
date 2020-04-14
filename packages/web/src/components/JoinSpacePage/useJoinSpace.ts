@@ -21,6 +21,11 @@ interface LoginResult {
         name: string;
       };
     };
+    rtcConfiguration: {
+      iceServers: Array<{
+        urls: string[];
+      }>;
+    };
   };
 }
 
@@ -45,7 +50,8 @@ export const useJoinSpace = ({ slug }: UseJoinSpaceOptions) => {
     const currentUser = CurrentUser.create(
       result.data.login.session.user.id,
       result.data.login.session.token,
-      result.data.login.session.user.name
+      result.data.login.session.user.name,
+      result.data.login.rtcConfiguration
     );
     const conference = Conference.create(slug, currentUser);
 

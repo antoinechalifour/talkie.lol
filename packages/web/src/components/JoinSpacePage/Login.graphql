@@ -7,5 +7,10 @@ mutation Login($slug: String!) {
         name
       }
     }
+    rtcConfiguration {
+      iceServers {
+        urls
+      }
+    }
   }
 }
