@@ -47,11 +47,17 @@ export const useJoinSpace = ({ slug }: UseJoinSpaceOptions) => {
 
     if (!result.data) return;
 
+    const mediaStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true,
+    });
+
     const currentUser = CurrentUser.create(
       result.data.login.session.user.id,
       result.data.login.session.token,
       result.data.login.session.user.name,
-      result.data.login.rtcConfiguration
+      result.data.login.rtcConfiguration,
+      mediaStream
     );
     const conference = Conference.create(slug, currentUser);
 

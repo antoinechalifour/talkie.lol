@@ -5,13 +5,12 @@ import { RemotePeer } from "./RemotePeer";
 const log = debug("app:CurrentUser");
 
 export class CurrentUser {
-  private _localMediaStream: MediaStream | null = null;
-
   private constructor(
     private _id: string,
     private _token: string,
     private _name: string,
-    private _rtcConfiguration: RTCConfiguration
+    private _rtcConfiguration: RTCConfiguration,
+    private _localMediaStream: MediaStream | null
   ) {}
 
   name() {
@@ -56,8 +55,9 @@ export class CurrentUser {
     id: string,
     token: string,
     name: string,
-    rtcConfiguration: RTCConfiguration
+    rtcConfiguration: RTCConfiguration,
+    mediaStream: MediaStream
   ) {
-    return new CurrentUser(id, token, name, rtcConfiguration);
+    return new CurrentUser(id, token, name, rtcConfiguration, mediaStream);
   }
 }

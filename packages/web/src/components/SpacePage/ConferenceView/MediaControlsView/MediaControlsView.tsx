@@ -7,30 +7,63 @@ import {
   faPhone,
 } from "@fortawesome/free-solid-svg-icons";
 
+import { useEnumerateMediaDevices } from "../../../../hooks/useEnumerateMediaDevices";
 import {
-  CancelButton,
-  MediaControlsButton,
-  MediaControlsLayout,
-} from "./styles";
+  DropdownButton,
+  DropdownMenu,
+  DropdownToggle,
+  DropdownOptionButton,
+} from "./DropdownButton";
+import { CancelButton, MediaControlsLayout, ShareScreenButton } from "./styles";
 
 export interface MediaControlsViewProps {}
 
-export const MediaControlsView: React.FC<MediaControlsViewProps> = () => (
-  <MediaControlsLayout>
-    <MediaControlsButton aria-label="Share video">
-      <FontAwesomeIcon icon={faVideo} />
-    </MediaControlsButton>
+export const MediaControlsView: React.FC<MediaControlsViewProps> = () => {
+  const devices = useEnumerateMediaDevices();
 
-    <MediaControlsButton aria-label="Share audio">
-      <FontAwesomeIcon icon={faMicrophone} />
-    </MediaControlsButton>
+  return (
+    <MediaControlsLayout>
+      <DropdownButton>
+        <DropdownToggle>
+          <FontAwesomeIcon aria-label="Share video" icon={faVideo} />
+        </DropdownToggle>
 
-    <MediaControlsButton aria-label="Share screen">
-      <FontAwesomeIcon icon={faDesktop} />
-    </MediaControlsButton>
+        <DropdownMenu>
+          <ul>
+            {devices.videoDevices.map((device) => (
+              <li key={device.deviceId}>
+                <DropdownOptionButton>{device.label}</DropdownOptionButton>
+              </li>
+            ))}
+          </ul>
+        </DropdownMenu>
+      </DropdownButton>
 
-    <CancelButton aria-label="Leave the space">
-      <FontAwesomeIcon icon={faPhone} />
-    </CancelButton>
-  </MediaControlsLayout>
-);
+      <DropdownButton>
+        <DropdownToggle aria-label="Share audio">
+          <FontAwesomeIcon icon={faMicrophone} />
+        </DropdownToggle>
+
+        <DropdownMenu>
+          <ul>
+            {devices.audioDevices.map((device) => (
+              <li key={device.deviceId}>
+                <DropdownOptionButton>{device.label}</DropdownOptionButton>
+              </li>
+            ))}
+          </ul>
+        </DropdownMenu>
+      </DropdownButton>
+
+      <ShareScreenButton aria-label="Share screen">
+        <FontAwesomeIcon icon={faDesktop} />
+      </ShareScreenButton>
+
+      <div />
+
+      <CancelButton aria-label="Leave the space">
+        <FontAwesomeIcon icon={faPhone} />
+      </CancelButton>
+    </MediaControlsLayout>
+  );
+};

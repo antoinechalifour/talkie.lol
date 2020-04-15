@@ -1,36 +1,24 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Helmet } from "react-helmet";
 
 import { createTitle } from "../../utils/html";
 import { ConferenceViewModel } from "../../viewmodels/ConferenceViewModel";
-import { useConference } from "./webrtc/useConference";
-import { useLocalUser } from "../../hooks/useLocalUser";
+import { useSignaling } from "./webrtc/useSignaling";
 import { useNotifier } from "./useNotifier";
-import { HeaderArea, PageLayout } from "./styles";
 import { ConferenceView } from "./ConferenceView/ConferenceView";
+import { conferenceContext } from "./context";
+import { HeaderArea, PageLayout } from "./styles";
 
 export interface SpacePageProps {
   conference: ConferenceViewModel;
 }
 
 export const SpacePage: React.FC<SpacePageProps> = ({ conference }) => {
-  const localUser = useLocalUser(conference);
-
-  useConference(conference);
+  useSignaling(conference);
   useNotifier(conference);
 
-  const onUserMediaAdded = useCallback(
-    (mediaStream: MediaStream) =>
-      conference.addLocalUserMediaStream(mediaStream),
-    [conference]
-  );
-  const onUserMediaRemoved = useCallback(
-    () => conference.removeLocalUserMediaStream(),
-    [conference]
-  );
-
   return (
-    <>
+    <conferenceContext.Provider value={conference}>
       <Helmet>
         <title>{createTitle(conference.name())}</title>
       </Helmet>
@@ -39,6 +27,6 @@ export const SpacePage: React.FC<SpacePageProps> = ({ conference }) => {
         <HeaderArea>WebRTC Experiments</HeaderArea>
         <ConferenceView />
       </PageLayout>
-    </>
+    </conferenceContext.Provider>
   );
 };

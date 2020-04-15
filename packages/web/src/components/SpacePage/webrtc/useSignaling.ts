@@ -22,7 +22,7 @@ import {
   SpaceLeftEvent,
 } from "./signaling";
 
-export const useConference = (conference: ConferenceViewModel) => {
+export const useSignaling = (conference: ConferenceViewModel) => {
   /*
                     WebRTC Signaling setup
   In here we are creating the handlers which will respond to the offer / answer

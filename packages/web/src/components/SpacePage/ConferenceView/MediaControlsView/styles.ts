@@ -2,11 +2,11 @@ import styled from "styled-components";
 
 export const MediaControlsLayout = styled.div`
   display: grid;
-  grid-template-columns: auto auto 1fr auto;
+  grid-template-columns: auto auto auto 1fr auto;
   grid-gap: 2rem;
 `;
 
-export const MediaControlsButton = styled.button`
+export const ShareScreenButton = styled.button`
   all: unset;
 
   display: flex;
@@ -19,15 +19,8 @@ export const MediaControlsButton = styled.button`
   color: #fff;
 
   cursor: pointer;
-  transform: scale(1);
-  transition: transform 0.25s ease;
-
-  &:hover {
-    transform: scale(1.05);
-  }
 `;
 
-export const CancelButton = styled(MediaControlsButton)`
+export const CancelButton = styled(ShareScreenButton)`
   background: #ff4c4c;
-  align-self: end;
 `;
