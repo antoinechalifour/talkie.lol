@@ -149,6 +149,11 @@ export class RemotePeer {
         callback();
       }
     });
+    this._connection.addEventListener("connectionstatechange", () => {
+      if (this._connection.connectionState === "closed") {
+        callback();
+      }
+    });
 
     return this;
   }
