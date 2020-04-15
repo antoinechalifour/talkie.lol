@@ -7,7 +7,6 @@ import { Token } from "../domain/entities/Token";
 import { User } from "../domain/entities/User";
 import { UserPort } from "../usecase/ports/UserPort";
 import { TokenPort } from "../usecase/ports/TokenPort";
-import { LeaveSpace } from "../usecase/LeaveSpace";
 import { typeDefs } from "./typeDefs";
 import { resolvers } from "./resolvers";
 import { GraphQLContext } from "./types";
@@ -56,7 +55,6 @@ export class WebRtcExperimentsApp {
       context: this.getGraphQLContext,
       subscriptions: {
         onConnect: this.onSubscriptionConnect,
-        onDisconnect: this.onSubscriptionDisconnect,
       },
       formatError: (e): never => {
         console.error(e.originalError);
@@ -89,22 +87,6 @@ export class WebRtcExperimentsApp {
     const currentUser = await this.getAuthenticatedUser(params.authToken);
 
     return { currentUser };
-  };
-
-  private onSubscriptionDisconnect = async (
-    _: unknown,
-    connection: SubscriptionConnection
-  ): Promise<void> => {
-    log("Handling subscription disconnection");
-
-    const wsContext = await connection.initPromise;
-    const container = this.getScopedContainer();
-
-    container.register("currentUser", asValue(wsContext.currentUser));
-
-    const leaveSpace = container.resolve<LeaveSpace>("leaveSpace");
-
-    await leaveSpace.execute();
   };
 
   private getScopedContainer(): AwilixContainer {
