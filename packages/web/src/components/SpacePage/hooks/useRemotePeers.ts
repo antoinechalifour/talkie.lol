@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
-import { ConferenceViewModel } from "../../../viewmodels/ConferenceViewModel";
+import { useConference } from "./useConference";
 
-export const useRemotePeers = (conference: ConferenceViewModel) => {
+export const useRemotePeers = () => {
+  const conference = useConference();
   const [{ value }, setRemotePeers] = useState(() => ({
     value: conference.allRemotePeers(),
   }));

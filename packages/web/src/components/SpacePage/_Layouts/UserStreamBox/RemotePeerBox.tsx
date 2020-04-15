@@ -31,10 +31,10 @@ export const RemotePeerBox: React.FC<RemotePeerBoxProps> = ({
       {remotePeer.isSharingVideo() ? (
         <VideoStreamBox
           id={`stream-${remotePeer.id()}`}
-          mediaStream={remotePeer.mediaStream!}
+          mediaStream={remotePeer.mediaStream()}
         />
       ) : remotePeer.isSharingAudio() ? (
-        <AudioStreamBox mediaStream={remotePeer.mediaStream!} />
+        <AudioStreamBox mediaStream={remotePeer.mediaStream()} />
       ) : (
         <AllMute>
           <FontAwesomeIcon icon={faVolumeMute} />

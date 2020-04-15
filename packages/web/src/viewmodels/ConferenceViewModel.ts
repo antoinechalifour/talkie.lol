@@ -34,16 +34,6 @@ export class ConferenceViewModel {
     };
   }
 
-  addLocalUserMediaStream(mediaStream: MediaStream) {
-    this.conference.addLocalUserMediaStream(mediaStream);
-    this._notifyLocalUserChanged();
-  }
-
-  removeLocalUserMediaStream() {
-    this.conference.removeLocalUserMediaStream();
-    this._notifyLocalUserChanged();
-  }
-
   addRemotePeer(newRemotePeer: RemotePeer) {
     this.conference.addRemotePeer(newRemotePeer);
     this._notifyRemotePeerAdded(newRemotePeer);

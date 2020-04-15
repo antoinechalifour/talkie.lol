@@ -13,7 +13,7 @@ import {
   DropdownMenu,
   DropdownToggle,
   DropdownOptionButton,
-} from "./DropdownButton";
+} from "../../../ui/MediaControlsView/DropdownButton";
 import { CancelButton, MediaControlsLayout, ShareScreenButton } from "./styles";
 
 export interface MediaControlsViewProps {}

@@ -19,8 +19,8 @@ export const VideoGridLayout: React.FC<VideoGridLayoutProps> = ({
   conference,
   onPresenterPeerSelected,
 }) => {
-  const localUser = useLocalUser(conference);
-  const remotePeers = useRemotePeers(conference);
+  const localUser = useLocalUser();
+  const remotePeers = useRemotePeers();
   const pip = usePictureInPicture();
 
   return (

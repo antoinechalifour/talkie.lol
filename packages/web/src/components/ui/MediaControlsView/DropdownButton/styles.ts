@@ -44,7 +44,7 @@ export const DropdownLayout = styled.div`
   }
 `;
 
-export const DropdownMenu = styled.div`
+export const DropdownMenuLayout = styled.div`
   position: absolute;
   z-index: 10000;
   bottom: 50%;

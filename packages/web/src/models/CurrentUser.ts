@@ -1,17 +1,22 @@
 import debug from "debug";
 
 import { RemotePeer } from "./RemotePeer";
+import { User } from "./User";
 
 const log = debug("app:CurrentUser");
 
-export class CurrentUser {
+export class CurrentUser implements User {
   private constructor(
     private _id: string,
     private _token: string,
     private _name: string,
     private _rtcConfiguration: RTCConfiguration,
-    private _localMediaStream: MediaStream | null
+    private _localMediaStream: MediaStream
   ) {}
+
+  id() {
+    return "me";
+  }
 
   name() {
     return this._name;
@@ -29,19 +34,17 @@ export class CurrentUser {
     return this._localMediaStream;
   }
 
-  addMediaStream(mediaStream: MediaStream) {
-    log("Adding media stream");
-    this._localMediaStream = mediaStream;
-  }
-
-  removeMediaStream() {
-    log("Removing media stream");
-    this._localMediaStream = null;
-  }
+  // addMediaStream(mediaStream: MediaStream) {
+  //   log("Adding media stream");
+  //   this._localMediaStream = mediaStream;
+  // }
+  //
+  // removeMediaStream() {
+  //   log("Removing media stream");
+  //   this._localMediaStream = null;
+  // }
 
   startStreamingWithRemotePeer(remotePeer: RemotePeer) {
-    if (!this._localMediaStream) return;
-
     log(`Sending local stream to ${remotePeer.name()}`);
     remotePeer.startStreaming(this._localMediaStream);
   }

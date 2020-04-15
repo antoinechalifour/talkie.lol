@@ -1,6 +1,7 @@
 import debug from "debug";
 
 import { RemoteUser } from "./RemoteUser";
+import { User } from "./User";
 
 const log = debug("app:RemotePeer");
 
@@ -16,13 +17,13 @@ interface RemotePeerOptions {
   onDisconnected: () => void;
 }
 
-export class RemotePeer {
+export class RemotePeer implements User {
   public isConnected: boolean;
 
   constructor(
     private _user: RemoteUser,
     private _connection: RTCPeerConnection,
-    public mediaStream: MediaStream
+    private _mediaStream: MediaStream
   ) {
     this.isConnected = false;
 
@@ -46,6 +47,10 @@ export class RemotePeer {
 
   name() {
     return this._user.name();
+  }
+
+  mediaStream() {
+    return this._mediaStream;
   }
 
   // -------------------------------------------------- //
@@ -75,13 +80,13 @@ export class RemotePeer {
   }
 
   isSharingAudio() {
-    const audioTracks = this.mediaStream?.getAudioTracks() || [];
+    const audioTracks = this.mediaStream().getAudioTracks() || [];
 
     return audioTracks.length > 0;
   }
 
   isSharingVideo() {
-    const videoTracks = this.mediaStream?.getVideoTracks() || [];
+    const videoTracks = this.mediaStream().getVideoTracks() || [];
 
     return videoTracks.length > 0;
   }
@@ -125,6 +130,9 @@ export class RemotePeer {
   onNegociationNeeded(callback: OfferCallback) {
     this._connection.addEventListener("negotiationneeded", async () => {
       const offer = await this._connection.createOffer();
+
+      if (this._connection.signalingState !== "stable") return;
+
       await this._connection.setLocalDescription(offer);
 
       callback(offer);
@@ -218,15 +226,7 @@ export class RemotePeer {
 
   private _listenForTracks() {
     this._connection.addEventListener("track", ({ track }) => {
-      const tracksToRemove =
-        track.kind === "video"
-          ? this.mediaStream.getVideoTracks()
-          : this.mediaStream.getAudioTracks();
-      tracksToRemove.forEach((trackToRemove) =>
-        this.mediaStream.removeTrack(trackToRemove)
-      );
-
-      this.mediaStream.addTrack(track);
+      this.mediaStream().addTrack(track);
     });
   }
 }
