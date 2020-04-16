@@ -22,24 +22,6 @@ export class Conference {
     return this._currentUser;
   }
 
-  // addLocalUserMediaStream(mediaStream: MediaStream) {
-  //   log("Adding local user media stream");
-  //   this.localUser().addMediaStream(mediaStream);
-  //
-  //   this.allRemotePeers().forEach((peer) =>
-  //     this._currentUser.startStreamingWithRemotePeer(peer)
-  //   );
-  // }
-  //
-  // removeLocalUserMediaStream() {
-  //   log("Removing local user media stream");
-  //   this.localUser().removeMediaStream();
-  //
-  //   this.allRemotePeers().forEach((peer) =>
-  //     this._currentUser.stopStreamingWithRemotePeer(peer)
-  //   );
-  // }
-
   addRemotePeer(newRemotePeer: RemotePeer) {
     if (this._remotePeers.has(newRemotePeer)) return;
 
@@ -69,6 +51,13 @@ export class Conference {
 
   allRemotePeers(): RemotePeer[] {
     return Array.from(this._remotePeers);
+  }
+
+  leave() {
+    this.localUser().stopVideoStream();
+    this.localUser().stopAudioStream();
+
+    this.allRemotePeers().forEach((peer) => peer.closeConnection());
   }
 
   static create(slug: string, currentUser: CurrentUser) {

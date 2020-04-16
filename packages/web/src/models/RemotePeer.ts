@@ -166,6 +166,13 @@ export class RemotePeer implements User {
     return this;
   }
 
+  closeConnection() {
+    this.stopStreaming();
+
+    // @ts-ignore
+    this._connection = null;
+  }
+
   static create(user: RemoteUser, options: RemotePeerOptions) {
     const connection = new RTCPeerConnection(options.rtcConfiguration);
     const mediaStream = new MediaStream();

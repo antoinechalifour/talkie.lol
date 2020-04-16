@@ -119,6 +119,10 @@ export class ConferenceViewModel {
     );
   }
 
+  leave() {
+    this.conference.leave();
+  }
+
   static create(conference: Conference) {
     return new ConferenceViewModel(conference);
   }

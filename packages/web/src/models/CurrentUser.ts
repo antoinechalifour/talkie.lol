@@ -54,6 +54,36 @@ export class CurrentUser implements User {
     remotePeer.stopStreaming();
   }
 
+  setAudioStream(audioTracks: MediaStreamTrack[]) {
+    this.stopAudioStream();
+
+    for (const track of audioTracks) {
+      this.mediaStream().addTrack(track);
+    }
+  }
+
+  stopAudioStream() {
+    for (const track of this.mediaStream().getAudioTracks()) {
+      track.stop();
+      this.mediaStream().removeTrack(track);
+    }
+  }
+
+  setVideoStream(videoTracks: MediaStreamTrack[]) {
+    this.stopVideoStream();
+
+    for (const track of videoTracks) {
+      this.mediaStream().addTrack(track);
+    }
+  }
+
+  stopVideoStream() {
+    for (const track of this.mediaStream().getVideoTracks()) {
+      track.stop();
+      this.mediaStream().removeTrack(track);
+    }
+  }
+
   static create(
     id: string,
     token: string,

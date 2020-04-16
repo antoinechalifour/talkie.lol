@@ -58,7 +58,7 @@ export const DropdownMenuLayout = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 `;
 
-export const DropdownOptionButton = styled.button`
+export const OptionButton = styled.button`
   all: unset;
   display: block;
   box-sizing: border-box;
