@@ -1,7 +1,6 @@
 import "reset.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
-import "./monnkey-patching";
 
 import React from "react";
 import ReactDOM from "react-dom";
