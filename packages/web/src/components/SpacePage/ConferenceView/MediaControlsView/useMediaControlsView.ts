@@ -88,20 +88,22 @@ export const useMediaControlsView = () => {
     const mediaStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
     });
+
     dispatch("START_AUDIO");
-    conference.localUser().setAudioStream(mediaStream.getAudioTracks());
+    conference.startLocalAudio(mediaStream.getAudioTracks());
   }, [conference]);
 
   const stopSharingAudio = useCallback(() => {
     dispatch("STOP_AUDIO");
-    conference.localUser().stopAudioStream();
+    conference.stopLocalAudio();
   }, [conference]);
 
   const shareAudioDevice = useCallback(
     async (deviceId: string) => {
       const mediaStream = await getAudioStreamByDeviceId(deviceId);
+
       dispatch("START_AUDIO");
-      conference.localUser().setAudioStream(mediaStream.getAudioTracks());
+      conference.startLocalAudio(mediaStream.getAudioTracks());
     },
     [conference]
   );
@@ -110,20 +112,22 @@ export const useMediaControlsView = () => {
     const mediaStream = await navigator.mediaDevices.getUserMedia({
       video: true,
     });
+
     dispatch("START_VIDEO");
-    conference.localUser().setVideoStream(mediaStream.getVideoTracks());
+    conference.startLocalVideo(mediaStream.getVideoTracks());
   }, [conference]);
 
   const stopSharingVideo = useCallback(() => {
     dispatch("STOP_VIDEO");
-    conference.localUser().stopVideoStream();
+    conference.stopLocalVideo();
   }, [conference]);
 
   const shareVideoDevice = useCallback(
     async (deviceId: string) => {
       const mediaStream = await getVideoStreamByDeviceId(deviceId);
+
       dispatch("START_VIDEO");
-      conference.localUser().setVideoStream(mediaStream.getVideoTracks());
+      conference.startLocalVideo(mediaStream.getVideoTracks());
     },
     [conference]
   );
@@ -131,12 +135,12 @@ export const useMediaControlsView = () => {
   const startSharingScreen = useCallback(async () => {
     // @ts-ignore
     const mediaStream: MediaStream = await navigator.mediaDevices.getDisplayMedia();
-    conference.localUser().setVideoStream(mediaStream.getVideoTracks());
+    conference.startLocalVideo(mediaStream.getVideoTracks());
   }, [conference]);
 
   const stopSharingScreen = useCallback(() => {
     dispatch("STOP_SCREEN");
-    conference.localUser().stopVideoStream();
+    conference.stopLocalVideo();
   }, [conference]);
 
   const leaveConference = useCallback(() => {

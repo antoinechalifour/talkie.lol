@@ -233,10 +233,20 @@ export class RemotePeer implements User {
 
   private _listenForTracks() {
     this._connection.addEventListener("track", ({ track }) => {
-      this.mediaStream().addTrack(track);
+      for (const oldTrack of this.mediaStream().getTracks()) {
+        if (oldTrack.kind !== track.kind) continue;
+
+        const event = new MediaStreamTrackEvent("removetrack", {
+          track: oldTrack,
+        });
+
+        this.mediaStream().removeTrack(oldTrack);
+        this.mediaStream().dispatchEvent(event);
+      }
 
       const event = new MediaStreamTrackEvent("addtrack", { track });
 
+      this.mediaStream().addTrack(track);
       this.mediaStream().dispatchEvent(event);
     });
   }

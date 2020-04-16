@@ -34,8 +34,6 @@ export const UserMediaView: React.FC<UserMediaViewProps> = ({
       });
     };
 
-    // This works magically because :
-    //  MediaStream.prototype.addTrack and MediaStream.prototype.remove are monkey-patched
     mediaStream.addEventListener("addtrack", onTracksChanged);
     mediaStream.addEventListener("removetrack", onTracksChanged);
 

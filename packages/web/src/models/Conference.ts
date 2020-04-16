@@ -53,6 +53,26 @@ export class Conference {
     return Array.from(this._remotePeers);
   }
 
+  startLocalAudio(audioTracks: MediaStreamTrack[]) {
+    this.localUser().setAudioStream(audioTracks);
+    this._startStreamingLocalMediaStreamWithAllPeers();
+  }
+
+  stopLocalAudio() {
+    this.localUser().stopAudioStream();
+    this._stopStreamingLocalMediaStreamWithAllPeers();
+  }
+
+  startLocalVideo(videoTracks: MediaStreamTrack[]) {
+    this.localUser().setVideoStream(videoTracks);
+    this._startStreamingLocalMediaStreamWithAllPeers();
+  }
+
+  stopLocalVideo() {
+    this.localUser().stopVideoStream();
+    this._stopStreamingLocalMediaStreamWithAllPeers();
+  }
+
   leave() {
     this.localUser().stopVideoStream();
     this.localUser().stopAudioStream();
@@ -62,5 +82,17 @@ export class Conference {
 
   static create(slug: string, currentUser: CurrentUser) {
     return new Conference(slug, currentUser);
+  }
+
+  private _startStreamingLocalMediaStreamWithAllPeers() {
+    this.allRemotePeers().forEach((peer) =>
+      this.localUser().startStreamingWithRemotePeer(peer)
+    );
+  }
+
+  private _stopStreamingLocalMediaStreamWithAllPeers() {
+    this.allRemotePeers().forEach((peer) =>
+      this.localUser().stopStreamingWithRemotePeer(peer)
+    );
   }
 }

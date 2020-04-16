@@ -91,6 +91,26 @@ export class ConferenceViewModel {
     return this.conference.allRemotePeers();
   }
 
+  startLocalAudio(audioTracks: MediaStreamTrack[]) {
+    this.conference.startLocalAudio(audioTracks);
+  }
+
+  stopLocalAudio() {
+    this.conference.stopLocalAudio();
+  }
+
+  startLocalVideo(videoTracks: MediaStreamTrack[]) {
+    this.conference.startLocalVideo(videoTracks);
+  }
+
+  stopLocalVideo() {
+    this.conference.stopLocalVideo();
+  }
+
+  leave() {
+    this.conference.leave();
+  }
+
   private _notifyRemotePeerAdded(newRemotePeer: RemotePeer) {
     this._onRemotePeerAddedListeners.forEach((listener) =>
       listener(newRemotePeer)
@@ -117,10 +137,6 @@ export class ConferenceViewModel {
     this._onLocalUserChangedListeners.forEach((listener) =>
       listener(this.localUser())
     );
-  }
-
-  leave() {
-    this.conference.leave();
   }
 
   static create(conference: Conference) {

@@ -34,16 +34,6 @@ export class CurrentUser implements User {
     return this._localMediaStream;
   }
 
-  // addMediaStream(mediaStream: MediaStream) {
-  //   log("Adding media stream");
-  //   this._localMediaStream = mediaStream;
-  // }
-  //
-  // removeMediaStream() {
-  //   log("Removing media stream");
-  //   this._localMediaStream = null;
-  // }
-
   startStreamingWithRemotePeer(remotePeer: RemotePeer) {
     log(`Sending local stream to ${remotePeer.name()}`);
     remotePeer.startStreaming(this._localMediaStream);
