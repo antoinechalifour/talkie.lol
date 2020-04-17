@@ -1,23 +1,27 @@
 import React from "react";
-import { MainMediaArea, MediaArea, MediaGridLayout } from "./styles";
+
+import { useLocalUser } from "../../hooks/useLocalUser";
+import { useRemotePeers } from "../../hooks/useRemotePeers";
 import { UserMediaView } from "./UserMediaView/UserMediaView";
-import { useMediaGridView } from "./useMediaGridView";
+import { MediaArea, MediaGridLayout } from "./styles";
+import { LocalMediaView } from "./UserMediaView/LocalMediaView";
 
 export interface MediaGridViewProps {}
 
 export const MediaGridView: React.FC<MediaGridViewProps> = () => {
-  const { mainUser, otherUsers } = useMediaGridView();
+  const localUser = useLocalUser();
+  const remotePeers = useRemotePeers();
 
   return (
     <MediaGridLayout>
-      <MainMediaArea>
-        <UserMediaView
-          name={mainUser.name()}
-          mediaStream={mainUser.mediaStream()}
+      <MediaArea>
+        <LocalMediaView
+          name={localUser.name()}
+          mediaStream={localUser.mediaStream()}
         />
-      </MainMediaArea>
+      </MediaArea>
 
-      {otherUsers.map((user) => (
+      {remotePeers.map((user) => (
         <MediaArea key={user.id()}>
           <UserMediaView name={user.name()} mediaStream={user.mediaStream()} />
         </MediaArea>

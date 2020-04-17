@@ -12,20 +12,18 @@ import {
 
 export interface ConferenceViewProps {}
 
-export const ConferenceView: React.FC<ConferenceViewProps> = () => {
-  return (
-    <ConferenceLayout>
-      <MediaArea>
-        <MediaGridView />
-      </MediaArea>
+export const ConferenceView: React.FC<ConferenceViewProps> = () => (
+  <ConferenceLayout>
+    <MediaArea>
+      <MediaGridView />
+    </MediaArea>
 
-      <MediaControlsArea>
-        <MediaControlsView />
-      </MediaControlsArea>
+    <MediaControlsArea>
+      <MediaControlsView />
+    </MediaControlsArea>
 
-      <ChatArea>
-        <ChatView />
-      </ChatArea>
-    </ConferenceLayout>
-  );
-};
+    <ChatArea>
+      <ChatView />
+    </ChatArea>
+  </ConferenceLayout>
+);

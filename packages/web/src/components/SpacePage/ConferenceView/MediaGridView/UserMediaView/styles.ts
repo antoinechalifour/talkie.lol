@@ -11,7 +11,7 @@ export const UserMediaLayout = styled.div`
   background: rgba(0, 0, 0, 0.8);
 `;
 
-export const UserNameView = styled.p`
+export const LocalNameView = styled.p`
   position: absolute;
   bottom: 1rem;
   left: 50%;
@@ -25,6 +25,10 @@ export const UserNameView = styled.p`
 
   background: #3280e9;
   color: #fff;
+`;
+
+export const UserNameView = styled(LocalNameView)`
+  background: rgba(0, 0, 0, 0.7);
 `;
 
 export const UserVideo = styled.video`

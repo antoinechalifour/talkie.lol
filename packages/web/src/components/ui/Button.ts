@@ -8,7 +8,7 @@ export const Button = styled.button`
   border: 2px solid #000;
   border-bottom-width: 5px;
 
-  background: var(--color-background-darker);
+  background: rgba(0, 0, 0, 0.65);
   color: var(--color-text);
 
   font-size: inherit;
