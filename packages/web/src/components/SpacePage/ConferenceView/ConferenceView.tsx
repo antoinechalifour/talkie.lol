@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 
 import { MediaGridView } from "./MediaGridView/MediaGridView";
 import { ChatView } from "./ChatView/ChatView";
 import { MediaControlsView } from "./MediaControlsView/MediaControlsView";
+import { pictureInPictureContext } from "./pictureInPictureContext";
 import {
   ChatArea,
   ConferenceLayout,
@@ -12,18 +13,33 @@ import {
 
 export interface ConferenceViewProps {}
 
-export const ConferenceView: React.FC<ConferenceViewProps> = () => (
-  <ConferenceLayout>
-    <MediaArea>
-      <MediaGridView />
-    </MediaArea>
+export const ConferenceView: React.FC<ConferenceViewProps> = () => {
+  const [pictureInPictureVideoId, setPictureInPictureVideoId] = useState<
+    string | null
+  >(null);
+  const context = useMemo(
+    () => ({
+      pictureInPictureVideoId,
+      setPictureInPictureVideoId,
+    }),
+    [pictureInPictureVideoId, setPictureInPictureVideoId]
+  );
 
-    <MediaControlsArea>
-      <MediaControlsView />
-    </MediaControlsArea>
+  return (
+    <pictureInPictureContext.Provider value={context}>
+      <ConferenceLayout>
+        <MediaArea>
+          <MediaGridView />
+        </MediaArea>
 
-    <ChatArea>
-      <ChatView />
-    </ChatArea>
-  </ConferenceLayout>
-);
+        <MediaControlsArea>
+          <MediaControlsView />
+        </MediaControlsArea>
+
+        <ChatArea>
+          <ChatView />
+        </ChatArea>
+      </ConferenceLayout>
+    </pictureInPictureContext.Provider>
+  );
+};

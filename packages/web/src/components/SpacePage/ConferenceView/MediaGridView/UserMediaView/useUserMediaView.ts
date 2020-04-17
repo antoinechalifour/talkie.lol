@@ -5,7 +5,8 @@ const hasMediaStreamVideo = (mediaStream: MediaStream) =>
 const hasMediaStreamAudio = (mediaStream: MediaStream) =>
   mediaStream.getAudioTracks().length > 0;
 
-export const useUserMediaView = (mediaStream: MediaStream) => {
+export const useUserMediaView = (id: string, mediaStream: MediaStream) => {
+  const videoId = `stream-${id}`;
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -49,6 +50,7 @@ export const useUserMediaView = (mediaStream: MediaStream) => {
   }, [hasAudio, mediaStream]);
 
   return {
+    videoId,
     hasAudio,
     audioRef,
     hasVideo,

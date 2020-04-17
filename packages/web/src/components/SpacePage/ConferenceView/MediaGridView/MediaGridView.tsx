@@ -16,6 +16,7 @@ export const MediaGridView: React.FC<MediaGridViewProps> = () => {
     <MediaGridLayout>
       <MediaArea>
         <LocalMediaView
+          id={localUser.id()}
           name={localUser.name()}
           mediaStream={localUser.mediaStream()}
         />
@@ -23,7 +24,11 @@ export const MediaGridView: React.FC<MediaGridViewProps> = () => {
 
       {remotePeers.map((user) => (
         <MediaArea key={user.id()}>
-          <UserMediaView name={user.name()} mediaStream={user.mediaStream()} />
+          <UserMediaView
+            id={user.id()}
+            name={user.name()}
+            mediaStream={user.mediaStream()}
+          />
         </MediaArea>
       ))}
     </MediaGridLayout>
