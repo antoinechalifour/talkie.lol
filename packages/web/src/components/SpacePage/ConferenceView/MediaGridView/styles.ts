@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const MediaGridLayout = styled.div`
   max-width: 860px;
@@ -9,9 +9,22 @@ export const MediaGridLayout = styled.div`
   grid-gap: 2rem;
 `;
 
+const mediaEnterAnimation = keyframes`
+  from {
+    transform: perspective(500px) translateZ(50px);
+    opacity: 0;
+  }
+  to {
+    transform: perspective(500px) translateZ(0);
+    opacity: 1;
+  }
+`;
+
 export const MediaArea = styled.div`
   padding-bottom: 75%;
   position: relative;
   box-shadow: var(--box-shadow);
   border-radius: 1rem;
+
+  animation: ${mediaEnterAnimation} 0.25s ease;
 `;
