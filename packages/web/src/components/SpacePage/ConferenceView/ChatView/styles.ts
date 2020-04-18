@@ -68,13 +68,15 @@ export const InputGroup = styled.div`
 `;
 
 export const MessagesList = styled.ul`
-  display: grid;
-  grid-gap: 2rem;
   height: 100%;
   overflow-y: scroll;
 `;
 
 export const MessageLayout = styled.li`
+  & + li {
+    margin-top: 2rem;
+  }
+
   > * + * {
     margin-top: 0.8rem;
   }
