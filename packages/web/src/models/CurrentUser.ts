@@ -74,6 +74,10 @@ export class CurrentUser implements User {
     }
   }
 
+  sendMessageToRemotePeer(message: string, peer: RemotePeer) {
+    peer.sendMessage(message);
+  }
+
   static create(
     id: string,
     token: string,

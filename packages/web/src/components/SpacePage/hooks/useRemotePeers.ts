@@ -4,14 +4,13 @@ import { useConference } from "./useConference";
 
 export const useRemotePeers = () => {
   const conference = useConference();
-  const [{ value }, setRemotePeers] = useState(() => ({
-    value: conference.allRemotePeers(),
-  }));
+  const [remotePeers, setRemotePeers] = useState(conference.allRemotePeers());
 
   useEffect(
-    () => conference.onRemotePeersChanged((value) => setRemotePeers({ value })),
+    () =>
+      conference.onRemotePeersChanged((peers) => setRemotePeers([...peers])),
     [conference]
   );
 
-  return value;
+  return remotePeers;
 };

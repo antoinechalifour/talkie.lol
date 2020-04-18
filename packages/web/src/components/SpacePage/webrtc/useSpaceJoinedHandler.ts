@@ -25,9 +25,7 @@ export const useSpaceJoinedHandler = (conference: ConferenceViewModel) => {
     logSignaling(`[IN] SPACE_JOINED | ${user.name} ${user.id}`);
 
     const remoteUser = RemoteUser.create(user.id, user.name);
-
-    // Create the connection
-    const remotePeer = RemotePeer.create(remoteUser, {
+    const remotePeer = RemotePeer.createOfferer(remoteUser, {
       rtcConfiguration: conference.localUser().rtcConfiguration(),
       onIceCandidate: (candidate) => {
         logSignaling(
@@ -52,6 +50,7 @@ export const useSpaceJoinedHandler = (conference: ConferenceViewModel) => {
         });
       },
       onDisconnected: () => conference.removeRemotePeer(remotePeer),
+      onMessage: (message) => conference.addMessage(message),
     });
 
     conference.addRemotePeer(remotePeer);

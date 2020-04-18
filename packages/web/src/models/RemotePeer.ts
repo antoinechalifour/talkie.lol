@@ -2,6 +2,7 @@ import debug from "debug";
 
 import { RemoteUser } from "./RemoteUser";
 import { User } from "./User";
+import { Message } from "./Message";
 
 const log = debug("app:RemotePeer");
 
@@ -9,12 +10,14 @@ type IceCandidateCallback = (iceCandidate: RTCIceCandidate) => void;
 type OfferCallback = (offer: RTCSessionDescriptionInit) => void;
 type ConnectedCallback = () => void;
 type DisconnectedCallback = () => void;
+type MessageCallback = (message: Message) => void;
 
 interface RemotePeerOptions {
   rtcConfiguration: RTCConfiguration;
   onIceCandidate: (candidate: RTCIceCandidate) => void;
   onNegociationNeeded: (offer: RTCSessionDescriptionInit) => void;
   onDisconnected: () => void;
+  onMessage: MessageCallback;
 }
 
 export class RemotePeer implements User {
@@ -23,12 +26,13 @@ export class RemotePeer implements User {
   constructor(
     private _user: RemoteUser,
     private _connection: RTCPeerConnection,
-    private _mediaStream: MediaStream
+    private _mediaStream: MediaStream,
+    private _dataChannel: RTCDataChannel | null
   ) {
     this.isConnected = false;
 
-    this.onConnected(() => (this.isConnected = true));
-    this.onDisconnected(() => (this.isConnected = false));
+    this._onConnected(() => (this.isConnected = true));
+    this._onDisconnected(() => (this.isConnected = false));
 
     this._listenForTracks();
   }
@@ -51,6 +55,10 @@ export class RemotePeer implements User {
 
   mediaStream() {
     return this._mediaStream;
+  }
+
+  dataChannel() {
+    return this._dataChannel;
   }
 
   // -------------------------------------------------- //
@@ -79,16 +87,12 @@ export class RemotePeer implements User {
     });
   }
 
-  isSharingAudio() {
-    const audioTracks = this.mediaStream().getAudioTracks() || [];
+  sendMessage(message: string) {
+    const dataChannel = this.dataChannel();
 
-    return audioTracks.length > 0;
-  }
+    if (!dataChannel) return;
 
-  isSharingVideo() {
-    const videoTracks = this.mediaStream().getVideoTracks() || [];
-
-    return videoTracks.length > 0;
+    dataChannel.send(message);
   }
 
   // -------------------------------------------------- //
@@ -115,57 +119,6 @@ export class RemotePeer implements User {
     return this._connection.addIceCandidate(iceCandidate);
   }
 
-  onIceCandidate(callback: IceCandidateCallback) {
-    this._connection.addEventListener("icecandidate", (e) => {
-      if (!e.candidate) {
-        return;
-      }
-
-      callback(e.candidate);
-    });
-
-    return this;
-  }
-
-  onNegociationNeeded(callback: OfferCallback) {
-    this._connection.addEventListener("negotiationneeded", async () => {
-      const offer = await this._connection.createOffer();
-
-      if (this._connection.signalingState !== "stable") return;
-
-      await this._connection.setLocalDescription(offer);
-
-      callback(offer);
-    });
-
-    return this;
-  }
-
-  onConnected(callback: ConnectedCallback) {
-    this._connection.addEventListener("signalingstatechange", () => {
-      if (this._connection.signalingState === "stable") {
-        callback();
-      }
-    });
-
-    return this;
-  }
-
-  onDisconnected(callback: DisconnectedCallback) {
-    this._connection.addEventListener("iceconnectionstatechange", () => {
-      if (this._connection.iceConnectionState === "disconnected") {
-        callback();
-      }
-    });
-    this._connection.addEventListener("connectionstatechange", () => {
-      if (this._connection.connectionState === "closed") {
-        callback();
-      }
-    });
-
-    return this;
-  }
-
   closeConnection() {
     this.stopStreaming();
 
@@ -173,18 +126,40 @@ export class RemotePeer implements User {
     this._connection = null;
   }
 
-  static create(user: RemoteUser, options: RemotePeerOptions) {
+  static createOfferer(user: RemoteUser, options: RemotePeerOptions) {
+    const connection = new RTCPeerConnection(options.rtcConfiguration);
+    const mediaStream = new MediaStream();
+    const dataChannel = connection.createDataChannel("chat");
+
+    return new RemotePeer(user, connection, mediaStream, dataChannel)
+      ._onIceCandidate(options.onIceCandidate)
+      ._onNegociationNeeded(options.onNegociationNeeded)
+      ._onDisconnected(options.onDisconnected)
+      ._onMessage(options.onMessage)
+      ._debugRtc()
+      ._debugDataChannel();
+  }
+
+  static createAnswerer(user: RemoteUser, options: RemotePeerOptions) {
     const connection = new RTCPeerConnection(options.rtcConfiguration);
     const mediaStream = new MediaStream();
 
-    return new RemotePeer(user, connection, mediaStream)
-      .onIceCandidate(options.onIceCandidate)
-      .onNegociationNeeded(options.onNegociationNeeded)
-      .onDisconnected(options.onDisconnected)
-      .debugRtc();
+    const remotePeer = new RemotePeer(user, connection, mediaStream, null)
+      ._onIceCandidate(options.onIceCandidate)
+      ._onNegociationNeeded(options.onNegociationNeeded)
+      ._onDisconnected(options.onDisconnected)
+      ._debugRtc();
+
+    connection.addEventListener("datachannel", (e) => {
+      log(`♻️ Data Channel | ${e.channel.label}`);
+      remotePeer._addDataChannel(e.channel);
+      remotePeer._onMessage(options.onMessage);
+    });
+
+    return remotePeer;
   }
 
-  private debugRtc() {
+  private _debugRtc() {
     this._connection.addEventListener("icecandidateerror", (e) => {
       log(
         `🛑 Ice candidate error (user ${this.id()}, ${this.name()}):`,
@@ -231,6 +206,33 @@ export class RemotePeer implements User {
     return this;
   }
 
+  private _debugDataChannel() {
+    if (!this._dataChannel) return this;
+
+    this._dataChannel.addEventListener("open", () => {
+      log(`♻️ Data channel is now open for user ${this.id()} (${this.name()})`);
+    });
+
+    this._dataChannel.addEventListener("close", () => {
+      log(
+        `♻️ Data channel is now closed for user ${this.id()} (${this.name()})`
+      );
+    });
+
+    this._dataChannel.addEventListener("error", (e) => {
+      log(`🛑 Data channel error for user ${this.id()} (${this.name()}):`, e);
+    });
+
+    this._dataChannel.addEventListener("message", (e) => {
+      log(
+        `♻️ Data channel message from user ${this.id()} (${this.name()}):`,
+        e
+      );
+    });
+
+    return this;
+  }
+
   private _listenForTracks() {
     this._connection.addEventListener("track", ({ track }) => {
       for (const oldTrack of this.mediaStream().getTracks()) {
@@ -249,5 +251,81 @@ export class RemotePeer implements User {
       this.mediaStream().addTrack(track);
       this.mediaStream().dispatchEvent(event);
     });
+  }
+
+  private _addDataChannel(dataChannel: RTCDataChannel) {
+    this._dataChannel = dataChannel;
+
+    this._debugDataChannel();
+  }
+
+  private _onIceCandidate(callback: IceCandidateCallback) {
+    this._connection.addEventListener("icecandidate", (e) => {
+      if (!e.candidate) {
+        return;
+      }
+
+      callback(e.candidate);
+    });
+
+    return this;
+  }
+
+  private _onNegociationNeeded(callback: OfferCallback) {
+    this._connection.addEventListener("negotiationneeded", async () => {
+      const offer = await this._connection.createOffer();
+
+      if (this._connection.signalingState !== "stable") return;
+
+      await this._connection.setLocalDescription(offer);
+
+      callback(offer);
+    });
+
+    return this;
+  }
+
+  private _onConnected(callback: ConnectedCallback) {
+    this._connection.addEventListener("signalingstatechange", () => {
+      if (this._connection.signalingState === "stable") {
+        callback();
+      }
+    });
+
+    return this;
+  }
+
+  private _onDisconnected(callback: DisconnectedCallback) {
+    this._connection.addEventListener("iceconnectionstatechange", () => {
+      if (this._connection.iceConnectionState === "disconnected") {
+        callback();
+      }
+    });
+    this._connection.addEventListener("connectionstatechange", () => {
+      if (this._connection.connectionState === "closed") {
+        callback();
+      }
+    });
+
+    return this;
+  }
+
+  private _onMessage(onMessage: MessageCallback) {
+    const dataChannel = this.dataChannel();
+
+    if (!dataChannel) return this;
+
+    dataChannel.addEventListener("message", (e) =>
+      onMessage(
+        Message.create(
+          {
+            name: this.name(),
+          },
+          e.data
+        )
+      )
+    );
+
+    return this;
   }
 }
