@@ -11,8 +11,12 @@ export const StreamOptionsLayout = styled.div`
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent);
 `;
 
-export const PictureInPictureLabel = styled.label`
+export const OptionLabel = styled.label`
   cursor: pointer;
+
+  & + label {
+    margin-left: 1rem;
+  }
 
   input {
     position: absolute;

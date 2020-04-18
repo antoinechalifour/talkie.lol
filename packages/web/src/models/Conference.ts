@@ -55,6 +55,18 @@ export class Conference {
     return this.allRemotePeers().find((peer) => peer.isUser(user)) || null;
   }
 
+  userById(userId: string) {
+    if (this.localUser().id() === userId) return this.localUser();
+
+    for (const peer of this.allRemotePeers()) {
+      if (peer.id() === userId) {
+        return peer;
+      }
+    }
+
+    throw new Error(`User not found in conference: ${userId}`);
+  }
+
   allRemotePeers(): RemotePeer[] {
     return Array.from(this._remotePeers);
   }

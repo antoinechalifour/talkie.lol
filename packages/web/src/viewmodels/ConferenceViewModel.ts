@@ -176,4 +176,8 @@ export class ConferenceViewModel {
   static create(conference: Conference) {
     return new ConferenceViewModel(conference);
   }
+
+  userById(userId: string) {
+    return this.conference.userById(userId);
+  }
 }
