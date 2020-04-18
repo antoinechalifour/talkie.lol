@@ -4,7 +4,7 @@ import { Background, AppTitle } from "./styles";
 
 export const HomeLayout: React.FC = ({ children }) => (
   <Background>
-    <AppTitle>WebRTC Experiments</AppTitle>
+    <AppTitle>Talkie.LOL</AppTitle>
     {children}
   </Background>
 );

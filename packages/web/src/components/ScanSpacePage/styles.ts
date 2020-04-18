@@ -8,5 +8,6 @@ export const QrCodeVideoPreview = styled.video`
   max-width: 250px;
   border-radius: 1rem;
   margin-bottom: 2rem;
+  background: rgba(0, 0, 0, 0.85);
   box-shadow: var(--box-shadow);
 `;

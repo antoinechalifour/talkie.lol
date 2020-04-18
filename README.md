@@ -1,4 +1,4 @@
-# WebRTC Experiments
+# Talkie.LOL
 
 - 👨‍💻 A [demo](http://webrtc-experiments.netlify.com/) is available on Netlify
 - 💻 The [signaling server](https://webrtc-experiments.herokuapp.com/graphql) is hosted on Heroku (this project is on a free plan so it might take quite some time to wake the servers).

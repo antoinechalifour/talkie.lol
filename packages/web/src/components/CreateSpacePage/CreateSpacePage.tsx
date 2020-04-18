@@ -22,8 +22,10 @@ export const CreateSpacePage: React.FC = () => {
         </Button>
       ) : (
         <CreateOrJoin>
-          <Button onClick={createSpace}>Create a space</Button>
-          <Link to="/join">... or join an existing space</Link>
+          <Button onClick={createSpace}>
+            Create a space to chat with your friends
+          </Button>
+          <Link to="/join">... or join one of your friend's space</Link>
         </CreateOrJoin>
       )}
     </HomeLayout>

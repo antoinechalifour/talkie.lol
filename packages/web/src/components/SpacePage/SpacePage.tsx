@@ -24,7 +24,7 @@ export const SpacePage: React.FC<SpacePageProps> = ({ conference }) => {
       </Helmet>
 
       <PageLayout>
-        <HeaderArea>WebRTC Experiments</HeaderArea>
+        <HeaderArea>Talkie.LOL</HeaderArea>
         <ConferenceView />
       </PageLayout>
     </conferenceContext.Provider>
