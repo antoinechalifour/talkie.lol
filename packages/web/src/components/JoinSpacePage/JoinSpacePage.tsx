@@ -7,13 +7,16 @@ import { HomeLayout } from "../HomeLayout/HomeLayout";
 import { SpacePage } from "../SpacePage/SpacePage";
 import { Button } from "../ui/Button";
 import { useJoinSpace } from "./useJoinSpace";
+import { JoinButton, VideoLayout } from "./styles";
 
 export interface JoinSpacePageProps {
   spaceSlug: string;
 }
 
 export const JoinSpacePage: React.FC<JoinSpacePageProps> = ({ spaceSlug }) => {
-  const { conference, isFetching, login } = useJoinSpace({ slug: spaceSlug });
+  const { conference, isFetching, login, videoRef } = useJoinSpace({
+    slug: spaceSlug,
+  });
 
   if (conference) {
     return (
@@ -29,11 +32,13 @@ export const JoinSpacePage: React.FC<JoinSpacePageProps> = ({ spaceSlug }) => {
         <title>{createTitle(`Join space ${spaceSlug}`)}</title>
       </Helmet>
 
-      {isFetching ? (
-        <p>Connecting to space...</p>
-      ) : (
-        <Button onClick={login}>Join space {spaceSlug}</Button>
-      )}
+      <VideoLayout>
+        <video ref={videoRef} autoPlay muted />
+
+        <JoinButton onClick={login} disabled={isFetching}>
+          {isFetching ? "Connecting to space..." : `Join space ${spaceSlug}`}
+        </JoinButton>
+      </VideoLayout>
     </HomeLayout>
   );
 };
