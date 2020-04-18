@@ -2,8 +2,12 @@ import styled from "styled-components";
 
 export const MediaControlsLayout = styled.div`
   display: grid;
-  grid-template-columns: auto auto auto 1fr auto auto;
   grid-gap: 2rem;
+  grid-template-columns: repeat(3, 1fr);
+
+  @media (min-width: 860px) {
+    grid-template-columns: auto auto auto 1fr auto auto;
+  }
 `;
 
 export const ShareScreenButton = styled.button`
@@ -19,6 +23,14 @@ export const ShareScreenButton = styled.button`
   color: var(--button-text);
 
   cursor: pointer;
+`;
+
+export const Spacer = styled.div`
+  display: none;
+
+  @media (min-width: 860px) {
+    display: block;
+  }
 `;
 
 export const CancelButton = styled(ShareScreenButton)`
