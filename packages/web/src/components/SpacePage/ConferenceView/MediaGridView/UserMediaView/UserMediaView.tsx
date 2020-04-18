@@ -25,7 +25,7 @@ export const UserMediaView: React.FC<UserMediaViewProps> = ({
       {hasVideo && <UserVideo id={videoId} ref={videoRef} autoPlay muted />}
       {hasAudio && <audio ref={audioRef} autoPlay />}
 
-      <StreamOptionsView videoId={videoId} />
+      <StreamOptionsView videoId={videoId} userId={id} />
 
       <UserNameView>{name}</UserNameView>
     </UserMediaLayout>

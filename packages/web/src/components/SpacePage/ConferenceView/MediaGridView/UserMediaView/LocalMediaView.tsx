@@ -21,7 +21,7 @@ export const LocalMediaView: React.FC<LocalMediaViewProps> = ({
     <UserMediaLayout>
       {hasVideo && <UserVideo id={videoId} ref={videoRef} autoPlay muted />}
 
-      <StreamOptionsView videoId={videoId} />
+      <StreamOptionsView videoId={videoId} userId={id} />
 
       <LocalNameView>{name}</LocalNameView>
     </UserMediaLayout>

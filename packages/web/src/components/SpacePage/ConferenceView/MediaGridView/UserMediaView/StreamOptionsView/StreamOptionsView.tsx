@@ -1,25 +1,44 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCompress } from "@fortawesome/free-solid-svg-icons";
+import { faCompress, faExpand } from "@fortawesome/free-solid-svg-icons";
 
-import { PictureInPictureLabel, StreamOptionsLayout } from "./styles";
+import { useZenMode } from "../../../useZenMode";
 import { useStreamOptionsView } from "./useStreamOptionsView";
+import { OptionLabel, StreamOptionsLayout } from "./styles";
 
 export interface StreamOptionsViewProps {
   videoId: string;
+  userId: string;
 }
 
 export const StreamOptionsView: React.FC<StreamOptionsViewProps> = ({
   videoId,
+  userId,
 }) => {
   const {
     isPictureInPictureEnabled,
     togglePictureInPicture,
   } = useStreamOptionsView(videoId);
 
+  const zenMode = useZenMode();
+  const isZenModeEnabled = zenMode.userId === userId;
+  const enterZenMode = useCallback(() => zenMode.enterZenMode(userId), [
+    userId,
+    zenMode,
+  ]);
+
   return (
     <StreamOptionsLayout>
-      <PictureInPictureLabel title="Enable picture in picture for this user">
+      <OptionLabel>
+        <input
+          type="checkbox"
+          checked={isZenModeEnabled}
+          onChange={enterZenMode}
+        />
+
+        <FontAwesomeIcon icon={faExpand} />
+      </OptionLabel>
+      <OptionLabel title="Enable picture in picture for this user">
         <input
           type="checkbox"
           checked={isPictureInPictureEnabled}
@@ -27,7 +46,7 @@ export const StreamOptionsView: React.FC<StreamOptionsViewProps> = ({
         />
 
         <FontAwesomeIcon icon={faCompress} />
-      </PictureInPictureLabel>
+      </OptionLabel>
     </StreamOptionsLayout>
   );
 };
