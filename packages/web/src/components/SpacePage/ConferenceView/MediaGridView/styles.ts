@@ -5,8 +5,11 @@ export const MediaGridLayout = styled.div`
   margin-left: auto;
   margin-right: auto;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
   grid-gap: 2rem;
+
+  @media (min-width: 860px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const mediaEnterAnimation = keyframes`

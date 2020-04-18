@@ -5,8 +5,7 @@ export const DropdownGroup = styled.div`
 `;
 
 export const DropdownLayout = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, auto);
+  display: flex;
 
   button {
     all: unset;

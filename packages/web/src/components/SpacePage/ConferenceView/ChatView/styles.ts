@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const ChatLayout = styled.div`
   display: grid;
   grid-template-rows: 1fr auto;
+  grid-gap: 2rem;
   height: 100%;
 `;
 
