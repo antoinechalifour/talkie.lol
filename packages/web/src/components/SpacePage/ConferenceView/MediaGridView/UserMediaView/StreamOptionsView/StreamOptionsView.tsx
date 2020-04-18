@@ -19,7 +19,7 @@ export const StreamOptionsView: React.FC<StreamOptionsViewProps> = ({
 
   return (
     <StreamOptionsLayout>
-      <PictureInPictureLabel>
+      <PictureInPictureLabel title="Enable picture in picture for this user">
         <input
           type="checkbox"
           checked={isPictureInPictureEnabled}
