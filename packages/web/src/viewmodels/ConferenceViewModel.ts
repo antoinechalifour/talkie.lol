@@ -34,16 +34,6 @@ export class ConferenceViewModel {
     };
   }
 
-  addLocalUserMediaStream(mediaStream: MediaStream) {
-    this.conference.addLocalUserMediaStream(mediaStream);
-    this._notifyLocalUserChanged();
-  }
-
-  removeLocalUserMediaStream() {
-    this.conference.removeLocalUserMediaStream();
-    this._notifyLocalUserChanged();
-  }
-
   addRemotePeer(newRemotePeer: RemotePeer) {
     this.conference.addRemotePeer(newRemotePeer);
     this._notifyRemotePeerAdded(newRemotePeer);
@@ -99,6 +89,26 @@ export class ConferenceViewModel {
 
   allRemotePeers(): RemotePeer[] {
     return this.conference.allRemotePeers();
+  }
+
+  startLocalAudio(audioTracks: MediaStreamTrack[]) {
+    this.conference.startLocalAudio(audioTracks);
+  }
+
+  stopLocalAudio() {
+    this.conference.stopLocalAudio();
+  }
+
+  startLocalVideo(videoTracks: MediaStreamTrack[]) {
+    this.conference.startLocalVideo(videoTracks);
+  }
+
+  stopLocalVideo() {
+    this.conference.stopLocalVideo();
+  }
+
+  leave() {
+    this.conference.leave();
   }
 
   private _notifyRemotePeerAdded(newRemotePeer: RemotePeer) {

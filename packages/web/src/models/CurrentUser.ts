@@ -1,18 +1,22 @@
 import debug from "debug";
 
 import { RemotePeer } from "./RemotePeer";
+import { User } from "./User";
 
 const log = debug("app:CurrentUser");
 
-export class CurrentUser {
-  private _localMediaStream: MediaStream | null = null;
-
+export class CurrentUser implements User {
   private constructor(
     private _id: string,
     private _token: string,
     private _name: string,
-    private _rtcConfiguration: RTCConfiguration
+    private _rtcConfiguration: RTCConfiguration,
+    private _localMediaStream: MediaStream
   ) {}
+
+  id() {
+    return "me";
+  }
 
   name() {
     return this._name;
@@ -30,19 +34,7 @@ export class CurrentUser {
     return this._localMediaStream;
   }
 
-  addMediaStream(mediaStream: MediaStream) {
-    log("Adding media stream");
-    this._localMediaStream = mediaStream;
-  }
-
-  removeMediaStream() {
-    log("Removing media stream");
-    this._localMediaStream = null;
-  }
-
   startStreamingWithRemotePeer(remotePeer: RemotePeer) {
-    if (!this._localMediaStream) return;
-
     log(`Sending local stream to ${remotePeer.name()}`);
     remotePeer.startStreaming(this._localMediaStream);
   }
@@ -52,12 +44,43 @@ export class CurrentUser {
     remotePeer.stopStreaming();
   }
 
+  setAudioStream(audioTracks: MediaStreamTrack[]) {
+    this.stopAudioStream();
+
+    for (const track of audioTracks) {
+      this.mediaStream().addTrack(track);
+    }
+  }
+
+  stopAudioStream() {
+    for (const track of this.mediaStream().getAudioTracks()) {
+      track.stop();
+      this.mediaStream().removeTrack(track);
+    }
+  }
+
+  setVideoStream(videoTracks: MediaStreamTrack[]) {
+    this.stopVideoStream();
+
+    for (const track of videoTracks) {
+      this.mediaStream().addTrack(track);
+    }
+  }
+
+  stopVideoStream() {
+    for (const track of this.mediaStream().getVideoTracks()) {
+      track.stop();
+      this.mediaStream().removeTrack(track);
+    }
+  }
+
   static create(
     id: string,
     token: string,
     name: string,
-    rtcConfiguration: RTCConfiguration
+    rtcConfiguration: RTCConfiguration,
+    mediaStream: MediaStream
   ) {
-    return new CurrentUser(id, token, name, rtcConfiguration);
+    return new CurrentUser(id, token, name, rtcConfiguration, mediaStream);
   }
 }

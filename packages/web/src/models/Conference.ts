@@ -22,24 +22,6 @@ export class Conference {
     return this._currentUser;
   }
 
-  addLocalUserMediaStream(mediaStream: MediaStream) {
-    log("Adding local user media stream");
-    this.localUser().addMediaStream(mediaStream);
-
-    this.allRemotePeers().forEach((peer) =>
-      this._currentUser.startStreamingWithRemotePeer(peer)
-    );
-  }
-
-  removeLocalUserMediaStream() {
-    log("Removing local user media stream");
-    this.localUser().removeMediaStream();
-
-    this.allRemotePeers().forEach((peer) =>
-      this._currentUser.stopStreamingWithRemotePeer(peer)
-    );
-  }
-
   addRemotePeer(newRemotePeer: RemotePeer) {
     if (this._remotePeers.has(newRemotePeer)) return;
 
@@ -71,7 +53,46 @@ export class Conference {
     return Array.from(this._remotePeers);
   }
 
+  startLocalAudio(audioTracks: MediaStreamTrack[]) {
+    this.localUser().setAudioStream(audioTracks);
+    this._startStreamingLocalMediaStreamWithAllPeers();
+  }
+
+  stopLocalAudio() {
+    this.localUser().stopAudioStream();
+    this._stopStreamingLocalMediaStreamWithAllPeers();
+  }
+
+  startLocalVideo(videoTracks: MediaStreamTrack[]) {
+    this.localUser().setVideoStream(videoTracks);
+    this._startStreamingLocalMediaStreamWithAllPeers();
+  }
+
+  stopLocalVideo() {
+    this.localUser().stopVideoStream();
+    this._stopStreamingLocalMediaStreamWithAllPeers();
+  }
+
+  leave() {
+    this.localUser().stopVideoStream();
+    this.localUser().stopAudioStream();
+
+    this.allRemotePeers().forEach((peer) => peer.closeConnection());
+  }
+
   static create(slug: string, currentUser: CurrentUser) {
     return new Conference(slug, currentUser);
+  }
+
+  private _startStreamingLocalMediaStreamWithAllPeers() {
+    this.allRemotePeers().forEach((peer) =>
+      this.localUser().startStreamingWithRemotePeer(peer)
+    );
+  }
+
+  private _stopStreamingLocalMediaStreamWithAllPeers() {
+    this.allRemotePeers().forEach((peer) =>
+      this.localUser().stopStreamingWithRemotePeer(peer)
+    );
   }
 }

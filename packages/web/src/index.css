@@ -4,15 +4,39 @@ html {
   --font-primary: "Arvo", serif;
   --font-secondary: "Source Sans Pro", sans-serif;
 
-  --color-background-lighter: hsl(245, 21%, 30%);
-  --color-background: hsl(245, 21%, 20%);
-  --color-background-darker: hsl(245, 21%, 10%);
+  --color-white: #fff;
+  --color-black: #000;
+  --color-lightgray: #ddd;
+  --color-darkgray: #373737;
+  --color-blue: #3280e9;
+  --color-dark-blue: #3157ac;
+  --color-red: #ff4c4c;
+  --color-green: #4fd77e;
+  --color-darkblue: #252f43;
+  --color-darker-darkblue: #1d2636;
+  --color-darkest-darkblue: #161d28;
 
-  --color-text: hsl(245, 21%, 95%);
-  --color-text-darker: hsl(245, 21%, 75%);
+  --background-lighter: var(--color-darkblue);
+  --background: var(--color-darkest-darkblue);
+  --background-darker: var(--color-darker-darkblue);
+  --background-pattern: url("data:image/svg+xml,%3Csvg width='84' height='48' viewBox='0 0 84 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h12v6H0V0zm28 8h12v6H28V8zm14-8h12v6H42V0zm14 0h12v6H56V0zm0 8h12v6H56V8zM42 8h12v6H42V8zm0 16h12v6H42v-6zm14-8h12v6H56v-6zm14 0h12v6H70v-6zm0-16h12v6H70V0zM28 32h12v6H28v-6zM14 16h12v6H14v-6zM0 24h12v6H0v-6zm0 8h12v6H0v-6zm14 0h12v6H14v-6zm14 8h12v6H28v-6zm-14 0h12v6H14v-6zm28 0h12v6H42v-6zm14-8h12v6H56v-6zm0-8h12v6H56v-6zm14 8h12v6H70v-6zm0 8h12v6H70v-6zM14 24h12v6H14v-6zm14-8h12v6H28v-6zM14 8h12v6H14V8zM0 8h12v6H0V8z' fill='%23161d28' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+  --background-video: var(--color-black);
+  --background-reverse: var(--color-white);
 
-  --color-accent: #4fd77e;
-  --color-accent-darker: #1e5933;
+  --color-text: var(--color-white);
+  --color-text-reverse: var(--color-darkgray);
+
+  --box-shadow-1: 0 1px 6px rgba(0, 0, 0, 0.25);
+  --box-shadow-2: 0 1px 12px rgba(0, 0, 0, 0.4);
+  --box-shadow: 20px 20px 60px #0f141c, -20px -20px 60px #1d2634;
+
+  --button-background: var(--color-blue);
+  --button-background-gradient: linear-gradient(25deg, #3280e9, #74e396);
+  --button-text: var(--color-white);
+
+  --button-danger-background: var(--color-red);
+
+  --input-active-background: var(--color-green);
 }
 
 body {
@@ -34,5 +58,4 @@ body {
 
 .Toastify__close-button {
   align-self: center;
-
 }
