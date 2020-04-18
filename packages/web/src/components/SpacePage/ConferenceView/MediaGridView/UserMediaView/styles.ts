@@ -1,6 +1,10 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const UserMediaLayout = styled.div`
+export interface UserMediaLayoutProps {
+  isActive: boolean;
+}
+
+export const UserMediaLayout = styled.div<UserMediaLayoutProps>`
   position: absolute;
   overflow: hidden;
   top: 0;
@@ -9,6 +13,15 @@ export const UserMediaLayout = styled.div`
   left: 0;
   border-radius: 1rem;
   background: var(--color-black);
+
+  border: 2px solid black;
+  transition: border 0.25s ease;
+
+  ${(props) =>
+    props.isActive &&
+    css`
+      border: 2px solid var(--color-green);
+    `};
 `;
 
 export const LocalNameView = styled.p`
