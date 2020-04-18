@@ -27,7 +27,7 @@ export const useRtcOfferReceivedHandler = (conference: ConferenceViewModel) => {
   >(SEND_RTC_ICE_CANDIDATE);
 
   async function handleFirstConnection(remoteUser: RemoteUser) {
-    const remotePeer = RemotePeer.create(remoteUser, {
+    const remotePeer = RemotePeer.createAnswerer(remoteUser, {
       rtcConfiguration: conference.localUser().rtcConfiguration(),
       onIceCandidate: (candidate) => {
         logSignaling(
@@ -52,6 +52,7 @@ export const useRtcOfferReceivedHandler = (conference: ConferenceViewModel) => {
         });
       },
       onDisconnected: () => conference.removeRemotePeer(remotePeer),
+      onMessage: (message) => conference.addMessage(message),
     });
 
     conference.addRemotePeer(remotePeer);

@@ -8,9 +8,11 @@ export const ChatLayout = styled.div`
 `;
 
 export const MessagesArea = styled.div`
-  overflow-y: scroll;
+  overflow-y: hidden;
+`;
 
-  // Temporary while the chat is not ready
+export const NoMessageArea = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -63,4 +65,38 @@ export const InputGroup = styled.div`
   input:disabled + button {
     cursor: not-allowed;
   }
+`;
+
+export const MessagesList = styled.ul`
+  display: grid;
+  grid-gap: 2rem;
+  height: 100%;
+  overflow-y: scroll;
+`;
+
+export const MessageLayout = styled.li`
+  > * + * {
+    margin-top: 0.8rem;
+  }
+`;
+
+export const AuthorName = styled.div`
+  font-size: 1.4rem;
+  color: var(--color-lightgray);
+  opacity: 0.75;
+`;
+
+export const MessageContent = styled.p`
+  display: inline-block;
+  padding: 2rem;
+  border-radius: 1rem;
+
+  background: var(--color-white);
+  color: var(--color-text-reverse);
+`;
+
+export const ReceivedTime = styled.div`
+  font-size: 1.4rem;
+  color: var(--color-lightgray);
+  opacity: 0.75;
 `;

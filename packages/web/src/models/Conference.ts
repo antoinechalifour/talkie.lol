@@ -3,11 +3,13 @@ import debug from "debug";
 import { RemotePeer } from "./RemotePeer";
 import { CurrentUser } from "./CurrentUser";
 import { RemoteUser } from "./RemoteUser";
+import { Message } from "./Message";
 
 const log = debug("app:Conference");
 
 export class Conference {
   private _remotePeers: Set<RemotePeer> = new Set();
+  private _messages: Message[] = [];
 
   private constructor(
     private _name: string,
@@ -20,6 +22,10 @@ export class Conference {
 
   localUser() {
     return this._currentUser;
+  }
+
+  messages() {
+    return this._messages;
   }
 
   addRemotePeer(newRemotePeer: RemotePeer) {
@@ -71,6 +77,26 @@ export class Conference {
   stopLocalVideo() {
     this.localUser().stopVideoStream();
     this._stopStreamingLocalMediaStreamWithAllPeers();
+  }
+
+  sendMessage(messageContent: string) {
+    const message = Message.create(
+      {
+        name: this.localUser().name(),
+      },
+      messageContent
+    );
+
+    this._messages.push(message);
+    this.allRemotePeers().forEach((peer) =>
+      this.localUser().sendMessageToRemotePeer(message.content(), peer)
+    );
+
+    return message;
+  }
+
+  addMessage(message: Message) {
+    this._messages.push(message);
   }
 
   leave() {

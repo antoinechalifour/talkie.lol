@@ -2,17 +2,20 @@ import { Conference } from "../models/Conference";
 import { RemotePeer } from "../models/RemotePeer";
 import { RemoteUser } from "../models/RemoteUser";
 import { CurrentUser } from "../models/CurrentUser";
+import { Message } from "../models/Message";
 
 type OnLocalUserChangedListener = (localUser: CurrentUser) => void;
 type OnRemotePeerAddedListener = (newPeer: RemotePeer) => void;
 type OnRemotePeerRemovedListener = (oldPeer: RemotePeer) => void;
 type OnRemotePeersChangedListener = (peers: RemotePeer[]) => void;
+type OnMessageAddedListener = (message: Message) => void;
 
 export class ConferenceViewModel {
   private _onLocalUserChangedListeners: OnLocalUserChangedListener[] = [];
   private _onRemotePeerAddedListeners: OnRemotePeerAddedListener[] = [];
   private _onRemotePeerRemovedListeners: OnRemotePeerRemovedListener[] = [];
   private _onRemotePeersChangedListeners: OnRemotePeersChangedListener[] = [];
+  private _onMessageAddedListeners: OnMessageAddedListener[] = [];
 
   private constructor(private conference: Conference) {}
 
@@ -22,6 +25,10 @@ export class ConferenceViewModel {
 
   localUser() {
     return this.conference.localUser();
+  }
+
+  messages() {
+    return this.conference.messages();
   }
 
   onLocalUserChanged(listener: OnLocalUserChangedListener) {
@@ -107,6 +114,29 @@ export class ConferenceViewModel {
     this.conference.stopLocalVideo();
   }
 
+  sendMessage(messageContent: string) {
+    const message = this.conference.sendMessage(messageContent);
+
+    this._notifyMessageAdded(message);
+
+    return message;
+  }
+
+  addMessage(message: Message) {
+    this.conference.addMessage(message);
+    this._notifyMessageAdded(message);
+  }
+
+  onMessageAdded(listener: OnMessageAddedListener) {
+    this._onMessageAddedListeners.push(listener);
+
+    return () => {
+      this._onMessageAddedListeners = this._onMessageAddedListeners.filter(
+        (x) => x !== listener
+      );
+    };
+  }
+
   leave() {
     this.conference.leave();
   }
@@ -137,6 +167,10 @@ export class ConferenceViewModel {
     this._onLocalUserChangedListeners.forEach((listener) =>
       listener(this.localUser())
     );
+  }
+
+  private _notifyMessageAdded(message: Message) {
+    this._onMessageAddedListeners.forEach((listener) => listener(message));
   }
 
   static create(conference: Conference) {
