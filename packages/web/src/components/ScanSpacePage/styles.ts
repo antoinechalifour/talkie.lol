@@ -6,7 +6,7 @@ export const QrCodeVideoPreview = styled.video`
   object-fit: cover;
   width: 100%;
   max-width: 250px;
-  border: 5px solid var(--color-text);
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   margin-bottom: 2rem;
+  box-shadow: var(--box-shadow);
 `;

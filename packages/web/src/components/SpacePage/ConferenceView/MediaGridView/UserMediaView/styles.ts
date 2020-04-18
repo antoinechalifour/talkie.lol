@@ -8,7 +8,7 @@ export const UserMediaLayout = styled.div`
   bottom: 0;
   left: 0;
   border-radius: 1rem;
-  background: rgba(0, 0, 0, 0.8);
+  background: var(--color-black);
 `;
 
 export const LocalNameView = styled.p`
@@ -21,10 +21,10 @@ export const LocalNameView = styled.p`
   padding: 1rem 2rem;
   place-content: center;
   border-radius: 1rem;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--box-shadow-1);
 
-  background: #3280e9;
-  color: #fff;
+  background: var(--color-blue);
+  color: var(--color-white);
 `;
 
 export const UserNameView = styled(LocalNameView)`

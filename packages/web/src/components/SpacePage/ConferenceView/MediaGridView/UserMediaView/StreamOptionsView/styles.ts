@@ -27,6 +27,6 @@ export const PictureInPictureLabel = styled.label`
   }
 
   input:checked + * {
-    color: #4fd77e;
+    color: var(--input-active-background);
   }
 `;

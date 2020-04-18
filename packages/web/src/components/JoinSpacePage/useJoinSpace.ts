@@ -54,6 +54,14 @@ export const useJoinSpace = ({ slug }: UseJoinSpaceOptions) => {
   }, []);
 
   useEffect(() => {
+    return () => {
+      if (!mediaStream) return;
+
+      mediaStream.getTracks().forEach((track) => track.stop());
+    };
+  }, [mediaStream]);
+
+  useEffect(() => {
     if (!mediaStream) return;
     if (!videoRef.current) return;
 

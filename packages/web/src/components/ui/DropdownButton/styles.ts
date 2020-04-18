@@ -17,8 +17,8 @@ export const DropdownLayout = styled.div`
     width: 50px;
     border-radius: 1rem;
 
-    background: #3280e9;
-    color: #fff;
+    background: var(--button-background);
+    color: var(--color-white);
 
     cursor: pointer;
   }
@@ -39,7 +39,7 @@ export const DropdownLayout = styled.div`
     }
 
     &[aria-expanded="true"] {
-      background: #3157ac;
+      background: var(--color-dark-blue);
     }
   }
 `;
@@ -53,9 +53,9 @@ export const DropdownMenuLayout = styled.div`
   padding: 1rem 0;
   border-radius: 0.5rem;
 
-  background: #fff;
-  color: #373737;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  background: var(--color-white);
+  color: var(--color-text-reverse);
+  box-shadow: var(--box-shadow-1);
 `;
 
 export const OptionButton = styled.button`
@@ -69,6 +69,6 @@ export const OptionButton = styled.button`
 
   &:hover,
   &:focus {
-    background: #ddd;
+    background: var(--color-lightgray);
   }
 `;

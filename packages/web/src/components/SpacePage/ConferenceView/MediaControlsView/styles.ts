@@ -15,12 +15,12 @@ export const ShareScreenButton = styled.button`
   width: 50px;
   border-radius: 1rem;
 
-  background: #3280e9;
-  color: #fff;
+  background: var(--button-background);
+  color: var(--button-text);
 
   cursor: pointer;
 `;
 
 export const CancelButton = styled(ShareScreenButton)`
-  background: #ff4c4c;
+  background: var(--button-danger-background);
 `;

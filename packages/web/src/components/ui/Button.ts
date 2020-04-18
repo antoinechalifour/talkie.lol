@@ -12,21 +12,21 @@ export const Button = styled.button<ButtonProps>`
   box-sizing: border-box;
   border-radius: 1rem;
   padding: 2rem 3rem;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--box-shadow-1);
 
   text-align: center;
   font-family: inherit;
   font-size: inherit;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
 
-  background: linear-gradient(25deg, #3280e9, #f3754d);
-  color: #fff;
+  background: var(--button-background-gradient);
+  color: var(--button-text);
 
   cursor: pointer;
   transition: box-shadow 0.25s ease, transform 0.25s ease;
 
   &:hover {
-    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--box-shadow-2);
   }
 
   &[disabled] {

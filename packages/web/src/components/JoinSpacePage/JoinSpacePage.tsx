@@ -5,7 +5,6 @@ import { createTitle } from "../../utils/html";
 import { AuthenticatedClient } from "../AuthenticatedClient/AuthenticatedClient";
 import { HomeLayout } from "../HomeLayout/HomeLayout";
 import { SpacePage } from "../SpacePage/SpacePage";
-import { Button } from "../ui/Button";
 import { useJoinSpace } from "./useJoinSpace";
 import { JoinButton, VideoLayout } from "./styles";
 

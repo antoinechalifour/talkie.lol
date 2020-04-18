@@ -31,7 +31,7 @@ export const InputGroup = styled.div`
   border-radius: 1rem;
   overflow: hidden;
 
-  background: #fff;
+  background: var(--background-reverse);
 
   input,
   button {
@@ -55,8 +55,8 @@ export const InputGroup = styled.div`
     place-content: center;
     width: 50px;
 
-    background: #3280e9;
-    color: #fff;
+    background: var(--button-background);
+    color: var(--button-text);
   }
 
   input:disabled + button {

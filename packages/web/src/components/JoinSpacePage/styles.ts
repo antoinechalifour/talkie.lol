@@ -9,10 +9,10 @@ export const VideoLayout = styled.div`
   margin-left: auto;
   margin-right: auto;
 
-  background: black;
+  background: var(--background-video);
   border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 20px 20px 60px #0f141c, -20px -20px 60px #1d2634;
+  box-shadow: var(--box-shadow);
 
   &::after {
     content: "";

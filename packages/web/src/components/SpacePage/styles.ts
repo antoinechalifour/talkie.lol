@@ -12,7 +12,10 @@ export const PageLayout = styled.main`
 `;
 
 export const HeaderArea = styled.header`
+  position: relative;
+  z-index: 1;
   padding: 2rem;
-  background: #1d2636;
-  color: #fff;
+  background: var(--background-darker);
+  color: var(--color-text);
+  box-shadow: var(--box-shadow-2);
 `;

@@ -12,6 +12,6 @@ export const MediaGridLayout = styled.div`
 export const MediaArea = styled.div`
   padding-bottom: 75%;
   position: relative;
-  box-shadow: 20px 20px 60px #0f141c, -20px -20px 60px #1d2634;
+  box-shadow: var(--box-shadow);
   border-radius: 1rem;
 `;
