@@ -29,7 +29,7 @@ export const StreamOptionsView: React.FC<StreamOptionsViewProps> = ({
 
   return (
     <StreamOptionsLayout>
-      <OptionLabel>
+      <OptionLabel title="Enter zend mode for this user">
         <input
           type="checkbox"
           checked={isZenModeEnabled}
