@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const MediaControlsLayout = styled.div`
   display: grid;
-  grid-template-columns: auto auto auto 1fr auto;
+  grid-template-columns: auto auto auto 1fr auto auto;
   grid-gap: 2rem;
 `;
 
@@ -23,4 +23,18 @@ export const ShareScreenButton = styled.button`
 
 export const CancelButton = styled(ShareScreenButton)`
   background: var(--button-danger-background);
+`;
+
+export const QrCodeArea = styled.div`
+  padding: 0 1rem;
+
+  p {
+    margin-bottom: 2rem;
+  }
+
+  canvas {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;

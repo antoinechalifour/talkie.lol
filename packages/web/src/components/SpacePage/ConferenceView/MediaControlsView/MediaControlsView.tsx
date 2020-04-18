@@ -7,6 +7,7 @@ import {
   faMicrophoneSlash,
   faDesktop,
   faPhone,
+  faShare,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useEnumerateMediaDevices } from "../../../../hooks/useEnumerateMediaDevices";
@@ -18,6 +19,8 @@ import {
 } from "../../../ui/DropdownButton";
 import { CancelButton, MediaControlsLayout, ShareScreenButton } from "./styles";
 import { useMediaControlsView } from "./useMediaControlsView";
+import { SpaceQrCode } from "./SpaceQrCode";
+import { toast } from "react-toastify";
 
 export interface MediaControlsViewProps {}
 
@@ -55,6 +58,12 @@ export const MediaControlsView: React.FC<MediaControlsViewProps> = () => {
     if (isSharingScreen) stopSharingScreen();
     else startSharingScreen();
   }, [isSharingScreen, startSharingScreen, stopSharingScreen]);
+
+  const copyToClipBoard = useCallback(async () => {
+    await navigator.clipboard.writeText(window.location.href);
+
+    toast.success("The link has been copied to clipboard");
+  }, []);
 
   return (
     <MediaControlsLayout>
@@ -108,6 +117,16 @@ export const MediaControlsView: React.FC<MediaControlsViewProps> = () => {
       </ShareScreenButton>
 
       <div />
+
+      <DropdownButton>
+        <DropdownToggle onClick={copyToClipBoard}>
+          <FontAwesomeIcon icon={faShare} />
+        </DropdownToggle>
+
+        <DropdownMenu>
+          <SpaceQrCode />
+        </DropdownMenu>
+      </DropdownButton>
 
       <CancelButton aria-label="Leave the space" onClick={leaveConference}>
         <FontAwesomeIcon icon={faPhone} />
