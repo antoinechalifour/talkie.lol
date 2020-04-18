@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { Button } from "../ui/Button";
+
 export const VideoLayout = styled.div`
   position: relative;
   width: 98%;
@@ -29,28 +31,10 @@ export const VideoLayout = styled.div`
   }
 `;
 
-export const JoinButton = styled.button`
-  all: unset;
-
-  text-align: center;
-  display: block;
-  box-sizing: border-box;
-  width: 90%;
+export const JoinButton = styled(Button)`
   position: absolute;
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  border-radius: 1rem;
-
-  padding: 2rem 3rem;
-  background: #3280e9;
-  color: #fff;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-
-  &[disabled] {
-    cursor: not-allowed;
-    opacity: 0.8;
-  }
+  width: 90%;
 `;

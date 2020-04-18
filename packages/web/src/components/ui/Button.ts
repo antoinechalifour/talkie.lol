@@ -1,17 +1,43 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const Button = styled.button`
+export interface ButtonProps {
+  fullwidth?: boolean;
+}
+
+const isFullWidth = (props: ButtonProps) => !!props.fullwidth;
+
+export const Button = styled.button<ButtonProps>`
   all: unset;
 
-  padding: 2rem 4rem;
+  box-sizing: border-box;
   border-radius: 1rem;
-  border: 2px solid #000;
-  border-bottom-width: 5px;
+  padding: 2rem 3rem;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 
-  background: rgba(0, 0, 0, 0.65);
-  color: var(--color-text);
-
-  font-size: inherit;
+  text-align: center;
   font-family: inherit;
+  font-size: inherit;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+
+  background: linear-gradient(25deg, #3280e9, #f3754d);
+  color: #fff;
+
   cursor: pointer;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+
+  ${(props) =>
+    isFullWidth(props) &&
+    css`
+      display: block;
+      width: 100%;
+    `};
 `;

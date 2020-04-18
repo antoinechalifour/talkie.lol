@@ -1,12 +1,15 @@
 import styled from "styled-components";
 
 export const Background = styled.main`
-  text-align: center;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 2rem;
+
+  text-align: center;
+
   background: #161d28;
   color: var(--color-text);
 `;
