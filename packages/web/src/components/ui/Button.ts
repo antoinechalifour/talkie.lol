@@ -1,10 +1,21 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 export interface ButtonProps {
   fullwidth?: boolean;
+  loading?: boolean;
 }
 
 const isFullWidth = (props: ButtonProps) => !!props.fullwidth;
+const isLoading = (props: ButtonProps) => !!props.loading;
+
+const loadingPlaceholderAnimation = keyframes`
+  from {
+    left: -50%;
+  }
+  to {
+    left: 150%;
+  }
+`;
 
 export const Button = styled.button<ButtonProps>`
   all: unset;
@@ -39,5 +50,30 @@ export const Button = styled.button<ButtonProps>`
     css`
       display: block;
       width: 100%;
+    `};
+
+  ${(props) =>
+    isLoading(props) &&
+    css`
+      position: relative;
+      overflow: hidden;
+
+      &::after {
+        content: "";
+        position: absolute;
+        display: block;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+
+        animation: ${loadingPlaceholderAnimation} 1.5s forwards infinite;
+        background: linear-gradient(
+          to right,
+          transparent 0%,
+          rgba(255, 255, 255, 0.5) 33%,
+          transparent 66%
+        );
+      }
     `};
 `;
