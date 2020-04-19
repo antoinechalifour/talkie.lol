@@ -41,8 +41,17 @@ export const LocalNameView = styled.p`
 `;
 
 export const UserNameView = styled(LocalNameView)`
+  display: grid;
+  grid-template-columns: auto 24px;
+  grid-gap: 2rem;
   background: rgba(0, 0, 0, 0.7);
   min-width: 200px;
+
+  button {
+    all: unset;
+    cursor: pointer;
+    text-align: center;
+  }
 `;
 
 export const UserVideo = styled.video`

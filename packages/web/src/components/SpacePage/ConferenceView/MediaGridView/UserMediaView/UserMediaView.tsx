@@ -1,9 +1,15 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMicrophone,
+  faMicrophoneSlash,
+} from "@fortawesome/free-solid-svg-icons";
 
+import { useSoundActivityDetection } from "../../../../../hooks/useSoundActivityDetection";
+import { useAudioMediaStream } from "../../../../../hooks/useAudioMediaStream";
 import { StreamOptionsView } from "./StreamOptionsView/StreamOptionsView";
 import { useUserMediaView } from "./useUserMediaView";
 import { UserMediaLayout, UserNameView, UserVideo } from "./styles";
-import { useSoundActivityDetection } from "../../../../../hooks/useSoundActivityDetection";
 
 export interface UserMediaViewProps {
   id: string;
@@ -16,20 +22,26 @@ export const UserMediaView: React.FC<UserMediaViewProps> = ({
   name,
   mediaStream,
 }) => {
-  const { videoId, hasAudio, audioRef, hasVideo, videoRef } = useUserMediaView(
-    id,
-    mediaStream
-  );
+  const { videoId, hasVideo, videoRef } = useUserMediaView(id, mediaStream);
   const isSpeaking = useSoundActivityDetection(mediaStream);
+
+  const { isPlaying, toggle } = useAudioMediaStream(mediaStream);
 
   return (
     <UserMediaLayout isActive={isSpeaking}>
       {hasVideo && <UserVideo id={videoId} ref={videoRef} autoPlay muted />}
-      {hasAudio && <audio ref={audioRef} autoPlay />}
 
       <StreamOptionsView videoId={videoId} userId={id} />
 
-      <UserNameView>{name}</UserNameView>
+      <UserNameView>
+        <span>{name}</span>
+
+        <button onClick={toggle} aria-label="Toggle audio for this user">
+          <FontAwesomeIcon
+            icon={isPlaying ? faMicrophone : faMicrophoneSlash}
+          />
+        </button>
+      </UserNameView>
     </UserMediaLayout>
   );
 };
