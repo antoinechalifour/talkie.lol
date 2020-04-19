@@ -14,7 +14,7 @@ export const AuthenticatedClient: React.FC<AuthenticatedClientProps> = ({
   const { isConnected, client } = useAuthenticatedClient({ token });
 
   if (!isConnected) {
-    return <p>Connecting...</p>;
+    return null;
   }
 
   return <Provider value={client}>{children}</Provider>;

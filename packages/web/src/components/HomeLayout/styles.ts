@@ -9,10 +9,6 @@ export const Background = styled.main`
   padding: 2rem;
 
   text-align: center;
-
-  background-color: var(--background-lighter);
-  background-image: var(--background-pattern);
-  color: var(--color-text);
 `;
 
 export const AppTitle = styled.h1`

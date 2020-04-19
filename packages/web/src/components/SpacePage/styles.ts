@@ -16,6 +16,8 @@ export const HeaderArea = styled.header`
   position: relative;
   z-index: 1;
   padding: 2rem;
+
+  font-family: var(--font-secondary);
   background: var(--background-darker);
   color: var(--color-text);
   box-shadow: var(--box-shadow-2);

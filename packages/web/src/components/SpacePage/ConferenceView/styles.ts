@@ -4,9 +4,6 @@ export const ConferenceLayout = styled.div`
   display: grid;
   height: 100%;
   grid-template-rows: repeat(3, auto);
-  color: var(--color-text);
-  background-color: var(--background-lighter);
-  background-image: var(--background-pattern);
 
   @media (min-width: 860px) {
     grid-template-columns: 2fr 1fr;

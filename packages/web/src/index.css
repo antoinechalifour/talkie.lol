@@ -40,8 +40,14 @@ html {
 }
 
 body {
+  min-height: 100vh;
+
   font-size: 1.6rem;
   font-family: var(--font-primary);
+
+  background-color: var(--background-lighter);
+  background-image: var(--background-pattern);
+  color: var(--color-text);
 }
 
 * {
