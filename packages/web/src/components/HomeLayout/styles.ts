@@ -15,7 +15,7 @@ export const AppTitle = styled.h1`
   font-size: 5.5rem;
   letter-spacing: 0.5rem;
   font-family: var(--font-secondary);
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 
   text-shadow: 0 1px 12px #000;
 
