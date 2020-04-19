@@ -2,6 +2,7 @@ import React from "react";
 import { Router, Switch, Route, Redirect } from "react-router-dom";
 
 import { history } from "./utils/history";
+import { isBrowserSupported } from "./utils/featureDetection";
 import { CreateSpacePage } from "./components/CreateSpacePage/CreateSpacePage";
 import { ErrorPage } from "./components/ErrorPage/ErrorPage";
 
@@ -16,9 +17,6 @@ const ScanSpacePage = React.lazy(() =>
     default: mod.ScanSpacePage,
   }))
 );
-
-const isBrowserSupported = () =>
-  !!window.RTCPeerConnection && !!window.AudioContext;
 
 export const App: React.FC = () => {
   const isSupported = isBrowserSupported();

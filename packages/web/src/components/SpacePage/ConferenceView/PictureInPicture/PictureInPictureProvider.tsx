@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import { pictureInPictureContext } from "./pictureInPictureContext";
+import { isPictureInPictureSupported } from "../../../../utils/featureDetection";
 
 export const PictureInPictureProvider: React.FC = ({ children }) => {
   const [videoId, setVideoId] = useState<string | null>(null);
 
   const pictureInPicture = useMemo(
     () => ({
-      // @ts-ignore
-      isSupported: !!document.pictureInPictureEnabled,
+      isSupported: isPictureInPictureSupported(),
       videoId,
       setVideoId,
     }),
