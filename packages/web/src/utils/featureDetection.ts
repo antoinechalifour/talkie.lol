@@ -8,3 +8,7 @@ export const isBrowserSupported = () =>
 export const isPictureInPictureSupported = () =>
   // @ts-ignore
   !!document.pictureInPictureEnabled;
+
+export const isSharingScreenSupported = () =>
+  // @ts-ignore
+  !!navigator.mediaDevices.getDisplayMedia;
