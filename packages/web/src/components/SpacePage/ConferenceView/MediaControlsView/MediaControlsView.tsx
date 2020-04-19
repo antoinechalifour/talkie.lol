@@ -77,7 +77,7 @@ export const MediaControlsView: React.FC<MediaControlsViewProps> = () => {
         <DropdownToggle onClick={toggleVideo}>
           <FontAwesomeIcon
             aria-label="Share video"
-            icon={isSharingVideo ? faVideoSlash : faVideo}
+            icon={isSharingVideo ? faVideo : faVideoSlash}
           />
         </DropdownToggle>
 
@@ -99,7 +99,7 @@ export const MediaControlsView: React.FC<MediaControlsViewProps> = () => {
       <DropdownButton>
         <DropdownToggle aria-label="Share audio" onClick={toggleAudio}>
           <FontAwesomeIcon
-            icon={isSharingAudio ? faMicrophoneSlash : faMicrophone}
+            icon={isSharingAudio ? faMicrophone : faMicrophoneSlash}
           />
         </DropdownToggle>
 
