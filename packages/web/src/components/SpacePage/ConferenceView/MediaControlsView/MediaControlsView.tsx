@@ -43,6 +43,7 @@ export const MediaControlsView: React.FC<MediaControlsViewProps> = () => {
     shareVideoDevice,
 
     isSharingScreen,
+    isScreenSharingSupported,
     startSharingScreen,
     stopSharingScreen,
 
@@ -117,9 +118,13 @@ export const MediaControlsView: React.FC<MediaControlsViewProps> = () => {
         </DropdownMenu>
       </DropdownButton>
 
-      <ShareScreenButton aria-label="Share screen" onClick={toggleScreen}>
-        <FontAwesomeIcon icon={faDesktop} />
-      </ShareScreenButton>
+      {isScreenSharingSupported ? (
+        <ShareScreenButton aria-label="Share screen" onClick={toggleScreen}>
+          <FontAwesomeIcon icon={faDesktop} />
+        </ShareScreenButton>
+      ) : (
+        <div />
+      )}
 
       <Spacer />
 

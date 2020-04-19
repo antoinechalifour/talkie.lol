@@ -16,6 +16,7 @@ export const StreamOptionsView: React.FC<StreamOptionsViewProps> = ({
   userId,
 }) => {
   const {
+    isPictureInPictureSupported,
     isPictureInPictureEnabled,
     togglePictureInPicture,
   } = useStreamOptionsView(videoId);
@@ -38,15 +39,18 @@ export const StreamOptionsView: React.FC<StreamOptionsViewProps> = ({
 
         <FontAwesomeIcon icon={faExpand} />
       </OptionLabel>
-      <OptionLabel title="Enable picture in picture for this user">
-        <input
-          type="checkbox"
-          checked={isPictureInPictureEnabled}
-          onChange={togglePictureInPicture}
-        />
 
-        <FontAwesomeIcon icon={faCompress} />
-      </OptionLabel>
+      {isPictureInPictureSupported && (
+        <OptionLabel title="Enable picture in picture for this user">
+          <input
+            type="checkbox"
+            checked={isPictureInPictureEnabled}
+            onChange={togglePictureInPicture}
+          />
+
+          <FontAwesomeIcon icon={faCompress} />
+        </OptionLabel>
+      )}
     </StreamOptionsLayout>
   );
 };

@@ -1,6 +1,7 @@
 import { useCallback, useReducer } from "react";
 import { useHistory } from "react-router-dom";
 
+import { isSharingScreenSupported } from "../../../../utils/featureDetection";
 import { useConference } from "../../hooks/useConference";
 
 interface State {
@@ -158,6 +159,7 @@ export const useMediaControlsView = () => {
     shareVideoDevice,
     startSharingScreen,
     stopSharingScreen,
+    isScreenSharingSupported: isSharingScreenSupported(),
     leaveConference,
   };
 };
