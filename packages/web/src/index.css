@@ -54,6 +54,10 @@ body {
   box-sizing: border-box;
 }
 
+p {
+  line-height: 1.5;
+}
+
 .Toastify__toast {
   border-radius: 0.5rem;
   display: grid;

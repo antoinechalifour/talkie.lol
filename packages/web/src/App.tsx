@@ -17,10 +17,13 @@ const ScanSpacePage = React.lazy(() =>
   }))
 );
 
-export const App: React.FC = () => {
-  const isWebRtcSupported = !!window.RTCPeerConnection;
+const isBrowserSupported = () =>
+  !!window.RTCPeerConnection && !!window.AudioContext;
 
-  if (!isWebRtcSupported) return <ErrorPage />;
+export const App: React.FC = () => {
+  const isSupported = isBrowserSupported();
+
+  if (!isSupported) return <ErrorPage />;
 
   return (
     <React.Suspense fallback={null}>
