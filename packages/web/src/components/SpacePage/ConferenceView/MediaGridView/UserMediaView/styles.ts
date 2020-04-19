@@ -42,6 +42,7 @@ export const LocalNameView = styled.p`
 
 export const UserNameView = styled(LocalNameView)`
   background: rgba(0, 0, 0, 0.7);
+  min-width: 200px;
 `;
 
 export const UserVideo = styled.video`
