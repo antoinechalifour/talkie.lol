@@ -4,16 +4,15 @@ import { usePictureInPicture } from "../../../PictureInPicture/usePictureInPictu
 
 export const useStreamOptionsView = (videoId: string) => {
   const pictureInPicture = usePictureInPicture();
-  const isPictureInPictureEnabled =
-    pictureInPicture.pictureInPictureVideoId === videoId;
+  const isPictureInPictureEnabled = pictureInPicture.videoId === videoId;
 
   const togglePictureInPicture = useCallback(() => {
-    if (isPictureInPictureEnabled)
-      pictureInPicture.setPictureInPictureVideoId(null);
-    else pictureInPicture.setPictureInPictureVideoId(videoId);
+    if (isPictureInPictureEnabled) pictureInPicture.setVideoId(null);
+    else pictureInPicture.setVideoId(videoId);
   }, [isPictureInPictureEnabled, pictureInPicture, videoId]);
 
   return {
+    isPictureInPictureSupported: pictureInPicture.isSupported,
     isPictureInPictureEnabled,
     togglePictureInPicture,
   };

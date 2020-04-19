@@ -3,19 +3,21 @@ import React, { useEffect, useMemo, useState } from "react";
 import { pictureInPictureContext } from "./pictureInPictureContext";
 
 export const PictureInPictureProvider: React.FC = ({ children }) => {
-  const [pictureInPictureVideoId, setPictureInPictureVideoId] = useState<
-    string | null
-  >(null);
+  const [videoId, setVideoId] = useState<string | null>(null);
 
   const pictureInPicture = useMemo(
     () => ({
-      pictureInPictureVideoId,
-      setPictureInPictureVideoId,
+      // @ts-ignore
+      isSupported: !!document.pictureInPictureEnabled,
+      videoId,
+      setVideoId,
     }),
-    [pictureInPictureVideoId, setPictureInPictureVideoId]
+    [videoId, setVideoId]
   );
 
   useEffect(() => {
+    if (!pictureInPicture.isSupported) return;
+
     const onVisibilityChanged = () => {
       if (document.visibilityState === "visible") {
         // @ts-ignore
@@ -23,10 +25,8 @@ export const PictureInPictureProvider: React.FC = ({ children }) => {
 
         // @ts-ignore
         document.exitPictureInPicture();
-      } else if (pictureInPicture.pictureInPictureVideoId) {
-        const video = document.querySelector(
-          `#${pictureInPicture.pictureInPictureVideoId}`
-        );
+      } else if (pictureInPicture.videoId) {
+        const video = document.querySelector(`#${pictureInPicture.videoId}`);
 
         if (!video) return;
 
@@ -40,7 +40,7 @@ export const PictureInPictureProvider: React.FC = ({ children }) => {
     return () => {
       document.removeEventListener("visibilitychange", onVisibilityChanged);
     };
-  }, [pictureInPicture.pictureInPictureVideoId]);
+  }, [pictureInPicture.isSupported, pictureInPicture.videoId]);
 
   return (
     <pictureInPictureContext.Provider value={pictureInPicture}>

@@ -1,4 +1,5 @@
 export interface PictureInPictureState {
-  pictureInPictureVideoId: string | null;
-  setPictureInPictureVideoId: (videoId: string | null) => void;
+  isSupported: boolean;
+  videoId: string | null;
+  setVideoId: (videoId: string | null) => void;
 }
