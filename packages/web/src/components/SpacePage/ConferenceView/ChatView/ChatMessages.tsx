@@ -1,14 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import Linkify from "linkifyjs/react";
 
 import { Message } from "../../../../models/Message";
-import {
-  AuthorName,
-  MessageContent,
-  ReceivedTime,
-  MessagesList,
-  MessageLayout,
-} from "./styles";
+import { MessagesList } from "./styles";
+import { ChatMessage } from "./ChatMessage";
 
 export interface ChatMessagesProps {
   messages: Message[];
@@ -26,15 +20,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
   return (
     <MessagesList ref={listRef}>
       {messages.map((message) => (
-        <MessageLayout key={message.id()}>
-          <AuthorName>{message.author().name}</AuthorName>
-          <MessageContent>
-            <Linkify tagName="span" options={{ target: "_blank" }}>
-              {message.content()}
-            </Linkify>
-          </MessageContent>
-          <ReceivedTime>{message.receivedTime()}</ReceivedTime>
-        </MessageLayout>
+        <ChatMessage key={message.id()} message={message} />
       ))}
     </MessagesList>
   );

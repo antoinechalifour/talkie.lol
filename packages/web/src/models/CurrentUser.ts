@@ -2,6 +2,7 @@ import debug from "debug";
 
 import { RemotePeer } from "./RemotePeer";
 import { User } from "./User";
+import { Message } from "./Message";
 
 const log = debug("app:CurrentUser");
 
@@ -74,7 +75,7 @@ export class CurrentUser implements User {
     }
   }
 
-  sendMessageToRemotePeer(message: string, peer: RemotePeer) {
+  sendMessageToRemotePeer(message: Message, peer: RemotePeer) {
     peer.sendMessage(message);
   }
 

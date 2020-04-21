@@ -88,13 +88,23 @@ export const AuthorName = styled.div`
   opacity: 0.75;
 `;
 
-export const MessageContent = styled.p`
+export const MessageContent = styled.div`
   display: inline-block;
-  padding: 2rem;
   border-radius: 1rem;
+  overflow: hidden;
+  border: 2px solid var(--color-white);
 
   background: var(--color-white);
   color: var(--color-text-reverse);
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  p {
+    padding: 2rem;
+  }
 `;
 
 export const ReceivedTime = styled.div`

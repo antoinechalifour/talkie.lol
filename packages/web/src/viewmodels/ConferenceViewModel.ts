@@ -122,6 +122,14 @@ export class ConferenceViewModel {
     return message;
   }
 
+  sendImage(image: string) {
+    const message = this.conference.sendImage(image);
+
+    this._notifyMessageAdded(message);
+
+    return message;
+  }
+
   addMessage(message: Message) {
     this.conference.addMessage(message);
     this._notifyMessageAdded(message);
@@ -135,6 +143,10 @@ export class ConferenceViewModel {
         (x) => x !== listener
       );
     };
+  }
+
+  userById(userId: string) {
+    return this.conference.userById(userId);
   }
 
   leave() {
@@ -163,21 +175,11 @@ export class ConferenceViewModel {
     );
   }
 
-  private _notifyLocalUserChanged() {
-    this._onLocalUserChangedListeners.forEach((listener) =>
-      listener(this.localUser())
-    );
-  }
-
   private _notifyMessageAdded(message: Message) {
     this._onMessageAddedListeners.forEach((listener) => listener(message));
   }
 
   static create(conference: Conference) {
     return new ConferenceViewModel(conference);
-  }
-
-  userById(userId: string) {
-    return this.conference.userById(userId);
   }
 }

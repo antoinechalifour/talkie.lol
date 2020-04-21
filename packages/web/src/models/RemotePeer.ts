@@ -87,12 +87,17 @@ export class RemotePeer implements User {
     });
   }
 
-  sendMessage(message: string) {
+  sendMessage(message: Message) {
     const dataChannel = this.dataChannel();
 
     if (!dataChannel) return;
 
-    dataChannel.send(message);
+    const content = JSON.stringify({
+      type: message.type(),
+      content: message.content(),
+    });
+
+    dataChannel.send(content);
   }
 
   // -------------------------------------------------- //
@@ -315,16 +320,19 @@ export class RemotePeer implements User {
 
     if (!dataChannel) return this;
 
-    dataChannel.addEventListener("message", (e) =>
-      onMessage(
-        Message.create(
-          {
-            name: this.name(),
-          },
-          e.data
-        )
-      )
-    );
+    dataChannel.addEventListener("message", (e) => {
+      const { type, content } = JSON.parse(e.data);
+      const author = {
+        name: this.name(),
+      };
+
+      const message =
+        type === "image"
+          ? Message.createImageMessage(author, content)
+          : Message.createTextMessage(author, content);
+
+      onMessage(message);
+    });
 
     return this;
   }
