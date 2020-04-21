@@ -2,9 +2,9 @@ import React from "react";
 
 import { useLocalUser } from "../../hooks/useLocalUser";
 import { useRemotePeers } from "../../hooks/useRemotePeers";
-import { UserMediaView } from "./UserMediaView/UserMediaView";
-import { MediaArea, MediaGridLayout } from "./styles";
-import { LocalMediaView } from "./UserMediaView/LocalMediaView";
+import { LocalUserOnly } from "./LocalUserOnly";
+import { DualUsers } from "./DualUsers";
+import { MultipleUsers } from "./MultipleUsers";
 
 export interface MediaGridViewProps {}
 
@@ -12,25 +12,11 @@ export const MediaGridView: React.FC<MediaGridViewProps> = () => {
   const localUser = useLocalUser();
   const remotePeers = useRemotePeers();
 
-  return (
-    <MediaGridLayout>
-      <MediaArea>
-        <LocalMediaView
-          id={localUser.id()}
-          name={localUser.name()}
-          mediaStream={localUser.mediaStream()}
-        />
-      </MediaArea>
+  if (remotePeers.length === 0) {
+    return <LocalUserOnly localUser={localUser} />;
+  } else if (remotePeers.length === 1) {
+    return <DualUsers localUser={localUser} remotePeer={remotePeers[0]} />;
+  }
 
-      {remotePeers.map((user) => (
-        <MediaArea key={user.id()}>
-          <UserMediaView
-            id={user.id()}
-            name={user.name()}
-            mediaStream={user.mediaStream()}
-          />
-        </MediaArea>
-      ))}
-    </MediaGridLayout>
-  );
+  return <MultipleUsers localUser={localUser} remotePeers={remotePeers} />;
 };
