@@ -5,9 +5,12 @@ export interface Author {
   name: string;
 }
 
+export type MessageType = "text" | "image";
+
 export class Message {
   private constructor(
     private _id: string,
+    private _type: MessageType,
     private _author: Author,
     private _content: string,
     private _receivedAt: Date
@@ -25,11 +28,23 @@ export class Message {
     return this._content;
   }
 
+  type() {
+    return this._type;
+  }
+
   receivedTime() {
     return format(this._receivedAt, "HH:mm");
   }
 
-  static create(author: Author, content: string) {
-    return new Message(uuid(), author, content, new Date());
+  isImage() {
+    return this._type === "image";
+  }
+
+  static createTextMessage(author: Author, content: string) {
+    return new Message(uuid(), "text", author, content, new Date());
+  }
+
+  static createImageMessage(author: Author, content: string) {
+    return new Message(uuid(), "image", author, content, new Date());
   }
 }

@@ -92,17 +92,27 @@ export class Conference {
   }
 
   sendMessage(messageContent: string) {
-    const message = Message.create(
+    const message = Message.createTextMessage(
       {
         name: this.localUser().name(),
       },
       messageContent
     );
 
-    this._messages.push(message);
-    this.allRemotePeers().forEach((peer) =>
-      this.localUser().sendMessageToRemotePeer(message.content(), peer)
+    this._sendMessage(message);
+
+    return message;
+  }
+
+  sendImage(image: string) {
+    const message = Message.createImageMessage(
+      {
+        name: this.localUser().name(),
+      },
+      image
     );
+
+    this._sendMessage(message);
 
     return message;
   }
@@ -131,6 +141,13 @@ export class Conference {
   private _stopStreamingLocalMediaStreamWithAllPeers() {
     this.allRemotePeers().forEach((peer) =>
       this.localUser().stopStreamingWithRemotePeer(peer)
+    );
+  }
+
+  private _sendMessage(message: Message) {
+    this._messages.push(message);
+    this.allRemotePeers().forEach((peer) =>
+      this.localUser().sendMessageToRemotePeer(message, peer)
     );
   }
 }

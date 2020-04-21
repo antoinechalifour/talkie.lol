@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentAlt, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
+import { getImageFromClipboard } from "../../../../utils/clipboard";
 import { useConference } from "../../hooks/useConference";
 import { useMessages } from "../../hooks/useMessages";
 import { ChatMessages } from "./ChatMessages";
@@ -19,6 +20,17 @@ export const ChatView: React.FC<ChatViewProps> = () => {
   const conference = useConference();
   const allMessages = useMessages();
   const [message, setMessage] = useState("");
+
+  const onPaste = useCallback(
+    async (e: React.ClipboardEvent<HTMLInputElement>) => {
+      const image = await getImageFromClipboard(e.clipboardData.items);
+
+      if (!image) return;
+
+      conference.sendImage(image);
+    },
+    [conference]
+  );
 
   const onSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -51,6 +63,7 @@ export const ChatView: React.FC<ChatViewProps> = () => {
               placeholder="Type something..."
               aria-label="Type a message"
               value={message}
+              onPaste={onPaste}
               onChange={(e) => setMessage(e.target.value)}
             />
 
