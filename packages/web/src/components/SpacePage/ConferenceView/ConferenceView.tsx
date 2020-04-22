@@ -33,11 +33,11 @@ export const ConferenceView: React.FC<ConferenceViewProps> = () => {
         <ConferenceLayout>
           <MediaArea>
             <MediaGridView />
-          </MediaArea>
 
-          <MediaControlsArea>
-            <MediaControlsView />
-          </MediaControlsArea>
+            <MediaControlsArea>
+              <MediaControlsView />
+            </MediaControlsArea>
+          </MediaArea>
 
           <ChatArea>
             <ChatView />

@@ -17,12 +17,7 @@ import {
   DropdownToggle,
   DropdownOptionButton,
 } from "../../../ui/DropdownButton";
-import {
-  CancelButton,
-  MediaControlsLayout,
-  ShareScreenButton,
-  Spacer,
-} from "./styles";
+import { CancelButton, MediaControlsLayout, ShareScreenButton } from "./styles";
 import { useMediaControlsView } from "./useMediaControlsView";
 import { SpaceQrCode } from "./SpaceQrCode";
 import { toast } from "react-toastify";
@@ -126,7 +121,7 @@ export const MediaControlsView: React.FC<MediaControlsViewProps> = () => {
         <div />
       )}
 
-      <Spacer />
+      <div />
 
       <DropdownButton>
         <DropdownToggle onClick={copyToClipBoard}>

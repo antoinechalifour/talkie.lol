@@ -1,31 +1,29 @@
 import React from "react";
 
+import { useSoundActivityDetection } from "../../../../../hooks/useSoundActivityDetection";
 import { StreamOptionsView } from "./StreamOptionsView/StreamOptionsView";
 import { useUserMediaView } from "./useUserMediaView";
-import { UserMediaLayout, LocalNameView, UserVideo } from "./styles";
-import { useSoundActivityDetection } from "../../../../../hooks/useSoundActivityDetection";
+import { UserMediaLayout, LocalNameView } from "./styles";
 
 export interface LocalMediaViewProps {
   id: string;
-  name: string;
   mediaStream: MediaStream;
 }
 
 export const LocalMediaView: React.FC<LocalMediaViewProps> = ({
   id,
-  name,
   mediaStream,
 }) => {
   const { videoId, hasVideo, videoRef } = useUserMediaView(id, mediaStream);
   const isSpeaking = useSoundActivityDetection(mediaStream);
 
   return (
-    <UserMediaLayout isActive={isSpeaking}>
-      {hasVideo && <UserVideo id={videoId} ref={videoRef} autoPlay muted />}
+    <UserMediaLayout>
+      {hasVideo && <video id={videoId} ref={videoRef} autoPlay muted />}
 
       <StreamOptionsView videoId={videoId} userId={id} />
 
-      <LocalNameView>{name}</LocalNameView>
+      <LocalNameView isActive={isSpeaking}>You</LocalNameView>
     </UserMediaLayout>
   );
 };

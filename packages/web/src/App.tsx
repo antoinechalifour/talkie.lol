@@ -3,8 +3,10 @@ import { Router, Switch, Route, Redirect } from "react-router-dom";
 
 import { history } from "./utils/history";
 import { isBrowserSupported } from "./utils/featureDetection";
+import { useMediaQuery } from "./hooks/useMediaQuery";
 import { CreateSpacePage } from "./components/CreateSpacePage/CreateSpacePage";
-import { ErrorPage } from "./components/ErrorPage/ErrorPage";
+import { BrowserNotSupportedPage } from "./components/BrowserNotSupportedPage/BrowserNotSupportedPage";
+import { MobileNotSupportedPage } from "./components/MobileNotSupportedPage/MobileNotSupportedPage";
 
 const JoinSpacePage = React.lazy(() =>
   import("./components/JoinSpacePage/JoinSpacePage").then((mod) => ({
@@ -20,8 +22,10 @@ const ScanSpacePage = React.lazy(() =>
 
 export const App: React.FC = () => {
   const isSupported = isBrowserSupported();
+  const isLargeEnough = useMediaQuery("(min-width: 1024px)");
 
-  if (!isSupported) return <ErrorPage />;
+  if (!isSupported) return <BrowserNotSupportedPage />;
+  if (!isLargeEnough) return <MobileNotSupportedPage />;
 
   return (
     <React.Suspense fallback={null}>
