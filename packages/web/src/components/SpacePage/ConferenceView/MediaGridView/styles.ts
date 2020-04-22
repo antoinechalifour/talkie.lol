@@ -2,20 +2,24 @@ import styled, { keyframes } from "styled-components";
 import { VideoAspectRatioContainer } from "../../../ui/VideoAspectRatioContainer";
 
 export const LocalUserLayout = styled(VideoAspectRatioContainer)`
-  max-width: 860px;
-  margin-left: auto;
-  margin-right: auto;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 `;
 
 export const DualStreamLayout = styled(VideoAspectRatioContainer)`
-  max-width: 860px;
-  margin-left: auto;
-  margin-right: auto;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 
   > :last-child {
     position: absolute;
     width: 33%;
-    bottom: 2px;
+    top: 2px;
     right: 2px;
 
     p {
@@ -25,11 +29,14 @@ export const DualStreamLayout = styled(VideoAspectRatioContainer)`
 `;
 
 export const MediaGridLayout = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
   max-width: 860px;
-  margin-left: auto;
-  margin-right: auto;
+  max-height: 100%;
+  padding: 1rem;
   display: grid;
-  grid-gap: 2rem;
+  grid-gap: 1rem;
 
   @media (min-width: 860px) {
     grid-template-columns: repeat(2, 1fr);

@@ -8,7 +8,6 @@ export const PageLayout = styled.main`
 
   > :nth-child(2) {
     flex: 1;
-    overflow-y: auto;
   }
 `;
 
