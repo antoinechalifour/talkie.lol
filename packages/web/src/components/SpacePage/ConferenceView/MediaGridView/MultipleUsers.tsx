@@ -18,7 +18,6 @@ export const MultipleUsers: React.FC<MultipleUsersProps> = ({
     <MediaArea>
       <LocalMediaView
         id={localUser.id()}
-        name={localUser.name()}
         mediaStream={localUser.mediaStream()}
       />
     </MediaArea>

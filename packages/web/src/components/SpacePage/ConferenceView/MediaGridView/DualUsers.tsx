@@ -25,7 +25,6 @@ export const DualUsers: React.FC<DualUsersProps> = ({
     <VideoAspectRatioContainer>
       <LocalMediaView
         id={localUser.id()}
-        name={localUser.name()}
         mediaStream={localUser.mediaStream()}
       />
     </VideoAspectRatioContainer>

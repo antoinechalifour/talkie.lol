@@ -23,13 +23,13 @@ export const UserMediaView: React.FC<UserMediaViewProps> = ({
   const isSpeaking = useSoundActivityDetection(mediaStream);
 
   return (
-    <UserMediaLayout isActive={isSpeaking}>
+    <UserMediaLayout>
       {hasVideo && <video id={videoId} ref={videoRef} autoPlay muted />}
       {hasAudio && <audio ref={audioRef} autoPlay />}
 
       <StreamOptionsView videoId={videoId} userId={id} />
 
-      <UserNameView>{name}</UserNameView>
+      <UserNameView isActive={isSpeaking}>{name}</UserNameView>
     </UserMediaLayout>
   );
 };

@@ -10,10 +10,6 @@ export interface LocalUserOnlyProps {
 
 export const LocalUserOnly: React.FC<LocalUserOnlyProps> = ({ localUser }) => (
   <LocalUserLayout>
-    <LocalMediaView
-      mediaStream={localUser.mediaStream()}
-      id={localUser.id()}
-      name={localUser.name()}
-    />
+    <LocalMediaView mediaStream={localUser.mediaStream()} id={localUser.id()} />
   </LocalUserLayout>
 );

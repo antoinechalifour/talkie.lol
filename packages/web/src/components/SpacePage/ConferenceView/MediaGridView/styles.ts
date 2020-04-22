@@ -18,9 +18,10 @@ export const DualStreamLayout = styled(VideoAspectRatioContainer)`
 
   > :last-child {
     position: absolute;
-    width: 33%;
-    top: 2px;
-    right: 2px;
+    width: 30%;
+    top: 0px;
+    right: 0px;
+    border: 1px solid black;
 
     p {
       display: none;
@@ -32,14 +33,13 @@ export const MediaGridLayout = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  max-width: 860px;
+  max-width: 100%;
   max-height: 100%;
-  padding: 1rem;
   display: grid;
-  grid-gap: 1rem;
 
   @media (min-width: 860px) {
     grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 50%;
   }
 `;
 
@@ -56,7 +56,6 @@ const mediaEnterAnimation = keyframes`
 
 export const MediaArea = styled(VideoAspectRatioContainer)`
   position: relative;
-  box-shadow: var(--box-shadow);
-
+  border: 2px solid var(--color-black);
   animation: ${mediaEnterAnimation} 0.25s ease;
 `;

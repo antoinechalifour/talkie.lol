@@ -7,25 +7,23 @@ import { UserMediaLayout, LocalNameView } from "./styles";
 
 export interface LocalMediaViewProps {
   id: string;
-  name: string;
   mediaStream: MediaStream;
 }
 
 export const LocalMediaView: React.FC<LocalMediaViewProps> = ({
   id,
-  name,
   mediaStream,
 }) => {
   const { videoId, hasVideo, videoRef } = useUserMediaView(id, mediaStream);
   const isSpeaking = useSoundActivityDetection(mediaStream);
 
   return (
-    <UserMediaLayout isActive={isSpeaking}>
+    <UserMediaLayout>
       {hasVideo && <video id={videoId} ref={videoRef} autoPlay muted />}
 
       <StreamOptionsView videoId={videoId} userId={id} />
 
-      <LocalNameView>{name}</LocalNameView>
+      <LocalNameView isActive={isSpeaking}>You</LocalNameView>
     </UserMediaLayout>
   );
 };
