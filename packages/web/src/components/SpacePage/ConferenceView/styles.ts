@@ -32,9 +32,4 @@ export const ChatArea = styled.div`
   padding: 2rem;
   background: var(--background-lighter);
   box-shadow: var(--box-shadow-1);
-
-  @media (min-width: 860px) {
-    grid-row: 1 / span 2;
-    grid-column: 2;
-  }
 `;

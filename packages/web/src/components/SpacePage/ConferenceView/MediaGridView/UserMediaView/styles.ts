@@ -1,9 +1,5 @@
 import styled, { css } from "styled-components";
 
-export interface UserNameViewProps {
-  isActive: boolean;
-}
-
 export const UserMediaLayout = styled.div`
   position: absolute;
   top: 0;
@@ -12,6 +8,10 @@ export const UserMediaLayout = styled.div`
   left: 0;
   background: var(--color-black);
 `;
+
+export interface UserNameViewProps {
+  isActive: boolean;
+}
 
 export const LocalNameView = styled.p<UserNameViewProps>`
   position: absolute;

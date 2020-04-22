@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+
 import { VideoAspectRatioContainer } from "../../../ui/VideoAspectRatioContainer";
 
 export const LocalUserLayout = styled(VideoAspectRatioContainer)`
