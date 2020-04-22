@@ -37,11 +37,8 @@ export const MediaGridLayout = styled.div`
   max-width: 100%;
   max-height: 100%;
   display: grid;
-
-  @media (min-width: 860px) {
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 50%;
-  }
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 50%;
 `;
 
 const mediaEnterAnimation = keyframes`
