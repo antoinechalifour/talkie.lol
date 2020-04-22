@@ -6,12 +6,10 @@ export interface UserMediaLayoutProps {
 
 export const UserMediaLayout = styled.div<UserMediaLayoutProps>`
   position: absolute;
-  overflow: hidden;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: 1rem;
   background: var(--color-black);
 
   border: 2px solid black;
@@ -43,14 +41,4 @@ export const LocalNameView = styled.p`
 export const UserNameView = styled(LocalNameView)`
   background: rgba(0, 0, 0, 0.7);
   min-width: 200px;
-`;
-
-export const UserVideo = styled.video`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  max-height: 100%;
-  max-width: 100%;
 `;

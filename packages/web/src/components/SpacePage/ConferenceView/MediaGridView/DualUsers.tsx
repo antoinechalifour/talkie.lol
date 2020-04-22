@@ -1,6 +1,7 @@
 import React from "react";
 
 import { User } from "../../../../models/User";
+import { VideoAspectRatioContainer } from "../../../ui/VideoAspectRatioContainer";
 import { UserMediaView } from "./UserMediaView/UserMediaView";
 import { LocalMediaView } from "./UserMediaView/LocalMediaView";
 import { DualStreamLayout } from "./styles";
@@ -21,12 +22,12 @@ export const DualUsers: React.FC<DualUsersProps> = ({
       mediaStream={remotePeer.mediaStream()}
     />
 
-    <div>
+    <VideoAspectRatioContainer>
       <LocalMediaView
         id={localUser.id()}
         name={localUser.name()}
         mediaStream={localUser.mediaStream()}
       />
-    </div>
+    </VideoAspectRatioContainer>
   </DualStreamLayout>
 );

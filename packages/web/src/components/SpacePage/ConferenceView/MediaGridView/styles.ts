@@ -1,31 +1,16 @@
 import styled, { keyframes } from "styled-components";
+import { VideoAspectRatioContainer } from "../../../ui/VideoAspectRatioContainer";
 
-export const LocalUserLayout = styled.div`
-  position: relative;
-  width: 100%;
+export const LocalUserLayout = styled(VideoAspectRatioContainer)`
   max-width: 860px;
   margin-left: auto;
   margin-right: auto;
-
-  &::after {
-    content: "";
-    display: block;
-    padding-bottom: 75%;
-  }
 `;
 
-export const DualStreamLayout = styled.div`
-  position: relative;
-  width: 100%;
+export const DualStreamLayout = styled(VideoAspectRatioContainer)`
   max-width: 860px;
   margin-left: auto;
   margin-right: auto;
-
-  &::after {
-    content: "";
-    display: block;
-    padding-bottom: 75%;
-  }
 
   > :last-child {
     position: absolute;
@@ -35,12 +20,6 @@ export const DualStreamLayout = styled.div`
 
     p {
       display: none;
-    }
-
-    &::after {
-      content: "";
-      display: block;
-      padding-bottom: 75%;
     }
   }
 `;
@@ -68,11 +47,9 @@ const mediaEnterAnimation = keyframes`
   }
 `;
 
-export const MediaArea = styled.div`
-  padding-bottom: 75%;
+export const MediaArea = styled(VideoAspectRatioContainer)`
   position: relative;
   box-shadow: var(--box-shadow);
-  border-radius: 1rem;
 
   animation: ${mediaEnterAnimation} 0.25s ease;
 `;

@@ -1,9 +1,9 @@
 import React from "react";
 
+import { useSoundActivityDetection } from "../../../../../hooks/useSoundActivityDetection";
 import { StreamOptionsView } from "./StreamOptionsView/StreamOptionsView";
 import { useUserMediaView } from "./useUserMediaView";
-import { UserMediaLayout, UserNameView, UserVideo } from "./styles";
-import { useSoundActivityDetection } from "../../../../../hooks/useSoundActivityDetection";
+import { UserMediaLayout, UserNameView } from "./styles";
 
 export interface UserMediaViewProps {
   id: string;
@@ -24,7 +24,7 @@ export const UserMediaView: React.FC<UserMediaViewProps> = ({
 
   return (
     <UserMediaLayout isActive={isSpeaking}>
-      {hasVideo && <UserVideo id={videoId} ref={videoRef} autoPlay muted />}
+      {hasVideo && <video id={videoId} ref={videoRef} autoPlay muted />}
       {hasAudio && <audio ref={audioRef} autoPlay />}
 
       <StreamOptionsView videoId={videoId} userId={id} />
