@@ -13,7 +13,7 @@ export interface UserNameViewProps {
   isActive: boolean;
 }
 
-export const LocalTopMenu = styled.div<UserNameViewProps>`
+export const UserTopMenu = styled.div<UserNameViewProps>`
   position: absolute;
   top: -1px;
   left: -1px;
@@ -36,8 +36,4 @@ export const LocalTopMenu = styled.div<UserNameViewProps>`
       background: var(--color-green);
       color: var(--color-text-reverse);
     `};
-`;
-
-export const UserTopMenu = styled(LocalTopMenu)`
-  background: rgba(0, 0, 0, 0.7);
 `;
