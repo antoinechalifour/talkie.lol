@@ -1,5 +1,5 @@
-mutation Login($slug: String!) {
-  login(args: { slug: $slug }) {
+mutation Login($slug: String!, $userName: String) {
+  login(args: { slug: $slug, userName: $userName }) {
     session {
       token
       user {

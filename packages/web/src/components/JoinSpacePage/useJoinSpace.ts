@@ -10,6 +10,7 @@ const LOGIN = loader("./Login.graphql");
 
 interface LoginVariables {
   slug: string;
+  userName: string | null;
 }
 
 interface LoginResult {
@@ -35,6 +36,7 @@ interface UseJoinSpaceOptions {
 
 export const useJoinSpace = ({ slug }: UseJoinSpaceOptions) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [userName, setUserName] = useState("");
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const [conference, setConference] = useState<ConferenceViewModel | null>(
     null
@@ -68,28 +70,35 @@ export const useJoinSpace = ({ slug }: UseJoinSpaceOptions) => {
     videoRef.current.srcObject = mediaStream;
   }, [mediaStream]);
 
-  const login = useCallback(async () => {
-    if (!mediaStream) return;
+  const login = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    const result = await loginMutation({ slug });
+      if (!mediaStream) return;
 
-    if (!result.data) return;
+      const result = await loginMutation({ slug, userName: userName || null });
 
-    const currentUser = CurrentUser.create(
-      result.data.login.session.user.id,
-      result.data.login.session.token,
-      result.data.login.session.user.name,
-      result.data.login.rtcConfiguration,
-      mediaStream
-    );
-    const conference = Conference.create(slug, currentUser);
+      if (!result.data) return;
 
-    setConference(ConferenceViewModel.create(conference));
-  }, [loginMutation, slug, mediaStream]);
+      const currentUser = CurrentUser.create(
+        result.data.login.session.user.id,
+        result.data.login.session.token,
+        result.data.login.session.user.name,
+        result.data.login.rtcConfiguration,
+        mediaStream
+      );
+      const conference = Conference.create(slug, currentUser);
+
+      setConference(ConferenceViewModel.create(conference));
+    },
+    [loginMutation, slug, userName, mediaStream]
+  );
 
   return {
     videoRef,
     conference,
+    userName,
+    setUserName,
     isFetching: loginMutationResult.fetching,
     login,
   };

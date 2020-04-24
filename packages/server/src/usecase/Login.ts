@@ -26,11 +26,11 @@ export class Login {
     this.tokenPort = tokenPort;
   }
 
-  async execute(slug: string): Promise<Session> {
+  async execute(slug: string, userName: string | null): Promise<Session> {
     log("execute");
 
     const space = await this.spacePort.findSpaceBySlug(slug);
-    const user = User.create(space.id);
+    const user = User.create(space.id, userName);
 
     await this.userPort.saveUser(user);
 

@@ -15,11 +15,13 @@ export class User {
     public spaceId: SpaceId
   ) {}
 
-  static create(spaceId: SpaceId): User {
-    const name = uniqueNamesGenerator({
-      dictionaries: [adjectives, colors, animals],
-      length: 2,
-    });
+  static create(spaceId: SpaceId, userName: string | null): User {
+    const name =
+      userName ??
+      uniqueNamesGenerator({
+        dictionaries: [adjectives, colors, animals],
+        length: 2,
+      });
 
     return new User(UserId.create(), name, spaceId);
   }

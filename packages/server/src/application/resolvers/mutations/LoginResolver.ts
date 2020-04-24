@@ -9,6 +9,7 @@ import { MutationArguments, MutationResolver } from "./types";
 
 interface LoginArguments {
   slug: string;
+  userName: string | null;
 }
 
 interface LoginResult {
@@ -48,9 +49,9 @@ export class LoginResolver
     obj: unknown,
     { args }: MutationArguments<LoginArguments>
   ): Promise<LoginResult> {
-    log("resolve");
+    log("resolve", args);
 
-    const session = await this.login.execute(args.slug);
+    const session = await this.login.execute(args.slug, args.userName);
     const [user, space] = await Promise.all([
       this.userPort.findUserById(session.userId),
       this.spacePort.findSpaceById(session.spaceId),
