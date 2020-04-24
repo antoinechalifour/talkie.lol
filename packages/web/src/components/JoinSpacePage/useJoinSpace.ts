@@ -7,6 +7,7 @@ import { CurrentUser } from "../../models/CurrentUser";
 import { ConferenceViewModel } from "../../viewmodels/ConferenceViewModel";
 
 const LOGIN = loader("./Login.graphql");
+const LOCAL_STORAGE_USERNAME = "username";
 
 interface LoginVariables {
   slug: string;
@@ -47,6 +48,10 @@ export const useJoinSpace = ({ slug }: UseJoinSpaceOptions) => {
   >(LOGIN);
 
   useEffect(() => {
+    const previousUserName = localStorage.getItem(LOCAL_STORAGE_USERNAME);
+
+    if (previousUserName) setUserName(previousUserName);
+
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -90,6 +95,11 @@ export const useJoinSpace = ({ slug }: UseJoinSpaceOptions) => {
       const conference = Conference.create(slug, currentUser);
 
       setConference(ConferenceViewModel.create(conference));
+
+      localStorage.setItem(
+        LOCAL_STORAGE_USERNAME,
+        result.data.login.session.user.name
+      );
     },
     [loginMutation, slug, userName, mediaStream]
   );
