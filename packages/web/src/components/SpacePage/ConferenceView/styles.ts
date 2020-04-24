@@ -3,10 +3,13 @@ import styled from "styled-components";
 export const ConferenceLayout = styled.div`
   display: grid;
   height: 100%;
+  overflow: hidden;
   grid-template-columns: 2fr 1fr;
 `;
 
 export const MediaArea = styled.div`
+  height: 100%;
+  overflow: hidden;
   position: relative;
   display: flex;
   align-items: center;
@@ -24,6 +27,8 @@ export const MediaControlsArea = styled.div`
 `;
 
 export const ChatArea = styled.div`
+  height: 100%;
+  overflow: hidden;
   padding: 2rem;
   background: var(--background-lighter);
   box-shadow: var(--box-shadow-1);
