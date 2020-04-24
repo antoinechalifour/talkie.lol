@@ -4,7 +4,7 @@ import { faCompress, faExpand } from "@fortawesome/free-solid-svg-icons";
 
 import { useZenMode } from "../../../useZenMode";
 import { useStreamOptionsView } from "./useStreamOptionsView";
-import { OptionLabel, StreamOptionsLayout } from "./styles";
+import { OptionLabel } from "./styles";
 
 export interface StreamOptionsViewProps {
   videoId: string;
@@ -29,7 +29,7 @@ export const StreamOptionsView: React.FC<StreamOptionsViewProps> = ({
   ]);
 
   return (
-    <StreamOptionsLayout>
+    <>
       <OptionLabel title="Enter zend mode for this user">
         <input
           type="checkbox"
@@ -51,6 +51,6 @@ export const StreamOptionsView: React.FC<StreamOptionsViewProps> = ({
           <FontAwesomeIcon icon={faCompress} />
         </OptionLabel>
       )}
-    </StreamOptionsLayout>
+    </>
   );
 };

@@ -1,16 +1,5 @@
 import styled from "styled-components";
 
-export const StreamOptionsLayout = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 1rem;
-  text-align: right;
-
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent);
-`;
-
 export const OptionLabel = styled.label`
   cursor: pointer;
 

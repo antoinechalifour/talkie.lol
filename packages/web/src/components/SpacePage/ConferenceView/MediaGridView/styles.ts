@@ -20,13 +20,9 @@ export const DualStreamLayout = styled(VideoAspectRatioContainer)`
   > :last-child {
     position: absolute;
     width: 30%;
-    top: 0px;
-    right: 0px;
+    bottom: 0;
+    right: 0;
     border: 1px solid black;
-
-    p {
-      display: none;
-    }
   }
 `;
 

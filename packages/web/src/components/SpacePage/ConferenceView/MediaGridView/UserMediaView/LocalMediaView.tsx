@@ -3,7 +3,7 @@ import React from "react";
 import { useSoundActivityDetection } from "../../../../../hooks/useSoundActivityDetection";
 import { StreamOptionsView } from "./StreamOptionsView/StreamOptionsView";
 import { useUserMediaView } from "./useUserMediaView";
-import { UserMediaLayout, LocalNameView } from "./styles";
+import { UserMediaLayout, LocalTopMenu } from "./styles";
 
 export interface LocalMediaViewProps {
   id: string;
@@ -21,9 +21,11 @@ export const LocalMediaView: React.FC<LocalMediaViewProps> = ({
     <UserMediaLayout>
       {hasVideo && <video id={videoId} ref={videoRef} autoPlay muted />}
 
-      <StreamOptionsView videoId={videoId} userId={id} />
+      <LocalTopMenu isActive={isSpeaking}>
+        <p>You</p>
 
-      <LocalNameView isActive={isSpeaking}>You</LocalNameView>
+        <StreamOptionsView videoId={videoId} userId={id} />
+      </LocalTopMenu>
     </UserMediaLayout>
   );
 };

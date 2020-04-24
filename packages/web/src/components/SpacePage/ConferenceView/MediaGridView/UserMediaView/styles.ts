@@ -13,30 +13,31 @@ export interface UserNameViewProps {
   isActive: boolean;
 }
 
-export const LocalNameView = styled.p<UserNameViewProps>`
+export const LocalTopMenu = styled.div<UserNameViewProps>`
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: -1px;
+  left: -1px;
+  right: -1px;
 
-  display: flex;
-  padding: 1rem 2rem;
-  place-content: center;
-  border-radius: 1rem;
-  box-shadow: var(--box-shadow-1);
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr auto auto;
+  grid-gap: 1rem;
+  padding: 0.5rem 1rem;
 
-  background: var(--color-blue);
+  background: rgba(0, 0, 0, 0.85);
   color: var(--color-white);
 
-  border: 2px solid black;
-  transition: border 0.25s ease;
+  transition: all 0.25s ease;
 
   ${(props) =>
     props.isActive &&
     css`
-      border: 2px solid var(--color-green);
+      background: var(--color-green);
+      color: var(--color-text-reverse);
     `};
 `;
 
-export const UserNameView = styled(LocalNameView)`
+export const UserTopMenu = styled(LocalTopMenu)`
   background: rgba(0, 0, 0, 0.7);
 `;
