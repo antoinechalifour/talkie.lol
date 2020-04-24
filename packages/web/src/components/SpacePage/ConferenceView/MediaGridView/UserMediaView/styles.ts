@@ -9,11 +9,7 @@ export const UserMediaLayout = styled.div`
   background: var(--color-black);
 `;
 
-export interface UserNameViewProps {
-  isActive: boolean;
-}
-
-export const UserTopMenu = styled.div<UserNameViewProps>`
+export const UserTopMenu = styled.div`
   position: absolute;
   top: -1px;
   left: -1px;
@@ -21,7 +17,7 @@ export const UserTopMenu = styled.div<UserNameViewProps>`
 
   display: grid;
   align-items: center;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: auto 1fr auto auto;
   grid-gap: 1rem;
   padding: 0.5rem 1rem;
 
@@ -29,11 +25,8 @@ export const UserTopMenu = styled.div<UserNameViewProps>`
   color: var(--color-white);
 
   transition: all 0.25s ease;
+`;
 
-  ${(props) =>
-    props.isActive &&
-    css`
-      background: var(--color-green);
-      color: var(--color-text-reverse);
-    `};
+export const SpeakingIconContainer = styled.div`
+  color: var(--color-green);
 `;

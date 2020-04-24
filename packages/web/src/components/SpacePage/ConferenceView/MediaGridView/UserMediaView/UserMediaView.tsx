@@ -1,9 +1,11 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 
 import { useSoundActivityDetection } from "../../../../../hooks/useSoundActivityDetection";
 import { StreamOptionsView } from "./StreamOptionsView/StreamOptionsView";
 import { useUserMediaView } from "./useUserMediaView";
-import { UserMediaLayout, UserTopMenu } from "./styles";
+import { SpeakingIconContainer, UserMediaLayout, UserTopMenu } from "./styles";
 
 export interface UserMediaViewProps {
   id: string;
@@ -27,8 +29,12 @@ export const UserMediaView: React.FC<UserMediaViewProps> = ({
       {hasVideo && <video id={videoId} ref={videoRef} autoPlay muted />}
       {hasAudio && <audio ref={audioRef} autoPlay />}
 
-      <UserTopMenu isActive={isSpeaking}>
+      <UserTopMenu>
         <p>{name}</p>
+
+        <SpeakingIconContainer>
+          {isSpeaking && <FontAwesomeIcon icon={faVolumeUp} />}
+        </SpeakingIconContainer>
 
         <StreamOptionsView videoId={videoId} userId={id} />
       </UserTopMenu>
