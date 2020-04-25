@@ -1,4 +1,4 @@
-import { useCallback, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { useHistory } from "react-router-dom";
 
 import { isSharingScreenSupported } from "../../../../utils/featureDetection";
@@ -80,6 +80,11 @@ const getVideoStreamByDeviceId = (deviceId: string) =>
     },
   });
 
+const isMuteMicrophoneShortcut = (e: KeyboardEvent) =>
+  e.key === "d" && (e.metaKey || e.ctrlKey);
+const isMuteCameraShortcut = (e: KeyboardEvent) =>
+  e.key === "e" && (e.metaKey || e.ctrlKey);
+
 export const useMediaControlsView = () => {
   const history = useHistory();
   const conference = useConference();
@@ -150,6 +155,35 @@ export const useMediaControlsView = () => {
     conference.leave();
     history.replace("/");
   }, [conference, history]);
+
+  useEffect(() => {
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (isMuteMicrophoneShortcut(e)) {
+        e.preventDefault();
+
+        if (state.isSharingAudio) stopSharingAudio();
+        else startSharingAudio();
+      } else if (isMuteCameraShortcut(e)) {
+        e.preventDefault();
+
+        if (state.isSharingVideo) stopSharingVideo();
+        else startSharingVideo();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", onKeyUp);
+    };
+  }, [
+    state.isSharingAudio,
+    state.isSharingVideo,
+    startSharingAudio,
+    startSharingVideo,
+    stopSharingAudio,
+    stopSharingVideo,
+  ]);
 
   return {
     ...state,
