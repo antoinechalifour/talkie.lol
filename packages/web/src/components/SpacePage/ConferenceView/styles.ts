@@ -9,12 +9,10 @@ export const ConferenceLayout = styled.div`
 
 export const MediaArea = styled.div`
   height: 100%;
-  overflow: hidden;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.25);
 `;
 
 export const MediaControlsArea = styled.div`
