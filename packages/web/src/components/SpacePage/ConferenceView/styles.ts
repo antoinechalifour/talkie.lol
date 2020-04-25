@@ -27,7 +27,6 @@ export const MediaControlsArea = styled.div`
 export const ChatArea = styled.div`
   height: 100%;
   overflow: hidden;
-  padding: 2rem;
   background: var(--background-lighter);
   box-shadow: var(--box-shadow-1);
 `;

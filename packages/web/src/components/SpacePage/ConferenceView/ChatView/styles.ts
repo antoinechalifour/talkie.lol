@@ -3,7 +3,6 @@ import styled from "styled-components/macro";
 export const ChatLayout = styled.div`
   display: grid;
   grid-template-rows: 1fr auto;
-  grid-gap: 2rem;
   height: 100%;
 `;
 
@@ -25,7 +24,9 @@ export const NoMessageArea = styled.div`
   }
 `;
 
-export const NewMessageArea = styled.div``;
+export const NewMessageArea = styled.div`
+  padding: 0 1rem 1rem;
+`;
 
 export const InputGroup = styled.div`
   display: grid;
@@ -45,6 +46,8 @@ export const InputGroup = styled.div`
     font-family: inherit;
     font-size: inherit;
     padding: 0 2rem;
+    border: none;
+    outline: none;
   }
 
   input:disabled {
@@ -70,6 +73,7 @@ export const InputGroup = styled.div`
 export const MessagesList = styled.ul`
   height: 100%;
   overflow-y: scroll;
+  padding: 2rem;
 `;
 
 export const MessageLayout = styled.li`
