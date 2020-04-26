@@ -28,6 +28,11 @@ export const DropdownLayout = styled.div`
     border-bottom-right-radius: 0;
   }
 
+  button:focus {
+    position: relative;
+    outline: var(--outline-style);
+  }
+
   button:last-child {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;

@@ -22,4 +22,8 @@ export const OptionLabel = styled.label`
   input:checked + * {
     color: var(--input-active-background);
   }
+
+  input:focus + * {
+    outline: var(--outline-style);
+  }
 `;
