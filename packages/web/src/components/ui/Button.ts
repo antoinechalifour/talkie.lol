@@ -40,6 +40,10 @@ export const Button = styled.button<ButtonProps>`
     box-shadow: var(--box-shadow-2);
   }
 
+  &:focus {
+    outline: var(--outline-style);
+  }
+
   &[disabled] {
     cursor: not-allowed;
     opacity: 0.8;

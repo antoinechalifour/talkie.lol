@@ -1,4 +1,5 @@
 import styled from "styled-components/macro";
+import { motion } from "framer-motion";
 
 export const DropdownGroup = styled.div`
   position: relative;
@@ -27,6 +28,11 @@ export const DropdownLayout = styled.div`
     border-bottom-right-radius: 0;
   }
 
+  button:focus {
+    position: relative;
+    outline: var(--outline-style);
+  }
+
   button:last-child {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -43,7 +49,7 @@ export const DropdownLayout = styled.div`
   }
 `;
 
-export const DropdownMenuLayout = styled.div`
+export const DropdownMenuLayout = styled(motion.div)`
   position: absolute;
   z-index: 10000;
   bottom: 50%;
@@ -55,6 +61,7 @@ export const DropdownMenuLayout = styled.div`
   background: var(--color-white);
   color: var(--color-text-reverse);
   box-shadow: var(--box-shadow-1);
+  transform-origin: 0 100%;
 `;
 
 export const OptionButton = styled.button`

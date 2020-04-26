@@ -1,13 +1,15 @@
 import React from "react";
 import { Helmet } from "react-helmet";
+import { motion } from "framer-motion";
 
 import { createTitle } from "../../utils/html";
 import { AuthenticatedClient } from "../AuthenticatedClient/AuthenticatedClient";
-import { HomeLayout } from "../HomeLayout/HomeLayout";
 import { SpacePage } from "../SpacePage/SpacePage";
-import { useJoinSpace } from "./useJoinSpace";
-import { JoinInputGroup, VideoLayout } from "./styles";
 import { Button } from "../ui/Button";
+import { VStack } from "../ui/VStack";
+import { fadeIn } from "../ui/animations";
+import { useJoinSpace } from "./useJoinSpace";
+import { JoinInputGroup, JoinSpacelayout, VideoLayout } from "./styles";
 
 export interface JoinSpacePageProps {
   spaceSlug: string;
@@ -34,27 +36,42 @@ export const JoinSpacePage: React.FC<JoinSpacePageProps> = ({ spaceSlug }) => {
   }
 
   return (
-    <HomeLayout>
+    <JoinSpacelayout>
       <Helmet>
         <title>{createTitle(`Join space ${spaceSlug}`)}</title>
       </Helmet>
 
-      <VideoLayout>
-        <video ref={videoRef} autoPlay muted />
+      <VStack
+        initial="start"
+        animate="end"
+        variants={fadeIn.orchestratorVariants}
+      >
+        <motion.h2 variants={fadeIn.variants} transition={fadeIn.transition}>
+          Let's set you up...
+        </motion.h2>
 
-        <JoinInputGroup onSubmit={login}>
-          <input
-            type="text"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            aria-label="Your name. Leave blank for a funny name!"
-            placeholder="Your name. Leave blank for a funny name!"
-          />
-          <Button type="submit" disabled={isFetching}>
-            Join
-          </Button>
-        </JoinInputGroup>
-      </VideoLayout>
-    </HomeLayout>
+        <motion.p variants={fadeIn.variants} transition={fadeIn.transition}>
+          Talkie requires an access to your camera and microphone. Once granted,
+          pick a name and start chatting with your friends!
+        </motion.p>
+
+        <VideoLayout variants={fadeIn.variants} transition={fadeIn.transition}>
+          <video ref={videoRef} autoPlay muted />
+
+          <JoinInputGroup onSubmit={login}>
+            <input
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              aria-label="Your name. Leave blank for a funny name!"
+              placeholder="Your name. Leave blank for a funny name!"
+            />
+            <Button type="submit" disabled={isFetching}>
+              Join
+            </Button>
+          </JoinInputGroup>
+        </VideoLayout>
+      </VStack>
+    </JoinSpacelayout>
   );
 };

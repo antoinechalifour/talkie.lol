@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { AnimatePresence } from "framer-motion";
 
 import { useZenMode } from "../useZenMode";
 import { useConference } from "../../hooks/useConference";
 import { ExitButton, Video, ZenModeLayout } from "./styles";
+import { videoAnimation, zenModeAnimation } from "./animations";
 
 export const ZenMode: React.FC = () => {
   const zenMode = useZenMode();
@@ -32,15 +34,29 @@ export const ZenMode: React.FC = () => {
     videoRef.current.srcObject = user.mediaStream();
   }, [conference, zenMode.userId]);
 
-  if (!zenMode.userId) return null;
+  const showModal = !!zenMode.userId;
 
   return (
-    <ZenModeLayout>
-      <Video ref={videoRef} autoPlay muted />
+    <AnimatePresence>
+      {showModal && (
+        <ZenModeLayout
+          variants={zenModeAnimation.variants}
+          initial="closed"
+          animate="open"
+          exit="closed"
+        >
+          <Video
+            ref={videoRef}
+            autoPlay
+            muted
+            variants={videoAnimation.variants}
+          />
 
-      <ExitButton onClick={zenMode.exitZenMode}>
-        <FontAwesomeIcon icon={faTimes} />
-      </ExitButton>
-    </ZenModeLayout>
+          <ExitButton onClick={zenMode.exitZenMode}>
+            <FontAwesomeIcon icon={faTimes} />
+          </ExitButton>
+        </ZenModeLayout>
+      )}
+    </AnimatePresence>
   );
 };

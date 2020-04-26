@@ -4,7 +4,6 @@ import { Router, Switch, Route, Redirect } from "react-router-dom";
 import { history } from "./utils/history";
 import { isBrowserSupported } from "./utils/featureDetection";
 import { useMediaQuery } from "./hooks/useMediaQuery";
-import { CreateSpacePage } from "./components/CreateSpacePage/CreateSpacePage";
 import { BrowserNotSupportedPage } from "./components/BrowserNotSupportedPage/BrowserNotSupportedPage";
 import { MobileNotSupportedPage } from "./components/MobileNotSupportedPage/MobileNotSupportedPage";
 
@@ -14,9 +13,9 @@ const JoinSpacePage = React.lazy(() =>
   }))
 );
 
-const ScanSpacePage = React.lazy(() =>
-  import("./components/ScanSpacePage/ScanSpacePage").then((mod) => ({
-    default: mod.ScanSpacePage,
+const HomePage = React.lazy(() =>
+  import("./components/HomePage/HomePage").then((mod) => ({
+    default: mod.HomePage,
   }))
 );
 
@@ -31,6 +30,8 @@ export const App: React.FC = () => {
     <React.Suspense fallback={null}>
       <Router history={history}>
         <Switch>
+          <Route path="/home" render={() => <HomePage />} />
+
           <Route
             path="/space/:spaceSlug"
             exact
@@ -39,11 +40,7 @@ export const App: React.FC = () => {
             )}
           />
 
-          <Route path="/create" exact render={() => <CreateSpacePage />} />
-
-          <Route path="/join" exact render={() => <ScanSpacePage />} />
-
-          <Redirect to="/create" />
+          <Redirect to="/home" />
         </Switch>
       </Router>
     </React.Suspense>

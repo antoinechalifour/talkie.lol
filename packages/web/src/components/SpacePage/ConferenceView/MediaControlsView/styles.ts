@@ -19,6 +19,10 @@ export const ShareScreenButton = styled.button`
   color: var(--button-text);
 
   cursor: pointer;
+
+  &:focus {
+    outline: var(--outline-style);
+  }
 `;
 
 export const CancelButton = styled(ShareScreenButton)`

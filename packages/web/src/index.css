@@ -36,6 +36,8 @@ html {
   --button-danger-background: var(--color-red);
 
   --input-active-background: var(--color-green);
+
+  --outline-style: 2px dashed var(--color-green);
 }
 
 body {
@@ -45,7 +47,11 @@ body {
   font-family: var(--font-primary);
 
   background-color: var(--background-lighter);
-  background-image: linear-gradient(-45deg, var(--background), var(--background-darker) 75%);
+  background-image: linear-gradient(
+    -45deg,
+    var(--background),
+    var(--background-darker) 75%
+  );
   color: var(--color-text);
 }
 
@@ -54,7 +60,7 @@ body {
 }
 
 p {
-  line-height: 1.5;
+  line-height: 1.8;
 }
 
 .Toastify__toast {

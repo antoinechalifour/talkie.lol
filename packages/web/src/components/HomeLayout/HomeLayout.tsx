@@ -1,10 +1,16 @@
 import React from "react";
 
-import { Background, AppTitle } from "./styles";
+import { fadeIn } from "../ui/animations";
+import { AppTitle, Page, PageContent } from "./styles";
 
 export const HomeLayout: React.FC = ({ children }) => (
-  <Background>
-    <AppTitle>Talkie.LOL</AppTitle>
-    {children}
-  </Background>
+  <Page initial="start" animate="end" variants={fadeIn.orchestratorVariants}>
+    <AppTitle variants={fadeIn.variants} transition={fadeIn.transition}>
+      Talkie.LOL
+    </AppTitle>
+
+    <PageContent variants={fadeIn.variants} transition={fadeIn.transition}>
+      {children}
+    </PageContent>
+  </Page>
 );

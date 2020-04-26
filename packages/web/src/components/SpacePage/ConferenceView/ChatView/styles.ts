@@ -1,4 +1,5 @@
 import styled from "styled-components/macro";
+import { motion } from "framer-motion";
 
 export const ChatLayout = styled.div`
   display: grid;
@@ -76,23 +77,27 @@ export const MessagesList = styled.ul`
   padding: 2rem;
 `;
 
-export const MessageLayout = styled.li`
+export const MessageLayout = styled(motion.li)`
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  grid-template-areas: "time author" "message message";
+  grid-gap: 1rem;
+
   & + li {
     margin-top: 2rem;
-  }
-
-  > * + * {
-    margin-top: 0.8rem;
   }
 `;
 
 export const AuthorName = styled.div`
+  grid-area: author;
   font-size: 1.4rem;
   color: var(--color-lightgray);
   opacity: 0.75;
 `;
 
 export const MessageContent = styled.div`
+  grid-area: message;
   display: inline-block;
   border-radius: 1rem;
   overflow: hidden;
@@ -112,6 +117,7 @@ export const MessageContent = styled.div`
 `;
 
 export const ReceivedTime = styled.div`
+  grid-area: time;
   font-size: 1.4rem;
   color: var(--color-lightgray);
   opacity: 0.75;
