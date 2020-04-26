@@ -1,6 +1,7 @@
 import styled from "styled-components/macro";
+import { motion } from "framer-motion";
 
-export const VideoAspectRatioContainer = styled.div`
+export const VideoAspectRatioContainer = styled(motion.div)`
   position: relative;
 
   &:after {

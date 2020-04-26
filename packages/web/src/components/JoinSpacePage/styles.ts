@@ -11,10 +11,20 @@ export const JoinSpacelayout = styled.div`
   h2 {
     text-align: center;
     font-size: 4rem;
-  }
 
-  p {
-    margin: 4rem 0;
+    &:after {
+      content: "";
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      max-width: 200px;
+      height: 1px;
+      margin-top: 4rem;
+
+      background: var(--color-white);
+      opacity: 0.3;
+    }
   }
 `;
 

@@ -39,30 +39,3 @@ export const AppTitle = styled(motion.h1)`
     opacity: 0.3;
   }
 `;
-
-export const pageVariants = {
-  start: {
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-  end: {
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-export const fadeInVariants = {
-  start: {
-    opacity: 0,
-  },
-  end: {
-    opacity: 1,
-  },
-};
-
-export const fadeInTransition = {
-  duration: 0.5,
-  ease: "easeInOut",
-};
