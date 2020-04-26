@@ -51,8 +51,8 @@ export const JoinSpacePage: React.FC<JoinSpacePageProps> = ({ spaceSlug }) => {
         </motion.h2>
 
         <motion.p variants={fadeIn.variants} transition={fadeIn.transition}>
-          Talkie requires an access to your webcam and microphone. Once granted,
-          pick a nick name and start chatting with your friends!
+          Talkie requires an access to your camera and microphone. Once granted,
+          pick a name and start chatting with your friends!
         </motion.p>
 
         <VideoLayout variants={fadeIn.variants} transition={fadeIn.transition}>

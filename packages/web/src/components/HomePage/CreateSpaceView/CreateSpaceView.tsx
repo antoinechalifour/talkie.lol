@@ -18,10 +18,8 @@ export const CreateSpaceView: React.FC = () => {
 
       <VStack>
         <p>
-          Talkie is a free, secure, peer-to-peer video chat app that you can use
-          to talk to your friends. <br />
-          To start using Talkie, either create a space and send the link to your
-          friends, or join an existing space by scanning a Talkie QrCode.
+          Talkie is a free, open-source, secure, peer-to-peer video chat app
+          that you can use to talk to your friends.
         </p>
 
         {isCreating ? (
@@ -35,7 +33,7 @@ export const CreateSpaceView: React.FC = () => {
             </Button>
 
             <Link to="/home/join">
-              ... or scan a QR code to join an existing space
+              ... or scan a QR Code to join an existing space
             </Link>
           </>
         )}

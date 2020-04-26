@@ -19,7 +19,7 @@ export const ScanSpaceView: React.FC = () => {
 
       <VStack>
         <p>
-          Ask your friends for their Talkie QR code and scan it to join their
+          Ask your friends for their Talkie QR Code and scan it to join their
           space.
         </p>
 
