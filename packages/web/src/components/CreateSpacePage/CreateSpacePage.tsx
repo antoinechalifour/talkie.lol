@@ -16,6 +16,7 @@ export const CreateSpacePage: React.FC = () => {
       <Helmet>
         <title>{createTitle("Create a space")}</title>
       </Helmet>
+
       {isCreating ? (
         <Button disabled loading>
           Creating space (this may take a few seconds)...
