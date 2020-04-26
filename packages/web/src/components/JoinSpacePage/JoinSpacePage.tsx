@@ -3,11 +3,10 @@ import { Helmet } from "react-helmet";
 
 import { createTitle } from "../../utils/html";
 import { AuthenticatedClient } from "../AuthenticatedClient/AuthenticatedClient";
-import { HomeLayout } from "../HomeLayout/HomeLayout";
 import { SpacePage } from "../SpacePage/SpacePage";
 import { useJoinSpace } from "./useJoinSpace";
-import { JoinInputGroup, VideoLayout } from "./styles";
 import { Button } from "../ui/Button";
+import { JoinInputGroup, JoinSpacelayout, VideoLayout } from "./styles";
 
 export interface JoinSpacePageProps {
   spaceSlug: string;
@@ -34,10 +33,16 @@ export const JoinSpacePage: React.FC<JoinSpacePageProps> = ({ spaceSlug }) => {
   }
 
   return (
-    <HomeLayout>
+    <JoinSpacelayout>
       <Helmet>
         <title>{createTitle(`Join space ${spaceSlug}`)}</title>
       </Helmet>
+
+      <h2>Let's set you up...</h2>
+      <p>
+        Talkie requires an access to your webcam and microphone. Once granted,
+        pick a nick name and start chatting with your friends!
+      </p>
 
       <VideoLayout>
         <video ref={videoRef} autoPlay muted />
@@ -55,6 +60,6 @@ export const JoinSpacePage: React.FC<JoinSpacePageProps> = ({ spaceSlug }) => {
           </Button>
         </JoinInputGroup>
       </VideoLayout>
-    </HomeLayout>
+    </JoinSpacelayout>
   );
 };

@@ -1,18 +1,46 @@
 import styled from "styled-components/macro";
 import { motion } from "framer-motion";
 
-export const Background = styled.main`
+export const Page = styled(motion.main)`
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-
-  text-align: center;
+  padding-top: 10rem;
 `;
 
-export const appTitleVariants = {
+export const PageContent = styled(motion.div)`
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+
+  a {
+    text-align: center;
+  }
+`;
+
+export const AppTitle = styled(motion.h1)`
+  margin-bottom: 5rem;
+
+  font-size: 8rem;
+  letter-spacing: 0.5rem;
+  font-family: var(--font-secondary);
+  text-shadow: 0 1px 12px #000;
+  text-align: center;
+
+  &:after {
+    content: "";
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 200px;
+    height: 1px;
+    margin-top: 5rem;
+
+    background: var(--color-white);
+    opacity: 0.3;
+  }
+`;
+
+export const pageVariants = {
   start: {
     transition: {
       staggerChildren: 0.2,
@@ -25,15 +53,7 @@ export const appTitleVariants = {
   },
 };
 
-export const AppTitle = styled(motion.h1)`
-  font-size: 8rem;
-  letter-spacing: 0.5rem;
-  font-family: var(--font-secondary);
-  margin-bottom: 2rem;
-  text-shadow: 0 1px 12px #000;
-`;
-
-export const appTitlePartVariants = {
+export const fadeInVariants = {
   start: {
     opacity: 0,
   },
@@ -42,7 +62,7 @@ export const appTitlePartVariants = {
   },
 };
 
-export const appTitlePartTransition = {
-  duration: 1,
+export const fadeInTransition = {
+  duration: 0.5,
   ease: "easeInOut",
 };

@@ -2,11 +2,28 @@ import styled from "styled-components/macro";
 
 import { VideoAspectRatioContainer } from "../ui/VideoAspectRatioContainer";
 
+export const JoinSpacelayout = styled.div`
+  padding-top: 5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+
+  h2 {
+    text-align: center;
+    font-size: 4rem;
+  }
+
+  p {
+    margin: 4rem 0;
+  }
+`;
+
 export const VideoLayout = styled(VideoAspectRatioContainer)`
   width: 98%;
   max-width: 860px;
   margin-left: auto;
   margin-right: auto;
+  border: 2px solid #000;
 
   background: var(--background-video);
   box-shadow: var(--box-shadow);

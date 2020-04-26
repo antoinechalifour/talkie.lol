@@ -1,48 +1,26 @@
 import React from "react";
-import { motion } from "framer-motion";
 
 import {
-  Background,
   AppTitle,
-  appTitleVariants,
-  appTitlePartVariants,
-  appTitlePartTransition,
+  fadeInTransition,
+  fadeInVariants,
+  pageVariants,
+  Page,
+  PageContent,
 } from "./styles";
 
 export const HomeLayout: React.FC = ({ children }) => (
-  <Background>
-    <AppTitle initial="start" animate="end" variants={appTitleVariants}>
-      <motion.span
-        variants={appTitlePartVariants}
-        transition={appTitlePartTransition}
-      >
-        Talkie
-      </motion.span>
-      <motion.span
-        variants={appTitlePartVariants}
-        transition={appTitlePartTransition}
-      >
-        .
-      </motion.span>
-      <motion.span
-        variants={appTitlePartVariants}
-        transition={appTitlePartTransition}
-      >
-        L
-      </motion.span>
-      <motion.span
-        variants={appTitlePartVariants}
-        transition={appTitlePartTransition}
-      >
-        O
-      </motion.span>
-      <motion.span
-        variants={appTitlePartVariants}
-        transition={appTitlePartTransition}
-      >
-        L
-      </motion.span>
+  <Page initial="start" animate="end" variants={pageVariants}>
+    <AppTitle variants={fadeInVariants} transition={fadeInTransition}>
+      Talkie.LOL
     </AppTitle>
-    {children}
-  </Background>
+
+    <PageContent
+      key={window.location.pathname}
+      variants={fadeInVariants}
+      transition={fadeInTransition}
+    >
+      {children}
+    </PageContent>
+  </Page>
 );

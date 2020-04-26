@@ -3,7 +3,7 @@ import QrScanner from "qr-scanner";
 // @ts-ignore
 import QrScannerWorkerPath from "!!file-loader!qr-scanner/qr-scanner-worker.min.js"; // eslint-disable-line
 
-import { history } from "../../utils/history";
+import { history } from "../../../utils/history";
 
 QrScanner.WORKER_PATH = QrScannerWorkerPath;
 
