@@ -8,6 +8,7 @@ import {
   MessageLayout,
   ReceivedTime,
 } from "./styles";
+import { messageAnimation } from "./animations";
 
 export interface ChatMessageProps {
   message: Message;
@@ -23,10 +24,14 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   );
 
   return (
-    <MessageLayout>
+    <MessageLayout
+      variants={messageAnimation.variants}
+      initial="entering"
+      animate="entered"
+    >
       <AuthorName>{message.author().name}</AuthorName>
-      <MessageContent>{content}</MessageContent>
       <ReceivedTime>{message.receivedTime()}</ReceivedTime>
+      <MessageContent>{content}</MessageContent>
     </MessageLayout>
   );
 };
