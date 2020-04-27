@@ -99,19 +99,23 @@ export const AuthorName = styled.div`
 export const MessageContent = styled.div`
   grid-area: message;
   display: inline-block;
-  border-radius: 1rem;
-  overflow: hidden;
-  border: 2px solid var(--color-white);
 
-  background: var(--color-white);
-  color: var(--color-text-reverse);
+  img,
+  p {
+    display: inline-block;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 2px solid var(--color-white);
+
+    background: var(--color-white);
+  }
 
   img {
-    display: block;
     max-width: 100%;
   }
 
   p {
+    color: var(--color-text-reverse);
     padding: 2rem;
   }
 `;
