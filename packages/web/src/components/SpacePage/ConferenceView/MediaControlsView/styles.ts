@@ -30,10 +30,22 @@ export const CancelButton = styled(ShareScreenButton)`
 `;
 
 export const QrCodeArea = styled.div`
+  display: grid;
+  grid-gap: 2rem;
   padding: 0 1rem;
 
-  p {
-    margin-bottom: 2rem;
+  button {
+    all: unset;
+    line-height: 1.6;
+  }
+
+  button span {
+    text-decoration: underline;
+  }
+
+  button svg {
+    margin-left: 0.5rem;
+    font-size: 2rem;
   }
 
   canvas {
