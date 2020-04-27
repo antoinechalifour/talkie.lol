@@ -2,28 +2,38 @@ import React, { useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import QrCode from "qrcode.react";
-
-import { QrCodeArea } from "./styles";
 import { toast } from "react-toastify";
 
+import { QrCodeArea } from "./styles";
+import { useDropdownContext } from "../../../ui/DropdownButton/useDropdownContext";
+
+const canvasToBlob = (canvas: HTMLCanvasElement) =>
+  new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (!blob) reject();
+      else resolve(blob);
+    });
+  });
+
 export const SpaceQrCode: React.FC = () => {
-  const copy = useCallback(() => {
+  const { close } = useDropdownContext();
+
+  const copy = useCallback(async () => {
     const canvas = document.querySelector(
       "#scape-qrcode"
     )! as HTMLCanvasElement;
 
-    canvas.toBlob((blob) => {
-      if (!blob) return;
+    const blob = await canvasToBlob(canvas);
 
-      // @ts-ignore
-      const item = new ClipboardItem({ "image/png": blob });
+    // @ts-ignore
+    const item = new ClipboardItem({ "image/png": blob });
+    // @ts-ignore
+    await navigator.clipboard.write([item]);
 
-      // @ts-ignore
-      navigator.clipboard.write([item]);
+    close();
 
-      toast.info("The QR code has been copied to your clipboard");
-    });
-  }, []);
+    toast.info("The QR code has been copied to your clipboard");
+  }, [close]);
 
   return (
     <QrCodeArea>

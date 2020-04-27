@@ -36,7 +36,12 @@ export const QrCodeArea = styled.div`
 
   button {
     all: unset;
+    cursor: pointer;
     line-height: 1.6;
+  }
+
+  button:focus {
+    outline: var(--outline-style);
   }
 
   button span {
