@@ -4,16 +4,9 @@ import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import QrCode from "qrcode.react";
 import { toast } from "react-toastify";
 
-import { QrCodeArea } from "./styles";
+import { copyCanvasToClipboard } from "../../../../utils/canvas";
 import { useDropdownContext } from "../../../ui/DropdownButton/useDropdownContext";
-
-const canvasToBlob = (canvas: HTMLCanvasElement) =>
-  new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob((blob) => {
-      if (!blob) reject();
-      else resolve(blob);
-    });
-  });
+import { QrCodeArea } from "./styles";
 
 export const SpaceQrCode: React.FC = () => {
   const { close } = useDropdownContext();
@@ -23,15 +16,9 @@ export const SpaceQrCode: React.FC = () => {
       "#scape-qrcode"
     )! as HTMLCanvasElement;
 
-    const blob = await canvasToBlob(canvas);
-
-    // @ts-ignore
-    const item = new ClipboardItem({ "image/png": blob });
-    // @ts-ignore
-    await navigator.clipboard.write([item]);
+    await copyCanvasToClipboard(canvas);
 
     close();
-
     toast.info("The QR code has been copied to your clipboard");
   }, [close]);
 
