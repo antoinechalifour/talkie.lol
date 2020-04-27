@@ -4,6 +4,12 @@ import { motion } from "framer-motion";
 export const Page = styled(motion.main)`
   min-height: 100vh;
   padding-top: 10rem;
+
+  text-align: center;
+
+  @media (min-width: 1024px) {
+    text-align: left;
+  }
 `;
 
 export const PageContent = styled(motion.div)`
