@@ -1,41 +1,66 @@
 # Talkie.LOL
 
-- 👨‍💻 A [demo](http://webrtc-experiments.netlify.com/) is available on Netlify
-- 💻 The [signaling server](https://webrtc-experiments.herokuapp.com/graphql) is hosted on Heroku (this project is on a free plan so it might take quite some time to wake the servers).
+[Try it here!](https://www.talkie.lol)
 
-## Description
+> Talkie is a free, open-source, secure, peer-to-peer video chat app that you can use to talk to your friends.
 
-This app is a side-project for experimenting with WebRTC. I am planning on integrating as many features as possible, such as :
+## Quick Overview
 
-- audio sharing ✅
-- video sharing ✅
-- screen sharing ✅
-- picture in picture ✅
-- select media input sources ✅
-- filters on videos
-- volume controls
-- ... and so on
+Talkie is a side-project that I use to play with WebRTC and brand new Web APIs. Talkie uses :
 
-The backlog can be found [here](https://github.com/antoinechalifour/webrtc-experiments/projects/1).
+| Category         | API                             | Used for...                                       |
+| ---------------- | ------------------------------- | ------------------------------------------------- |
+| WebRTC           | RtcPeerconnection               | Creating peer to peer connections                 |
+| WebRTC           | Data Channels                   | Sending messages and images                       |
+| WebRTC           | MediaDevices / enumerateDevices | Selecting audio and video sources                 |
+| WebRTC           | MediaDevices/ getUserMedia      | Stream the user audio / video                     |
+| WebRTC           | MediaDevices / getDisplayMedia  | Share the user screen                             |
+| PictureInPicture | Video / requestPictureInPicture | Enable picture in picture for a user              |
+| Clipboard        | writeText                       | Copy the space link                               |
+| Clipboard        | write                           | Copy the space QR code                            |
+| Clipboard        | `paste` event                   | Send images from the clipboard over data channels |
+| Canvas           | captureStream                   | (Experiment) Merge all streams to a canvas        |
+| Canvas           | toBlob                          | To copy a canvas to the clipboard                 |
+| WebAudio         | AnalyzerNode                    | Detect sound and silence                          |
 
 ## Stack
 
-The signaling server is a [GraphQL API](https://github.com/apollographql/apollo-server) using :
+### Signaling server
 
-- mutations for sending RTC offers, answers, and ice candidates
-- subscriptions to forward RTC offers, answers and ice candidates to recipients
+The source code can be found [here](./tree/master/packages/server).
 
-A [Redis server](https://github.com/luin/ioredis) is used as a pubsub. This enables scaling the signaling server (publishing events in memory makes the signaling server stateful).
+The signaling server is a [GraphQL API](https://github.com/apollographql/apollo-server), written using :
 
-The frontend is a [React app](https://github.com/facebook/create-react-app) using [urql as a GraphQL client](https://github.com/FormidableLabs/urql).
+- ✅ TypeScript
+- 🚀 [Apollo server](https://github.com/apollographql/apollo-server) as a GraphQL server
+- 🄺 [Koa](https://github.com/koajs/koa)
+- ♻️ Dependency Injection using [Awilix](https://github.com/jeffijoe/awilix)
+- 📦 Redis as a database / pubsub
+
+### Web app
+
+The source code can be found [here](./tree/master/packages/web).
+
+The frontend is a [React app](https://github.com/facebook/create-react-app) using :
+
+- ✅ TypeScript
+- 🚀 [urql as a GraphQL client](https://github.com/FormidableLabs/urql)
+- 💅 [styled-components for styling](https://github.com/styled-components/styled-components)
+- 🎥 [framer motion for animations](https://github.com/framer/motion)
+
+This project extensively uses new APIs such as CSS Grid or CSS custom properties.
 
 ## Development environment
 
-You will need :
+### Requirements
+
+To run this project locally, you will need
 
 - Docker and docker-compose
 - Yarn
 - A version of Node supported by [create-react-app](https://create-react-app.dev/docs/getting-started#creating-an-app).
+
+### Running locally
 
 To start the app :
 
