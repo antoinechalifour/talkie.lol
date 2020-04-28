@@ -11,6 +11,5 @@ export const copyCanvasToClipboard = async (canvas: HTMLCanvasElement) => {
 
   // @ts-ignore
   const item = new ClipboardItem({ "image/png": blob });
-  // @ts-ignore
   await navigator.clipboard.write([item]);
 };
