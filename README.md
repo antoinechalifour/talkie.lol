@@ -22,6 +22,7 @@ Talkie is a side-project that I use to play with WebRTC and brand new Web APIs. 
 | Canvas           | captureStream                   | (Experiment) Merge all streams to a canvas        |
 | Canvas           | toBlob                          | To copy a canvas to the clipboard                 |
 | WebAudio         | AnalyzerNode                    | Detect sound and silence                          |
+| Navigator        | Connection                      | Detect connection type                            |
 
 ## Stack
 

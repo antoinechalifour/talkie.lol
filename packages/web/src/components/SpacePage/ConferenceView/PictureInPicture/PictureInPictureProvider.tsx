@@ -20,17 +20,16 @@ export const PictureInPictureProvider: React.FC = ({ children }) => {
 
     const onVisibilityChanged = () => {
       if (document.visibilityState === "visible") {
-        // @ts-ignore
         if (!document.pictureInPictureElement) return;
 
-        // @ts-ignore
         document.exitPictureInPicture();
       } else if (pictureInPicture.videoId) {
-        const video = document.querySelector(`#${pictureInPicture.videoId}`);
+        const video = document.querySelector(
+          `#${pictureInPicture.videoId}`
+        ) as HTMLVideoElement;
 
         if (!video) return;
 
-        // @ts-ignore
         video.requestPictureInPicture();
       }
     };

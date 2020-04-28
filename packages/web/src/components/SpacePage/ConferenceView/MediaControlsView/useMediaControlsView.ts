@@ -139,8 +139,7 @@ export const useMediaControlsView = () => {
   );
 
   const startSharingScreen = useCallback(async () => {
-    // @ts-ignore
-    const mediaStream: MediaStream = await navigator.mediaDevices.getDisplayMedia();
+    const mediaStream = await navigator.mediaDevices.getDisplayMedia();
 
     dispatch("START_SCREEN");
     conference.startLocalVideo(mediaStream.getVideoTracks());
