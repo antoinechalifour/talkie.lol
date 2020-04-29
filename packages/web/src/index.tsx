@@ -1,5 +1,6 @@
 import "reset.css";
 import "react-toastify/dist/ReactToastify.css";
+import "@reach/tooltip/styles.css";
 import "./index.css";
 
 import React from "react";
