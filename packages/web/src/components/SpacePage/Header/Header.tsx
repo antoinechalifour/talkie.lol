@@ -13,12 +13,14 @@ export const Header: React.FC = () => {
     <HeaderLayout>
       <h1>Talkie.LOL</h1>
 
-      <ConnectionTypeIcon
-        aria-label={getLabelForConnectionType(connectionType)}
-        connectionType={connectionType}
-      >
-        <FontAwesomeIcon icon={faWifi} />
-      </ConnectionTypeIcon>
+      {connectionType !== "unknown" && (
+        <ConnectionTypeIcon
+          aria-label={getLabelForConnectionType(connectionType)}
+          connectionType={connectionType}
+        >
+          <FontAwesomeIcon icon={faWifi} />
+        </ConnectionTypeIcon>
+      )}
     </HeaderLayout>
   );
 };
