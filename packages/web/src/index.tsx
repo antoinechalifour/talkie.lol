@@ -29,7 +29,13 @@ toast.configure({
   draggable: true,
 });
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register({
+  onUpdate: () =>
+    toast.info(
+      "An update is available! Please refresh this site to get the latest features.",
+      {
+        onClick: () => window.location.reload(),
+      }
+    ),
+});
