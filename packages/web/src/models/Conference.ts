@@ -94,6 +94,7 @@ export class Conference {
   sendMessage(messageContent: string) {
     const message = Message.createTextMessage(
       {
+        id: this.localUser().id(),
         name: this.localUser().name(),
       },
       messageContent
@@ -107,6 +108,7 @@ export class Conference {
   sendImage(image: string) {
     const message = Message.createImageMessage(
       {
+        id: this.localUser().id(),
         name: this.localUser().name(),
       },
       image

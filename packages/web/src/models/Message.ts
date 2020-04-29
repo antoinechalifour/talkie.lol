@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import format from "date-fns/format";
 
 export interface Author {
+  id: string;
   name: string;
 }
 

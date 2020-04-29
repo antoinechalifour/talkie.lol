@@ -323,6 +323,7 @@ export class RemotePeer implements User {
     dataChannel.addEventListener("message", (e) => {
       const { type, content } = JSON.parse(e.data);
       const author = {
+        id: this.id(),
         name: this.name(),
       };
 

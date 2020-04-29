@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentAlt, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 import { getImageFromClipboard } from "../../../../utils/clipboard";
+import { useNewMessageNotification } from "../../hooks/useNewMessageNotification";
 import { useConference } from "../../hooks/useConference";
 import { useMessages } from "../../hooks/useMessages";
 import { ChatMessages } from "./ChatMessages";
@@ -17,6 +18,8 @@ import {
 export interface ChatViewProps {}
 
 export const ChatView: React.FC<ChatViewProps> = () => {
+  useNewMessageNotification();
+
   const conference = useConference();
   const allMessages = useMessages();
   const [message, setMessage] = useState("");
