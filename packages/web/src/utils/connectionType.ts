@@ -1,6 +1,6 @@
-export type ConnectionType = "offline" | "slow" | "medium" | "fast";
+export type ConnectionType = "unknown" | "offline" | "slow" | "medium" | "fast";
 
-export const getConnectionType = (effectiveType: string) => {
+export const getConnectionType = (effectiveType: string | undefined) => {
   switch (effectiveType) {
     case "slow-2g":
     case "2g":
@@ -9,8 +9,11 @@ export const getConnectionType = (effectiveType: string) => {
     case "3g":
       return "medium";
 
-    default:
+    case "4g":
       return "fast";
+
+    default:
+      return "unknown";
   }
 };
 

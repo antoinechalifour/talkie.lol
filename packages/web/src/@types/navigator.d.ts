@@ -3,5 +3,5 @@ interface NavigatorConnection extends EventTarget {
 }
 
 interface Navigator {
-  connection: NavigatorConnection;
+  connection?: NavigatorConnection;
 }
