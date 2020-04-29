@@ -23,6 +23,7 @@ Talkie is a side-project that I use to play with WebRTC and brand new Web APIs. 
 | Canvas           | toBlob                          | To copy a canvas to the clipboard                 |
 | WebAudio         | AnalyzerNode                    | Detect sound and silence                          |
 | Navigator        | Connection                      | Detect connection type                            |
+| PWA              | Service Workers                 | Installing Talkie on your device!                 |
 
 ## Stack
 
