@@ -9,18 +9,25 @@ import {
   faPhone,
   faShare,
 } from "@fortawesome/free-solid-svg-icons";
+import Tooltip from "@reach/tooltip";
 
 import { useEnumerateMediaDevices } from "../../../../hooks/useEnumerateMediaDevices";
 import {
   DropdownButton,
   DropdownMenu,
   DropdownToggle,
-  DropdownOptionButton,
 } from "../../../ui/DropdownButton";
-import { CancelButton, MediaControlsLayout, ShareScreenButton } from "./styles";
+import {
+  CancelButton,
+  MediaControlsLayout,
+  ShareScreenButton,
+  tooltipStyle,
+} from "./styles";
 import { useMediaControlsView } from "./useMediaControlsView";
 import { SpaceQrCode } from "./SpaceQrCode";
 import { toast } from "react-toastify";
+import { VideoDeviceList } from "./VideoDeviceList";
+import { AudioDeviceList } from "./AudioDeviceList";
 
 export interface MediaControlsViewProps {}
 
@@ -68,74 +75,80 @@ export const MediaControlsView: React.FC<MediaControlsViewProps> = () => {
 
   return (
     <MediaControlsLayout>
-      <DropdownButton>
-        <DropdownToggle onClick={toggleVideo}>
-          <FontAwesomeIcon
-            aria-label="Share video"
-            icon={isSharingVideo ? faVideo : faVideoSlash}
-          />
-        </DropdownToggle>
+      <Tooltip label="Toggle video (cmd + e)" style={tooltipStyle}>
+        <div>
+          <DropdownButton>
+            <DropdownToggle onClick={toggleVideo}>
+              <FontAwesomeIcon
+                aria-label="Share video"
+                icon={isSharingVideo ? faVideo : faVideoSlash}
+              />
+            </DropdownToggle>
 
-        <DropdownMenu>
-          <ul>
-            {devices.videoDevices.map((device) => (
-              <li key={device.deviceId}>
-                <DropdownOptionButton
-                  onClick={() => shareVideoDevice(device.deviceId)}
-                >
-                  {device.label}
-                </DropdownOptionButton>
-              </li>
-            ))}
-          </ul>
-        </DropdownMenu>
-      </DropdownButton>
+            <DropdownMenu>
+              <VideoDeviceList
+                videoDevices={devices.videoDevices}
+                shareVideoDevice={shareVideoDevice}
+              />
+            </DropdownMenu>
+          </DropdownButton>
+        </div>
+      </Tooltip>
 
-      <DropdownButton>
-        <DropdownToggle aria-label="Share audio" onClick={toggleAudio}>
-          <FontAwesomeIcon
-            icon={isSharingAudio ? faMicrophone : faMicrophoneSlash}
-          />
-        </DropdownToggle>
+      <Tooltip label="Toggle audio (cmd + d)" style={tooltipStyle}>
+        <div>
+          <DropdownButton>
+            <DropdownToggle aria-label="Share audio" onClick={toggleAudio}>
+              <FontAwesomeIcon
+                icon={isSharingAudio ? faMicrophone : faMicrophoneSlash}
+              />
+            </DropdownToggle>
 
-        <DropdownMenu>
-          <ul>
-            {devices.audioDevices.map((device) => (
-              <li key={device.deviceId}>
-                <DropdownOptionButton
-                  onClick={() => shareAudioDevice(device.deviceId)}
-                >
-                  {device.label}
-                </DropdownOptionButton>
-              </li>
-            ))}
-          </ul>
-        </DropdownMenu>
-      </DropdownButton>
+            <DropdownMenu>
+              <AudioDeviceList
+                audioDevices={devices.audioDevices}
+                shareAudioDevice={shareAudioDevice}
+              />
+            </DropdownMenu>
+          </DropdownButton>
+        </div>
+      </Tooltip>
 
       {isScreenSharingSupported ? (
-        <ShareScreenButton aria-label="Share screen" onClick={toggleScreen}>
-          <FontAwesomeIcon icon={faDesktop} />
-        </ShareScreenButton>
+        <Tooltip label="Share screen" style={tooltipStyle}>
+          <div>
+            <ShareScreenButton aria-label="Share screen" onClick={toggleScreen}>
+              <FontAwesomeIcon icon={faDesktop} />
+            </ShareScreenButton>
+          </div>
+        </Tooltip>
       ) : (
         <div />
       )}
 
       <div />
 
-      <DropdownButton>
-        <DropdownToggle onClick={copyToClipBoard}>
-          <FontAwesomeIcon icon={faShare} />
-        </DropdownToggle>
+      <Tooltip label="Invite friends" style={tooltipStyle}>
+        <div>
+          <DropdownButton>
+            <DropdownToggle onClick={copyToClipBoard}>
+              <FontAwesomeIcon icon={faShare} />
+            </DropdownToggle>
 
-        <DropdownMenu>
-          <SpaceQrCode />
-        </DropdownMenu>
-      </DropdownButton>
+            <DropdownMenu>
+              <SpaceQrCode />
+            </DropdownMenu>
+          </DropdownButton>
+        </div>
+      </Tooltip>
 
-      <CancelButton aria-label="Leave the space" onClick={leaveConference}>
-        <FontAwesomeIcon icon={faPhone} />
-      </CancelButton>
+      <Tooltip label="Leave space" style={tooltipStyle}>
+        <div>
+          <CancelButton aria-label="Leave the space" onClick={leaveConference}>
+            <FontAwesomeIcon icon={faPhone} />
+          </CancelButton>
+        </div>
+      </Tooltip>
     </MediaControlsLayout>
   );
 };
