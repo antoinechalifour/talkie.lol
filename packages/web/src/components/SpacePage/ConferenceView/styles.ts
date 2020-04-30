@@ -29,4 +29,6 @@ export const ChatArea = styled.div`
   overflow: hidden;
   background: var(--background-lighter);
   box-shadow: var(--box-shadow-1);
+
+  transition: var(--theme-transition);
 `;

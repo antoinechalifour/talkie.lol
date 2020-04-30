@@ -16,7 +16,7 @@ export const ShareScreenButton = styled.button`
   border-radius: 1rem;
 
   background: var(--button-background);
-  color: var(--button-text);
+  color: #fff;
 
   cursor: pointer;
 

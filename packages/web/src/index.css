@@ -7,6 +7,7 @@ html {
   --color-white: #fff;
   --color-black: #000;
   --color-lightgray: #ddd;
+  --color-gray: #777;
   --color-darkgray: #373737;
   --color-blue: #3280e9;
   --color-dark-blue: #3157ac;
@@ -20,7 +21,7 @@ html {
   --background-lighter: var(--color-darkblue);
   --background: var(--color-darkest-darkblue);
   --background-darker: var(--color-darker-darkblue);
-  --background-video: var(--color-black);
+  --background-video: rgba(0, 0, 0, 0.75);
   --background-reverse: var(--color-white);
 
   --color-text: var(--color-white);
@@ -30,15 +31,23 @@ html {
   --box-shadow-2: 0 1px 12px rgba(0, 0, 0, 0.4);
   --box-shadow: 20px 20px 60px #0f141c, -20px -20px 60px #1d2634;
 
+  --text-shadow-app-title: 0 1px 12px #000;
+
   --button-background: var(--color-blue);
   --button-background-gradient: linear-gradient(25deg, #3280e9, #74e396);
   --button-text: var(--color-white);
-
+  --button-text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
   --button-danger-background: var(--color-red);
 
+  --input-text-background: var(--background-reverse);
   --input-active-background: var(--color-green);
 
+  --switch-handle: var(--color-white);
+  --switch-background: var(--color-lightgray);
+
   --outline-style: 2px dashed var(--color-green);
+
+  --theme-transition: background 0.25s ease, color 0.25s ease;
 }
 
 body {
@@ -54,6 +63,37 @@ body {
     var(--background-darker) 75%
   );
   color: var(--color-text);
+
+  transition: var(--theme-transition);
+}
+
+body.theme-light {
+  --background-lighter: #fff;
+  --background: #f7f7f9;
+  --background-darker: #ececf2;
+
+  --color-text: var(--color-darkgray);
+  --color-text-reverse: var(--color-white);
+
+  --box-shadow-1: 0 1px 6px rgba(0, 0, 0, 0.25);
+  --box-shadow-2: 0 1px 12px rgba(0, 0, 0, 0.4);
+  --box-shadow: 20px 20px 60px #dedee0, -20px -20px 60px #ffffff;
+
+  --text-shadow-app-title: 0 1px 12px rgba(0, 0, 0, 0.3);
+
+  --button-background: var(--color-blue);
+  --button-background-gradient: linear-gradient(25deg, #4fd77e, #b7e35d);
+  --button-text: var(--color-text);
+  --button-text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  --button-danger-background: var(--color-red);
+
+  --input-text-background: #eee;
+  --input-active-background: var(--color-green);
+
+  --switch-handle: var(--color-darkgray);
+  --switch-background: var(--color-gray);
+
+  --outline-style: 2px dashed var(--color-green);
 }
 
 * {

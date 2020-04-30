@@ -6,14 +6,14 @@ export const UserMediaLayout = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  background: var(--color-black);
+  background: var(--background-video);
 `;
 
 export const UserTopMenu = styled.div`
   position: absolute;
-  top: -1px;
-  left: -1px;
-  right: -1px;
+  top: 0;
+  left: 0;
+  right: 0;
 
   display: grid;
   align-items: center;
@@ -21,7 +21,7 @@ export const UserTopMenu = styled.div`
   grid-gap: 1rem;
   padding: 0.5rem 1rem;
 
-  background: rgba(0, 0, 0, 0.85);
+  background: var(--color-black);
   color: var(--color-white);
 
   transition: all 0.25s ease;

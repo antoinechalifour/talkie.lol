@@ -28,7 +28,7 @@ export const AppTitle = styled(motion.h1)`
   font-size: 8rem;
   letter-spacing: 0.5rem;
   font-family: var(--font-secondary);
-  text-shadow: 0 1px 12px #000;
+  text-shadow: var(--text-shadow-app-title);
   text-align: center;
 
   &:after {
