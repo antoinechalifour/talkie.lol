@@ -36,7 +36,8 @@ export const InputGroup = styled.div`
   border-radius: 1rem;
   overflow: hidden;
 
-  background: var(--background-reverse);
+  background: var(--input-text-background);
+  transition: var(--theme-transition);
 
   input,
   button {
@@ -49,6 +50,7 @@ export const InputGroup = styled.div`
     padding: 0 2rem;
     border: none;
     outline: none;
+    background: none;
   }
 
   input:disabled {
@@ -63,7 +65,7 @@ export const InputGroup = styled.div`
     width: 50px;
 
     background: var(--button-background);
-    color: var(--button-text);
+    color: #fff;
   }
 
   input:disabled + button {

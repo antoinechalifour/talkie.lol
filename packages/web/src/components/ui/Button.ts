@@ -28,7 +28,7 @@ export const Button = styled.button<ButtonProps>`
   text-align: center;
   font-family: inherit;
   font-size: inherit;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  text-shadow: var(--button-text-shadow);
 
   background: var(--button-background-gradient);
   color: var(--button-text);

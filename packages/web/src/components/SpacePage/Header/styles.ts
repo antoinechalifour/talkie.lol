@@ -4,8 +4,9 @@ import { ConnectionType } from "../../../utils/connectionType";
 
 export const HeaderLayout = styled.header`
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto auto;
   align-items: center;
+  grid-gap: 2rem;
   padding: 2rem;
   position: relative;
   z-index: 1;
@@ -14,6 +15,8 @@ export const HeaderLayout = styled.header`
   background: var(--background-darker);
   color: var(--color-text);
   box-shadow: var(--box-shadow-2);
+
+  transition: var(--theme-transition);
 `;
 
 export interface ConnectionTypeIconProps {
