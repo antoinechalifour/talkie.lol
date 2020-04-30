@@ -1,4 +1,5 @@
 import debug from "debug";
+import cors from "@koa/cors";
 import Koa, { Context } from "koa";
 import { ApolloServer } from "apollo-server-koa";
 import { asValue, AwilixContainer } from "awilix";
@@ -35,6 +36,8 @@ export class WebRtcExperimentsApp {
   constructor(private options: AppOptions) {
     this.koa = new Koa();
     this.container = options.container;
+
+    this.koa.use(cors());
   }
 
   run(): Promise<void> {
