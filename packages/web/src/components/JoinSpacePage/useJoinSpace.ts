@@ -110,6 +110,7 @@ export const useJoinSpace = ({ slug }: UseJoinSpaceOptions) => {
     userName,
     setUserName,
     isFetching: loginMutationResult.fetching,
+    isError: !!loginMutationResult.error,
     login,
   };
 };

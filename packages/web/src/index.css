@@ -12,6 +12,8 @@ html {
   --color-blue: #3280e9;
   --color-dark-blue: #3157ac;
   --color-red: #ff4c4c;
+  --color-darkred: #984040;
+  --color-lightred: rgba(255, 76, 76, .2);
   --color-green: #4fd77e;
   --color-orange: #ed7d3a;
   --color-darkblue: #252f43;
@@ -32,11 +34,13 @@ html {
   --box-shadow: 20px 20px 60px #0f141c, -20px -20px 60px #1d2634;
 
   --text-shadow-app-title: 0 1px 12px #000;
+  --text-shadow-1: 0 1px 4px rgba(0, 0, 0, 0.2);
+  --text-shadow-2: 0 1px 4px rgba(0, 0, 0, 0.7);
 
   --button-background: var(--color-blue);
   --button-background-gradient: linear-gradient(25deg, #3280e9, #74e396);
   --button-text: var(--color-white);
-  --button-text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  --button-text-shadow: var(--text-shadow-2);
   --button-danger-background: var(--color-red);
 
   --input-text-background: var(--background-reverse);
