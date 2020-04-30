@@ -32,9 +32,7 @@ export const CreateSpaceView: React.FC = () => {
               Create a space to chat with your friends
             </Button>
 
-            <Link to="/home/join">
-              ... or scan a QR Code to join an existing space
-            </Link>
+            <Link to="/home/join">... or join an existing space</Link>
           </>
         )}
       </VStack>
