@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 
 import { useSoundActivityDetection } from "../../../../../hooks/useSoundActivityDetection";
+import { Video } from "../../../../ui/Video/Video";
 import { StreamOptionsView } from "./StreamOptionsView/StreamOptionsView";
 import { useUserMediaView } from "./useUserMediaView";
 import { SpeakingIconContainer, UserMediaLayout, UserTopMenu } from "./styles";
@@ -26,7 +27,7 @@ export const UserMediaView: React.FC<UserMediaViewProps> = ({
 
   return (
     <UserMediaLayout>
-      {hasVideo && <video id={videoId} ref={videoRef} autoPlay muted />}
+      {hasVideo && <Video id={videoId} ref={videoRef} autoPlay muted />}
       {hasAudio && <audio ref={audioRef} autoPlay />}
 
       <UserTopMenu>
