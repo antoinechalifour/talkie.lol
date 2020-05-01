@@ -1,0 +1,11 @@
+# Inspired from https://medium.com/@gmaliar/generating-lets-encrypt-certificates-for-nginx-using-ansible-9fd27b90993a
+- hosts: server
+  become: yes
+  vars:
+    service_host: "talkie.antoinechalifour.dev"
+    service_admin_email: "antoine.chalifour@gmail.com"
+    service_name: "talkie"
+    letsencrypt_ssl_dir: "/etc/letsencrypt/live"
+  roles:
+    - letsencrypt
+    - reverse_proxy

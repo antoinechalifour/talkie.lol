@@ -1,0 +1,9 @@
+# Inspired from https://medium.com/@gmaliar/generating-lets-encrypt-certificates-for-nginx-using-ansible-9fd27b90993a
+- name: Install nginx
+  apt: name=nginx state=latest update_cache=yes
+
+- name: Remove default nginx default
+  file: path=/etc/nginx/sites-enabled/default state=absent
+
+- name: Generate dhparams file
+  shell: openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048

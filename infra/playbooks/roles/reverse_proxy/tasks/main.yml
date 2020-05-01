@@ -1,0 +1,24 @@
+# Inspired from https://medium.com/@gmaliar/generating-lets-encrypt-certificates-for-nginx-using-ansible-9fd27b90993a
+- name: Add http nginx configuration
+  template: src=http.conf.j2 dest=/etc/nginx/sites-available/{{ service_name }}.http.conf owner=www-data group=www-data mode=0644
+
+- name: Add http nginx symlink
+  file: src=/etc/nginx/sites-available/{{ service_name }}.http.conf dest=/etc/nginx/sites-enabled/{{ service_name }}.http owner=www-data group=www-data state=link
+
+- name: reload nginx
+  service: name=nginx state=reloaded
+
+# FIXME: WARNING: this is not idempotent. Do not forget to uncomment if you need certificates
+#- name: Create certificate
+#  shell: ./certbot-auto certonly --webroot --email {{ service_admin_email }} --agree-tos --webroot-path=/usr/share/nginx/html -d {{ service_host }};
+#  args:
+#    chdir: /opt/certbot
+
+- name: Add https nginx configuration
+  template: src=https.conf.j2 dest=/etc/nginx/sites-available/{{ service_name }}.https.conf owner=www-data group=www-data mode=0644
+
+- name: Add external https nginx symlink
+  file: src=/etc/nginx/sites-available/{{ service_name }}.https.conf dest=/etc/nginx/sites-enabled/{{ service_name }}.https owner=www-data group=www-data state=link
+
+- name: reload nginx
+  service: name=nginx state=reloaded

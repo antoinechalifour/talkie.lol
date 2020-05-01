@@ -1,0 +1,6 @@
+---
+- hosts: server
+  become: true
+  roles:
+    - nginx
+    - docker
