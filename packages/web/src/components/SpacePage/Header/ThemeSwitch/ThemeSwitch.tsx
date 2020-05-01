@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Tooltip from "@reach/tooltip";
 
 import { Switch } from "../../../ui/Switch/Switch";
