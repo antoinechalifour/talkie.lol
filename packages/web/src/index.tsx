@@ -8,14 +8,17 @@ import ReactDOM from "react-dom";
 import { toast } from "react-toastify";
 
 import { App } from "./App";
-import * as serviceWorker from "./serviceWorker";
 import { AnonymousClient } from "./components/AnonymousClient/AnonymousClient";
+import { Theme } from "./components/Theme/Theme";
+import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
   <React.StrictMode>
-    <AnonymousClient>
-      <App />
-    </AnonymousClient>
+    <Theme>
+      <AnonymousClient>
+        <App />
+      </AnonymousClient>
+    </Theme>
   </React.StrictMode>,
   document.getElementById("root")
 );

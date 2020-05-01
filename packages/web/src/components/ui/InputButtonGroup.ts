@@ -10,7 +10,7 @@ export const InputButtonGroup = styled.div`
 
   input {
     all: unset;
-    color: var(--color-text-reverse);
+    color: var(--input-text-color);
     padding: 0 2rem;
     font-family: inherit;
     font-size: inherit;
