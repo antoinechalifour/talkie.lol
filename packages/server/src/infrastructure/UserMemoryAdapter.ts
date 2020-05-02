@@ -4,10 +4,10 @@ import { UserNotFoundError } from "../domain/errors/UserNotFoundError";
 import { UserPort } from "../usecase/ports/UserPort";
 
 export class UserMemoryAdapter implements UserPort {
-  _byId = new Map<UserId, User>();
+  _byId = new Map<string, User>();
 
   findUserById(userId: UserId): Promise<User> {
-    const user = this._byId.get(userId);
+    const user = this._byId.get(userId.get());
 
     if (user) return Promise.resolve(user);
 
@@ -15,7 +15,7 @@ export class UserMemoryAdapter implements UserPort {
   }
 
   saveUser(user: User): Promise<void> {
-    this._byId.set(user.id, user);
+    this._byId.set(user.id.get(), user);
 
     return Promise.resolve();
   }
