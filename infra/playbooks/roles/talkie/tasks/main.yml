@@ -21,7 +21,7 @@
     links:
       - "talkie_redis"
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     env:
       PORT: "8080"
       SECRET: "{{ talkie_secret }}"
