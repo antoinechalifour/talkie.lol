@@ -1,0 +1,30 @@
+- name: Pull images
+  docker_image:
+    name: "{{ item }}"
+    source: pull
+  loop: ["redis:5", "antoinechalifour/talkie:latest"]
+
+- name: Ensure Redis is running
+  docker_container:
+    name: talkie_redis
+    image: redis
+    state: started
+    recreate: yes
+    exposed_ports:
+      - "6379"
+
+- name: Ensure Talkie is running
+  docker_container:
+    name: talkie_signaling_server
+    image: antoinechalifour/talkie
+    state: started
+    links:
+      - "talkie_redis"
+    ports:
+      - "8080:8080"
+    env:
+      PORT: "8080"
+      SECRET: "{{ talkie_secret }}"
+      DEBUG: "app:*"
+      REDIS_HOST: "talkie_redis"
+      REDIS_PORT: "6379"
