@@ -69,3 +69,16 @@ To start the app :
 - Install dependencies using `yarn` in the project root
 - Run `docker-compose up` in the project root (this will start Redis and the signaling server in watch mode using `ts-node`)
 - Run `yarn start` in the `packages/web` directory (this will start the front-end)
+
+## Deployment
+
+```shell script
+# Configure the remote machine (install Nginx and Docker)
+ansible-playbook infra/playbooks/install.yml
+
+# Configure the reverse proxy
+ansible-playbook infra/playbooks/reverse_proxy.yml
+
+# Deploy the app
+ansible-playbook infra/playbooks/talkie.yml
+```
