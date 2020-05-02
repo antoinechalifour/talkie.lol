@@ -1,7 +1,7 @@
-import { SpacePort } from "../usecase/ports/SpacePort";
 import { SpaceId } from "../domain/entities/SpaceId";
 import { Space } from "../domain/entities/Space";
 import { SpaceNotFoundError } from "../domain/errors/SpaceNotFoundError";
+import { SpacePort } from "../usecase/ports/SpacePort";
 
 export class SpaceMemoryAdapter implements SpacePort {
   private _byId = new Map<SpaceId, Space>();
