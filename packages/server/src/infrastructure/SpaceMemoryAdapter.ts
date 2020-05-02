@@ -4,11 +4,11 @@ import { SpaceNotFoundError } from "../domain/errors/SpaceNotFoundError";
 import { SpacePort } from "../usecase/ports/SpacePort";
 
 export class SpaceMemoryAdapter implements SpacePort {
-  private _byId = new Map<SpaceId, Space>();
+  private _byId = new Map<string, Space>();
   private _bySlug = new Map<string, Space>();
 
   findSpaceById(spaceId: SpaceId): Promise<Space> {
-    const space = this._byId.get(spaceId);
+    const space = this._byId.get(spaceId.get());
 
     if (space) return Promise.resolve(space);
 
@@ -24,7 +24,7 @@ export class SpaceMemoryAdapter implements SpacePort {
   }
 
   saveSpace(space: Space): Promise<void> {
-    this._byId.set(space.id, space);
+    this._byId.set(space.id.get(), space);
     this._bySlug.set(space.slug, space);
 
     return Promise.resolve();
