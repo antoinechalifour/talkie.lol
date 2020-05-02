@@ -11,6 +11,7 @@ import { TokenPort } from "../usecase/ports/TokenPort";
 import { typeDefs } from "./typeDefs";
 import { resolvers } from "./resolvers";
 import { GraphQLContext } from "./types";
+import { Server } from "http";
 
 export interface AppOptions {
   port: string;
@@ -29,9 +30,10 @@ interface ContextFactoryOptions {
 
 const log = debug("app:server");
 
-export class WebRtcExperimentsApp {
+export class TalkieApp {
   private readonly koa: Koa;
   private readonly container: AwilixContainer;
+  private server?: Server;
 
   constructor(private options: AppOptions) {
     this.koa = new Koa();
@@ -43,12 +45,20 @@ export class WebRtcExperimentsApp {
   run(): Promise<void> {
     return new Promise((resolve) => {
       log(`Starting server on port ${this.options.port}`);
-      const server = this.koa.listen(this.options.port, resolve);
+      this.server = this.koa.listen(this.options.port, resolve);
       const apollo = this.getGraphQLServer();
 
       apollo.applyMiddleware({ app: this.koa });
-      apollo.installSubscriptionHandlers(server);
+      apollo.installSubscriptionHandlers(this.server);
     });
+  }
+
+  stop(): Promise<void> {
+    const server = this.server;
+
+    if (!server) return Promise.resolve();
+
+    return new Promise((resolve) => server.close(() => resolve()));
   }
 
   private getGraphQLServer(): ApolloServer {

@@ -2651,6 +2651,13 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
+"@urql/core@1.11.7":
+  version "1.11.7"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-1.11.7.tgz#ff0c7b613c2a4b2a76c462e1d65b2472142fe8ef"
+  integrity sha512-0LGOfohIoCmBf66QEV8pdwehJUZkViGZLmwPoHwcZUx1ONgKsGTzjdNBdNnvCzfuaRLlsXj8r7GmO5M6oVKjsg==
+  dependencies:
+    wonka "^4.0.10"
+
 "@urql/core@^1.10.5":
   version "1.10.7"
   resolved "https://registry.yarnpkg.com/@urql/core/-/core-1.10.7.tgz#4632088a9abd5884e08726242261ea39d3cdda40"
@@ -6761,6 +6768,11 @@ get-own-enumerable-property-symbols@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/get-own-enumerable-property-symbols/-/get-own-enumerable-property-symbols-3.0.2.tgz#b5fde77f22cbe35f390b4e089922c50bce6ef664"
   integrity sha512-I0UBV/XOz1XkIJHEUDMZAbzCThU/H8DxmSfmdGcKPnVhu2VfFqr34jr9777IyaTYvxjedWhqVIilEDsCdP5G6g==
+
+get-port@5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/get-port/-/get-port-5.1.1.tgz#0469ed07563479de6efb986baf053dcd7d4e3193"
+  integrity sha512-g/Q1aTSDOxFpchXC4i8ZWvxA1lnPqx/JHqcpIw0/LX9T8x/GBbi6YnlN5nhaKIFkT8oFsscUKgDJYxfwfS6QsQ==
 
 get-stdin@^6.0.0:
   version "6.0.0"
@@ -14695,6 +14707,11 @@ widest-line@^2.0.0:
   integrity sha512-Ba5m9/Fa4Xt9eb2ELXt77JxVDV8w7qQrH0zS/TWSJdLyAwQjWoOzpzj5lwVftDz6n/EOu3tNACS84v509qwnJA==
   dependencies:
     string-width "^2.1.1"
+
+wonka@^4.0.10:
+  version "4.0.13"
+  resolved "https://registry.yarnpkg.com/wonka/-/wonka-4.0.13.tgz#8d188160bd5742870c78ede7a4eba686d089a33f"
+  integrity sha512-aWg92IVvbP/kp+q9rw+k/Uw3C/S2J0dTDNhEhivGVH3GXJZgpFk2nuyVtiS7Y1d0UG3m4jvOrR7bPXim6D/TBg==
 
 wonka@^4.0.9:
   version "4.0.9"
