@@ -55,6 +55,7 @@ export class Conference {
     return this.allRemotePeers().find((peer) => peer.isUser(user)) || null;
   }
 
+  // FIXME: it actually returns a peer, not a user
   userById(userId: string) {
     if (this.localUser().id() === userId) return this.localUser();
 
