@@ -1,5 +1,5 @@
 export class RemoteUser {
-  private constructor(private _id: string, private _name: string) {}
+  protected constructor(private _id: string, private _name: string) {}
 
   static create(id: string, name: string) {
     return new RemoteUser(id, name);

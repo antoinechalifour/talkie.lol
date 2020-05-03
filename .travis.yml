@@ -6,4 +6,5 @@ script:
   - yarn lint
   - yarn test
   - cd ../web
+  - yarn test
   - yarn build
