@@ -2,6 +2,26 @@ import { gql } from "apollo-server-koa";
 import { Client as UrqlClient } from "@urql/core";
 import fetch from "node-fetch";
 
+export interface GraphQLSpace {
+  id: string;
+  slug: string;
+}
+
+export interface GraphQLUser {
+  id: string;
+  name: string;
+}
+
+export interface GraphQLSession {
+  token: string;
+  user: GraphQLUser;
+  space: GraphQLSpace;
+}
+
+export interface GraphQLRtcConfiguration {
+  iceServers: Array<{ urls: string[] }>;
+}
+
 const CREATE_SPACE_MUTATION = gql`
   mutation CreateSpace {
     createSpace {
@@ -17,10 +37,44 @@ const CREATE_SPACE_MUTATION = gql`
 interface CreateSpaceMutationResult {
   createSpace: {
     success: boolean;
-    space: {
-      id: string;
-      slug: string;
-    };
+    space: GraphQLSpace;
+  };
+}
+
+const LOGIN_MUTATION = gql`
+  mutation Login($slug: String!, $userName: String) {
+    login(args: { slug: $slug, userName: $userName }) {
+      success
+      session {
+        token
+        user {
+          id
+          name
+        }
+        space {
+          id
+          slug
+        }
+      }
+      rtcConfiguration {
+        iceServers {
+          urls
+        }
+      }
+    }
+  }
+`;
+
+interface LoginMutationVariables {
+  slug: string;
+  userName: string | null;
+}
+
+interface LoginMutationResult {
+  login: {
+    success: boolean;
+    session: GraphQLSession;
+    rtcConfiguration: GraphQLRtcConfiguration;
   };
 }
 
@@ -39,6 +93,15 @@ export class Client {
   createSpace() {
     return this.client
       .mutation<CreateSpaceMutationResult>(CREATE_SPACE_MUTATION)
+      .toPromise();
+  }
+
+  login(slug: string, userName: string) {
+    return this.client
+      .mutation<LoginMutationResult, LoginMutationVariables>(LOGIN_MUTATION, {
+        slug,
+        userName,
+      })
       .toPromise();
   }
 }
