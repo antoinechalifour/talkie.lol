@@ -2,21 +2,21 @@
 import { AwilixContainer } from "awilix";
 
 import { TalkieApp } from "../src/application/server";
-import { Client, GraphQLSpace } from "./utils/Client";
+import { TalkieTestClient, GraphQLSpace } from "./utils/TalkieTestClient";
 import { createTestApp } from "./utils/createTestApp";
 
 describe("login", () => {
   let app: TalkieApp;
   let port: string;
   let container: AwilixContainer;
-  let client: Client;
+  let client: TalkieTestClient;
   let space: GraphQLSpace;
   let rtcConfiguration: RTCConfiguration;
 
   beforeEach(async () => {
     ({ app, port, container } = await createTestApp());
 
-    client = Client.createAnonymousClient(port);
+    client = TalkieTestClient.createAnonymousClient(port);
     rtcConfiguration = container.resolve<RTCConfiguration>("rtcConfiguration");
 
     await app.run();

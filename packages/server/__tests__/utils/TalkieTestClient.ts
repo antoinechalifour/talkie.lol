@@ -179,7 +179,7 @@ const RTC_OFFER_RECEIVED_SUBSCRIPTION = gql`
 
 const makeUrl = (port: string) => `http://localhost:${port}/graphql`;
 
-export class Client {
+export class TalkieTestClient {
   private constructor(
     private urqlClient: UrqlClient,
     private subscriptionClient: SubscriptionClient | null,
@@ -262,7 +262,7 @@ export class Client {
   }
 
   static createAnonymousClient(port: string) {
-    return new Client(
+    return new TalkieTestClient(
       new UrqlClient({
         url: makeUrl(port),
         fetch: fetch as any,
@@ -275,12 +275,12 @@ export class Client {
   static createAuthenticatedClient(
     port: string,
     token: string
-  ): Promise<Client> {
+  ): Promise<TalkieTestClient> {
     const url = makeUrl(port);
 
     return new Promise((resolve) => {
       // eslint-disable-next-line prefer-const
-      let client: Client;
+      let client: TalkieTestClient;
 
       const subscriptionClient = new SubscriptionClient(
         url,
@@ -292,7 +292,7 @@ export class Client {
         ws
       );
 
-      client = new Client(
+      client = new TalkieTestClient(
         new UrqlClient({
           url,
           fetch: fetch as any,

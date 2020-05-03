@@ -3,7 +3,11 @@ import { AwilixContainer } from "awilix";
 import { pipe, subscribe } from "wonka";
 
 import { TalkieApp } from "../src/application/server";
-import { Client, GraphQLSession, GraphQLSpace } from "./utils/Client";
+import {
+  TalkieTestClient,
+  GraphQLSession,
+  GraphQLSpace,
+} from "./utils/TalkieTestClient";
 import { createTestApp } from "./utils/createTestApp";
 import { flushPromises } from "./utils/flushPromises";
 
@@ -13,12 +17,12 @@ describe("joinSpace", () => {
   let app: TalkieApp;
   let port: string;
   let container: AwilixContainer;
-  let anonymousClient: Client;
+  let anonymousClient: TalkieTestClient;
 
   beforeEach(async () => {
     ({ app, port, container } = await createTestApp());
 
-    anonymousClient = Client.createAnonymousClient(port);
+    anonymousClient = TalkieTestClient.createAnonymousClient(port);
 
     await app.run();
   });
@@ -28,7 +32,7 @@ describe("joinSpace", () => {
   });
 
   describe("when other users are the the space", () => {
-    let newUserClient: Client;
+    let newUserClient: TalkieTestClient;
     let oldUserSession: GraphQLSession;
     let newUserSession: GraphQLSession;
     let space: GraphQLSpace;
@@ -52,12 +56,12 @@ describe("joinSpace", () => {
 
       // Setup subscriptions
       subscriber = jest.fn();
-      newUserClient = await Client.createAuthenticatedClient(
+      newUserClient = await TalkieTestClient.createAuthenticatedClient(
         port,
         newUserSession.token
       );
 
-      const oldUserClient = await Client.createAuthenticatedClient(
+      const oldUserClient = await TalkieTestClient.createAuthenticatedClient(
         port,
         oldUserSession.token
       );
@@ -112,7 +116,7 @@ describe("joinSpace", () => {
   });
 
   describe("when users are in an other space", () => {
-    let userInSpace2Client: Client;
+    let userInSpace2Client: TalkieTestClient;
     let userInSpace1Session: GraphQLSession;
     let userInSpace2Session: GraphQLSession;
     let userInSpace1Subscriber: jest.Mock;
@@ -136,12 +140,12 @@ describe("joinSpace", () => {
 
       // Setup subscriptions
       userInSpace1Subscriber = jest.fn();
-      userInSpace2Client = await Client.createAuthenticatedClient(
+      userInSpace2Client = await TalkieTestClient.createAuthenticatedClient(
         port,
         userInSpace2Session.token
       );
 
-      const userInSpace1Client = await Client.createAuthenticatedClient(
+      const userInSpace1Client = await TalkieTestClient.createAuthenticatedClient(
         port,
         userInSpace1Session.token
       );

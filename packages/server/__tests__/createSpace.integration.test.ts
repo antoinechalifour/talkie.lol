@@ -5,20 +5,20 @@ import { TalkieApp } from "../src/application/server";
 import { SpacePort } from "../src/usecase/ports/SpacePort";
 import { SpaceId } from "../src/domain/entities/SpaceId";
 import { createTestApp } from "./utils/createTestApp";
-import { Client } from "./utils/Client";
+import { TalkieTestClient } from "./utils/TalkieTestClient";
 
 describe("createSpace", () => {
   let app: TalkieApp;
   let port: string;
   let container: AwilixContainer;
-  let client: Client;
+  let client: TalkieTestClient;
   let spacePort: SpacePort;
 
   beforeEach(async () => {
     ({ app, port, container } = await createTestApp());
 
     spacePort = container.resolve<SpacePort>("spacePort");
-    client = Client.createAnonymousClient(port);
+    client = TalkieTestClient.createAnonymousClient(port);
 
     await app.run();
   });

@@ -3,7 +3,11 @@ import { AwilixContainer } from "awilix";
 import { pipe, subscribe } from "wonka";
 
 import { TalkieApp } from "../src/application/server";
-import { Client, GraphQLSession, GraphQLSpace } from "./utils/Client";
+import {
+  TalkieTestClient,
+  GraphQLSession,
+  GraphQLSpace,
+} from "./utils/TalkieTestClient";
 import { createTestApp } from "./utils/createTestApp";
 import { flushPromises } from "./utils/flushPromises";
 
@@ -13,8 +17,8 @@ describe("sendRtcOffer", () => {
   let app: TalkieApp;
   let port: string;
   let container: AwilixContainer;
-  let anonymousClient: Client;
-  let senderClient: Client;
+  let anonymousClient: TalkieTestClient;
+  let senderClient: TalkieTestClient;
   let sender: GraphQLSession;
   let recipient: GraphQLSession;
   let otherUser: GraphQLSession;
@@ -26,7 +30,7 @@ describe("sendRtcOffer", () => {
   beforeEach(async () => {
     ({ app, port, container } = await createTestApp());
 
-    anonymousClient = Client.createAnonymousClient(port);
+    anonymousClient = TalkieTestClient.createAnonymousClient(port);
 
     await app.run();
 
@@ -51,14 +55,17 @@ describe("sendRtcOffer", () => {
     recipientSubscriber = jest.fn();
     otherUserSubscriber = jest.fn();
 
-    senderClient = await Client.createAuthenticatedClient(port, sender.token);
+    senderClient = await TalkieTestClient.createAuthenticatedClient(
+      port,
+      sender.token
+    );
 
-    const recipientClient = await Client.createAuthenticatedClient(
+    const recipientClient = await TalkieTestClient.createAuthenticatedClient(
       port,
       recipient.token
     );
 
-    const otherUserClient = await Client.createAuthenticatedClient(
+    const otherUserClient = await TalkieTestClient.createAuthenticatedClient(
       port,
       otherUser.token
     );
