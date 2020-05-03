@@ -177,6 +177,40 @@ const RTC_OFFER_RECEIVED_SUBSCRIPTION = gql`
   }
 `;
 
+const SEND_RTC_ANSWER_MUTATION = gql`
+  mutation SendRtcAnswer($answer: String!, $recipientId: String!) {
+    sendRtcAnswer(args: { answer: $answer, recipientId: $recipientId }) {
+      success
+    }
+  }
+`;
+
+interface SendRtcAnswerMutationResult {
+  sendRtcAnswer: {
+    success: boolean;
+  };
+}
+
+interface SendRtcAnswerMutationVariables {
+  recipientId: string;
+  answer: string;
+}
+
+const RTC_ANSWER_RECEIVED_SUBSCRIPTION = gql`
+  subscription RtcAnswerReceived {
+    answerReceived {
+      answer {
+        sdp
+        type
+      }
+      sender {
+        id
+        name
+      }
+    }
+  }
+`;
+
 const makeUrl = (port: string) => `http://localhost:${port}/graphql`;
 
 export class TalkieTestClient {
@@ -231,6 +265,17 @@ export class TalkieTestClient {
       .toPromise();
   }
 
+  sendRtcAnswer(recipientId: string, answer: string) {
+    this.requireAuthentication();
+
+    return this.urqlClient
+      .mutation<SendRtcAnswerMutationResult, SendRtcAnswerMutationVariables>(
+        SEND_RTC_ANSWER_MUTATION,
+        { recipientId, answer }
+      )
+      .toPromise();
+  }
+
   onSpaceJoined(slug: string) {
     this.requireAuthentication();
 
@@ -251,6 +296,14 @@ export class TalkieTestClient {
     this.requireAuthentication();
 
     const query = createRequest(RTC_OFFER_RECEIVED_SUBSCRIPTION);
+
+    return this.urqlClient.executeSubscription(query);
+  }
+
+  onRtcAnswerReceived() {
+    this.requireAuthentication();
+
+    const query = createRequest(RTC_ANSWER_RECEIVED_SUBSCRIPTION);
 
     return this.urqlClient.executeSubscription(query);
   }
