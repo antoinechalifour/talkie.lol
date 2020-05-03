@@ -1,13 +1,13 @@
 import { Space } from "../domain/entities/Space";
 import { Token } from "../domain/entities/Token";
+import { Session } from "../domain/entities/Session";
+import { UserId } from "../domain/entities/UserId";
 import { SpaceMemoryAdapter } from "../infrastructure/SpaceMemoryAdapter";
 import { UserMemoryAdapter } from "../infrastructure/UserMemoryAdapter";
 import { SpacePort } from "./ports/SpacePort";
 import { UserPort } from "./ports/UserPort";
 import { TokenPort } from "./ports/TokenPort";
 import { Login } from "./Login";
-import { Session } from "../domain/entities/Session";
-import { UserId } from "../domain/entities/UserId";
 
 describe("Login", () => {
   let spacePort: SpacePort;
