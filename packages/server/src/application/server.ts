@@ -1,3 +1,4 @@
+import { Server } from "http";
 import debug from "debug";
 import cors from "@koa/cors";
 import Koa, { Context } from "koa";
@@ -11,7 +12,6 @@ import { TokenPort } from "../usecase/ports/TokenPort";
 import { typeDefs } from "./typeDefs";
 import { resolvers } from "./resolvers";
 import { GraphQLContext } from "./types";
-import { Server } from "http";
 
 export interface AppOptions {
   port: string;
