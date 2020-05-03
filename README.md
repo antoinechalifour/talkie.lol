@@ -1,8 +1,11 @@
 # Talkie.LOL
 
-[Try it here!](https://www.talkie.lol)
+[![Build Status](https://travis-ci.com/antoinechalifour/talkie.lol.svg?branch=master)](https://travis-ci.com/antoinechalifour/talkie.lol)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 > Talkie is a free, open-source, secure, peer-to-peer video chat app that you can use to talk to your friends.
+
+[Try it here!](https://www.talkie.lol)
 
 ## Quick Overview
 
