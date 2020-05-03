@@ -16,7 +16,7 @@ describe("login", () => {
   beforeEach(async () => {
     ({ app, port, container } = await createTestApp());
 
-    client = new Client(port);
+    client = Client.createAnonymousClient(port);
     rtcConfiguration = container.resolve<RTCConfiguration>("rtcConfiguration");
 
     await app.run();

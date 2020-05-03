@@ -18,7 +18,7 @@ describe("createSpace", () => {
     ({ app, port, container } = await createTestApp());
 
     spacePort = container.resolve<SpacePort>("spacePort");
-    client = new Client(port);
+    client = Client.createAnonymousClient(port);
 
     await app.run();
   });
