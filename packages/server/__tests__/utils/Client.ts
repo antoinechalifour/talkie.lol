@@ -99,9 +99,38 @@ interface JoinSpaceMutationResult {
   };
 }
 
+const LEAVE_SPACE_MUTATION = gql`
+  mutation LeaveSpace {
+    leaveSpace {
+      success
+    }
+  }
+`;
+
+interface LeaveSpaceMutationResult {
+  leaveSpace: {
+    success: boolean;
+  };
+}
+
 const SPACE_JOINED_SUBSCRIPTION = gql`
   subscription SpaceJoined($slug: String!) {
     spaceJoined(args: { slug: $slug }) {
+      space {
+        id
+        slug
+      }
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
+const SPACE_LEFT_SUBSCRIPTION = gql`
+  subscription SpaceLeft($slug: String!) {
+    spaceLeft(args: { slug: $slug }) {
       space {
         id
         slug
@@ -118,19 +147,19 @@ const makeUrl = (port: string) => `http://localhost:${port}/graphql`;
 
 export class Client {
   private constructor(
-    private urlqClient: UrqlClient,
+    private urqlClient: UrqlClient,
     private subscriptionClient: SubscriptionClient | null,
     private isAuthenticated: boolean
   ) {}
 
   createSpace() {
-    return this.urlqClient
+    return this.urqlClient
       .mutation<CreateSpaceMutationResult>(CREATE_SPACE_MUTATION)
       .toPromise();
   }
 
   login(slug: string, userName: string) {
-    return this.urlqClient
+    return this.urqlClient
       .mutation<LoginMutationResult, LoginMutationVariables>(LOGIN_MUTATION, {
         slug,
         userName,
@@ -139,21 +168,35 @@ export class Client {
   }
 
   joinSpace() {
-    if (!this.isAuthenticated)
-      throw new Error("Must use an authenticated client");
+    this.requireAuthentication();
 
-    return this.urlqClient
+    return this.urqlClient
       .mutation<JoinSpaceMutationResult>(JOIN_SPACE_MUTATION)
       .toPromise();
   }
 
+  leaveSpace() {
+    this.requireAuthentication();
+
+    return this.urqlClient
+      .mutation<LeaveSpaceMutationResult>(LEAVE_SPACE_MUTATION)
+      .toPromise();
+  }
+
   onSpaceJoined(slug: string) {
-    if (!this.isAuthenticated)
-      throw new Error("Must use an authenticated client");
+    this.requireAuthentication();
 
     const query = createRequest(SPACE_JOINED_SUBSCRIPTION, { slug });
 
-    return this.urlqClient.executeSubscription(query);
+    return this.urqlClient.executeSubscription(query);
+  }
+
+  onSpaceLeft(slug: string) {
+    this.requireAuthentication();
+
+    const query = createRequest(SPACE_LEFT_SUBSCRIPTION, { slug });
+
+    return this.urqlClient.executeSubscription(query);
   }
 
   close() {
@@ -213,5 +256,10 @@ export class Client {
         true
       );
     });
+  }
+
+  private requireAuthentication() {
+    if (!this.isAuthenticated)
+      throw new Error("Must use an authenticated client");
   }
 }
