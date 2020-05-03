@@ -10,3 +10,12 @@ window.MediaStream = class extends EventTarget {};
 window.RTCPeerConnection = class extends EventTarget {};
 // @ts-ignore
 window.RTCDataChannel = class extends EventTarget {};
+
+// @ts-ignore
+navigator.mediaDevices = new (class extends EventTarget {
+  ondevicechange = null;
+  enumerateDevices = jest.fn();
+  getSupportedConstraints = jest.fn();
+  getUserMedia = jest.fn();
+  getDisplayMedia = jest.fn();
+})();
