@@ -143,6 +143,40 @@ const SPACE_LEFT_SUBSCRIPTION = gql`
   }
 `;
 
+const SEND_RTC_OFFER_MUTATION = gql`
+  mutation SendRtcOffer($recipientId: String!, $offer: String!) {
+    sendRtcOffer(args: { recipientId: $recipientId, offer: $offer }) {
+      success
+    }
+  }
+`;
+
+interface SendRtcOfferMutationResult {
+  sendRtcOffer: {
+    success: boolean;
+  };
+}
+
+interface SendRtcOfferMutationVariables {
+  recipientId: string;
+  offer: string;
+}
+
+const RTC_OFFER_RECEIVED_SUBSCRIPTION = gql`
+  subscription RtcOfferReceived {
+    offerReceived {
+      offer {
+        sdp
+        type
+      }
+      sender {
+        id
+        name
+      }
+    }
+  }
+`;
+
 const makeUrl = (port: string) => `http://localhost:${port}/graphql`;
 
 export class Client {
@@ -183,6 +217,20 @@ export class Client {
       .toPromise();
   }
 
+  sendRtcOffer(recipientId: string, offer: string) {
+    this.requireAuthentication();
+
+    return this.urqlClient
+      .mutation<SendRtcOfferMutationResult, SendRtcOfferMutationVariables>(
+        SEND_RTC_OFFER_MUTATION,
+        {
+          recipientId,
+          offer,
+        }
+      )
+      .toPromise();
+  }
+
   onSpaceJoined(slug: string) {
     this.requireAuthentication();
 
@@ -195,6 +243,14 @@ export class Client {
     this.requireAuthentication();
 
     const query = createRequest(SPACE_LEFT_SUBSCRIPTION, { slug });
+
+    return this.urqlClient.executeSubscription(query);
+  }
+
+  onRtcOfferReceived() {
+    this.requireAuthentication();
+
+    const query = createRequest(RTC_OFFER_RECEIVED_SUBSCRIPTION);
 
     return this.urqlClient.executeSubscription(query);
   }
