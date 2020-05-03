@@ -211,6 +211,57 @@ const RTC_ANSWER_RECEIVED_SUBSCRIPTION = gql`
   }
 `;
 
+const SEND_RTC_ICE_CANDIDATE_MUTATION = gql`
+  mutation SendRtcIceCandidate(
+    $recipientId: String!
+    $sdpMLineIndex: Int!
+    $sdpMid: String!
+    $candidate: String!
+  ) {
+    sendRtcIceCandidate(
+      args: {
+        recipientId: $recipientId
+        iceCandidate: {
+          sdpMLineIndex: $sdpMLineIndex
+          sdpMid: $sdpMid
+          candidate: $candidate
+        }
+      }
+    ) {
+      success
+    }
+  }
+`;
+
+interface SendRtcIceCandidateMutationResult {
+  sendRtcIceCandidate: {
+    success: boolean;
+  };
+}
+
+interface SendRtcIceCandidateMutationVariables {
+  recipientId: string;
+  sdpMLineIndex: number;
+  sdpMid: string;
+  candidate: string;
+}
+
+const RTC_ICE_CANDIDATE_RECEIVED_SUBSCRIPTION = gql`
+  subscription RtcIceCandidateReceived {
+    iceCandidateReceived {
+      iceCandidate {
+        candidate
+        sdpMLineIndex
+        sdpMid
+      }
+      sender {
+        id
+        name
+      }
+    }
+  }
+`;
+
 const makeUrl = (port: string) => `http://localhost:${port}/graphql`;
 
 export class TalkieTestClient {
@@ -276,6 +327,27 @@ export class TalkieTestClient {
       .toPromise();
   }
 
+  sendRtcIceCandidate(
+    recipientId: string,
+    candidate: string,
+    sdpMid: string,
+    sdpMLineIndex: number
+  ) {
+    this.requireAuthentication();
+
+    return this.urqlClient
+      .mutation<
+        SendRtcIceCandidateMutationResult,
+        SendRtcIceCandidateMutationVariables
+      >(SEND_RTC_ICE_CANDIDATE_MUTATION, {
+        recipientId,
+        candidate,
+        sdpMid,
+        sdpMLineIndex,
+      })
+      .toPromise();
+  }
+
   onSpaceJoined(slug: string) {
     this.requireAuthentication();
 
@@ -304,6 +376,14 @@ export class TalkieTestClient {
     this.requireAuthentication();
 
     const query = createRequest(RTC_ANSWER_RECEIVED_SUBSCRIPTION);
+
+    return this.urqlClient.executeSubscription(query);
+  }
+
+  onRtcIceCandidateReceived() {
+    this.requireAuthentication();
+
+    const query = createRequest(RTC_ICE_CANDIDATE_RECEIVED_SUBSCRIPTION);
 
     return this.urqlClient.executeSubscription(query);
   }
