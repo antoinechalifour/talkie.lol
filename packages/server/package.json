@@ -46,7 +46,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon",
-    "lint": "eslint 'src/**/*.{js,ts,tsx}' --fix",
+    "lint": "eslint '{src,__tests__}/**/*.{js,ts,tsx}' --fix",
     "build": "tsc",
     "test": "jest"
   },

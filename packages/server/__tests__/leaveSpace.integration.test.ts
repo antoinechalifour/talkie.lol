@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { AwilixContainer } from "awilix";
 import { pipe, subscribe } from "wonka";
 
 import { TalkieApp } from "../src/application/server";
@@ -16,11 +15,10 @@ type CleanUpFn = () => void;
 describe("leaveSpace", () => {
   let app: TalkieApp;
   let port: string;
-  let container: AwilixContainer;
   let anonymousClient: TalkieTestClient;
 
   beforeEach(async () => {
-    ({ app, port, container } = await createTestApp());
+    ({ app, port } = await createTestApp());
 
     anonymousClient = TalkieTestClient.createAnonymousClient(port);
 

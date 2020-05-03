@@ -5,7 +5,7 @@ import { NotificationPort } from "./ports/NotificationPort";
 import { SpacePort } from "./ports/SpacePort";
 import { JoinSpace } from "./JoinSpace";
 
-const mockNotificationPort = () => ({
+const mockNotificationPort = (): NotificationPort => ({
   notifyRtcIceCandidateReceived: jest.fn(),
   notifyRtcAnswerReceived: jest.fn(),
   notifyRtcOfferReceived: jest.fn(),

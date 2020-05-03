@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { AwilixContainer } from "awilix";
 import { pipe, subscribe } from "wonka";
 
 import { TalkieApp } from "../src/application/server";
@@ -16,7 +15,6 @@ type CleanUpFn = () => void;
 describe("sendRtcAnswer", () => {
   let app: TalkieApp;
   let port: string;
-  let container: AwilixContainer;
   let anonymousClient: TalkieTestClient;
   let senderClient: TalkieTestClient;
   let sender: GraphQLSession;
@@ -28,7 +26,7 @@ describe("sendRtcAnswer", () => {
   let cleanUp: CleanUpFn;
 
   beforeEach(async () => {
-    ({ app, port, container } = await createTestApp());
+    ({ app, port } = await createTestApp());
 
     anonymousClient = TalkieTestClient.createAnonymousClient(port);
 
