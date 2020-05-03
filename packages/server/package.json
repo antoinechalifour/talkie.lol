@@ -37,9 +37,11 @@
     "node-fetch": "2.6.0",
     "nodemon": "^2.0.2",
     "prettier": "2.0.4",
+    "subscriptions-transport-ws": "0.9.16",
     "ts-jest": "25.4.0",
     "ts-node": "8.8.2",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "wonka": "4.0.13"
   },
   "scripts": {
     "start": "node dist/index.js",
