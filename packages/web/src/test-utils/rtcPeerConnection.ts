@@ -1,20 +1,19 @@
-export const mockRtcPeerConnection = (): RTCPeerConnection =>
-  new (class extends RTCPeerConnection {
-    constructor() {
-      super();
+export class MockRtcPeerConnection extends RTCPeerConnection {
+  createDataChannel = jest.fn();
+  getSenders = jest.fn().mockReturnValue([]);
+  getTransceivers = jest.fn().mockReturnValue([]);
+  addTransceiver = jest.fn();
+  getReceivers = jest.fn().mockReturnValue([]);
+  addTrack = jest.fn();
+  removeTrack = jest.fn();
+  createOffer = jest.fn();
+  createAnswer = jest.fn();
+  addIceCandidate = jest.fn();
+  setLocalDescription = jest.fn();
+  setRemoteDescription = jest.fn();
+  close = jest.fn();
 
-      this.createDataChannel = jest.fn();
-      this.getSenders = jest.fn().mockReturnValue([]);
-      this.getTransceivers = jest.fn().mockReturnValue([]);
-      this.addTransceiver = jest.fn();
-      this.getReceivers = jest.fn().mockReturnValue([]);
-      this.addTrack = jest.fn();
-      this.removeTrack = jest.fn();
-      this.createOffer = jest.fn();
-      this.createAnswer = jest.fn();
-      this.addIceCandidate = jest.fn();
-      this.setLocalDescription = jest.fn();
-      this.setRemoteDescription = jest.fn();
-      this.close = jest.fn();
-    }
-  })();
+  static create() {
+    return new MockRtcPeerConnection();
+  }
+}

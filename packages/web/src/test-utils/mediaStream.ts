@@ -1,14 +1,34 @@
-export const mockMediaStream = (): MediaStream =>
-  new (class extends MediaStream {
-    constructor() {
-      super();
-      this.getTracks = jest.fn().mockReturnValue([]);
-      this.getVideoTracks = jest.fn().mockReturnValue([]);
-      this.getAudioTracks = jest.fn().mockReturnValue([]);
+export class MockMediaStream extends MediaStream {
+  getTracks = jest.fn().mockReturnValue([]);
+  getVideoTracks = jest.fn().mockReturnValue([]);
+  getAudioTracks = jest.fn().mockReturnValue([]);
+  addTrack = jest.fn();
+  removeTrack = jest.fn();
+  getTrackById = jest.fn();
 
-      this.addTrack = jest.fn();
-      this.removeTrack = jest.fn();
+  static create() {
+    return new MockMediaStream();
+  }
+}
 
-      this.getTrackById = jest.fn();
-    }
-  })();
+export class MockMediaStreamTrack extends MediaStreamTrack {
+  applyConstraints = jest.fn();
+  getCapabilities = jest.fn();
+  getConstraints = jest.fn();
+  getSettings = jest.fn();
+  stop = jest.fn();
+
+  constructor(id: string, kind: string) {
+    super();
+
+    Object.assign(this, { id, kind });
+  }
+
+  static createAudioTrack(id: string) {
+    return new MockMediaStreamTrack(id, "audio");
+  }
+
+  static createVideoTrack(id: string) {
+    return new MockMediaStreamTrack(id, "video");
+  }
+}

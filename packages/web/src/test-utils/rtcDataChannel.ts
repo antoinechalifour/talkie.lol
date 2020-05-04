@@ -1,9 +1,8 @@
-export const mockRtcDataChannel = (): RTCDataChannel =>
-  new (class extends RTCDataChannel {
-    constructor() {
-      super();
+export class MockRtcDataChannel extends RTCDataChannel {
+  send = jest.fn();
+  close = jest.fn();
 
-      this.send = jest.fn();
-      this.close = jest.fn();
-    }
-  })();
+  static create() {
+    return new MockRtcDataChannel();
+  }
+}
