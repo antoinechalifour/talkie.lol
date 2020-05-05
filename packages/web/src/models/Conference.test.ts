@@ -26,6 +26,18 @@ const getDefaultTestConference = () => {
   return Conference.create("conference-name", currentUser);
 };
 
+const getTestConferenceWithLocalMediaStream = (mediaStream: MediaStream) => {
+  const currentUser = CurrentUser.create(
+    "current-user",
+    "current-user-token",
+    "current-user-name",
+    mockRtcConfiguration(),
+    mediaStream
+  );
+
+  return Conference.create("conference-name", currentUser);
+};
+
 const getDefaultTestRemotePeer = () =>
   MockRemotePeer.create(
     RemoteUser.create("user-1", "Jane Doe"),
@@ -78,17 +90,14 @@ describe("Conference", () => {
         const localVideotrack = MockMediaStreamTrack.createVideoTrack(
           "local-video"
         );
-        const rtcRtpSender = MockRTCRtpSender.createRTCRtpSender(
-          existingVideoTrack
-        );
-
-        const localTracks: MediaStreamTrack[] = [
+        const mediaStream = MockMediaStream.createWithTracks([
           existingVideoTrack,
           localAudioTrack,
           localVideotrack,
-        ];
-        const mediaStream = MockMediaStream.create();
-        (mediaStream.getTracks as jest.Mock).mockReturnValue(localTracks);
+        ]);
+        const rtcRtpSender = MockRTCRtpSender.createRTCRtpSender(
+          existingVideoTrack
+        );
 
         const currentUser = CurrentUser.create(
           "current-user",
@@ -101,6 +110,7 @@ describe("Conference", () => {
         const conference = Conference.create("conference-name", currentUser);
         const rtcPeerConnection = MockRtcPeerConnection.create();
 
+        // TODO: without mocks
         (rtcPeerConnection.getSenders as jest.Mock).mockReturnValue([
           rtcRtpSender,
         ]);
@@ -116,7 +126,7 @@ describe("Conference", () => {
         conference.addRemotePeer(newRemotePeer);
 
         // Then
-
+        // TODO: verify using getTracks
         expect(rtcPeerConnection.addTrack).toHaveBeenCalledTimes(2);
         expect(rtcPeerConnection.addTrack).toHaveBeenCalledWith(
           localAudioTrack,
@@ -273,10 +283,8 @@ describe("Conference", () => {
         MockMediaStreamTrack.createAudioTrack("old-audio-1"),
         MockMediaStreamTrack.createAudioTrack("old-audio-2"),
       ];
-      const conference = getDefaultTestConference();
-      const mediaStream = conference.localUser().mediaStream();
-
-      (mediaStream.getAudioTracks as jest.Mock).mockReturnValue(oldAudioTracks);
+      const mediaStream = MockMediaStream.createWithTracks(oldAudioTracks);
+      const conference = getTestConferenceWithLocalMediaStream(mediaStream);
 
       // When
       conference.startLocalAudio(newAudioTracks);
@@ -285,30 +293,20 @@ describe("Conference", () => {
       expect(oldAudioTracks[0].stop).toHaveBeenCalled();
       expect(oldAudioTracks[1].stop).toHaveBeenCalled();
 
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        1,
-        oldAudioTracks[0]
-      );
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        2,
-        oldAudioTracks[1]
-      );
-
-      expect(mediaStream.addTrack).toHaveBeenCalledTimes(1);
-      expect(mediaStream.addTrack).toHaveBeenCalledWith(newAudioTracks[0]);
+      expect(mediaStream.getAudioTracks()).toEqual(newAudioTracks);
     });
 
     it("should share the audio stream with all the peers", () => {
       // Given
-      const conference = getDefaultTestConference();
       const localAudioTrack = MockMediaStreamTrack.createAudioTrack("audio-1");
-      const localMediaStream = conference.localUser().mediaStream();
-      const remotePeer1RtcConnection = MockRtcPeerConnection.create();
-      const remotePeer2RtcConnection = MockRtcPeerConnection.create();
-
-      (localMediaStream.getTracks as jest.Mock).mockReturnValue([
+      const localMediaStream = MockMediaStream.createWithTracks([
         localAudioTrack,
       ]);
+      const conference = getTestConferenceWithLocalMediaStream(
+        localMediaStream
+      );
+      const remotePeer1RtcConnection = MockRtcPeerConnection.create();
+      const remotePeer2RtcConnection = MockRtcPeerConnection.create();
 
       conference.addRemotePeer(
         getTestRemotePeerWithRtcPeerconnection(remotePeer1RtcConnection)
@@ -340,10 +338,8 @@ describe("Conference", () => {
         MockMediaStreamTrack.createAudioTrack("audio-1"),
         MockMediaStreamTrack.createAudioTrack("audio-2"),
       ];
-      const conference = getDefaultTestConference();
-      const mediaStream = conference.localUser().mediaStream();
-
-      (mediaStream.getAudioTracks as jest.Mock).mockReturnValue(audioTracks);
+      const mediaStream = MockMediaStream.createWithTracks(audioTracks);
+      const conference = getTestConferenceWithLocalMediaStream(mediaStream);
 
       // When
       conference.stopLocalAudio();
@@ -352,14 +348,7 @@ describe("Conference", () => {
       expect(audioTracks[0].stop).toHaveBeenCalled();
       expect(audioTracks[1].stop).toHaveBeenCalled();
 
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        1,
-        audioTracks[0]
-      );
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        2,
-        audioTracks[1]
-      );
+      expect(mediaStream.getAudioTracks()).toEqual([]);
     });
 
     it("should stop sending the video stream to other peers", () => {
@@ -412,10 +401,8 @@ describe("Conference", () => {
         MockMediaStreamTrack.createVideoTrack("old-video-1"),
         MockMediaStreamTrack.createVideoTrack("old-video-2"),
       ];
-      const conference = getDefaultTestConference();
-      const mediaStream = conference.localUser().mediaStream();
-
-      (mediaStream.getVideoTracks as jest.Mock).mockReturnValue(oldVideoTracks);
+      const mediaStream = MockMediaStream.createWithTracks(oldVideoTracks);
+      const conference = getTestConferenceWithLocalMediaStream(mediaStream);
 
       // When
       conference.startLocalVideo(newVideoTracks);
@@ -424,30 +411,20 @@ describe("Conference", () => {
       expect(oldVideoTracks[0].stop).toHaveBeenCalled();
       expect(oldVideoTracks[1].stop).toHaveBeenCalled();
 
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        1,
-        oldVideoTracks[0]
-      );
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        2,
-        oldVideoTracks[1]
-      );
-
-      expect(mediaStream.addTrack).toHaveBeenCalledTimes(1);
-      expect(mediaStream.addTrack).toHaveBeenCalledWith(newVideoTracks[0]);
+      expect(mediaStream.getVideoTracks()).toEqual(newVideoTracks);
     });
 
     it("should share the video stream with all the peers", () => {
       // Given
-      const conference = getDefaultTestConference();
       const localVideoTrack = MockMediaStreamTrack.createVideoTrack("video-1");
-      const localMediaStream = conference.localUser().mediaStream();
-      const remotePeer1RtcConnection = MockRtcPeerConnection.create();
-      const remotePeer2RtcConnection = MockRtcPeerConnection.create();
-
-      (localMediaStream.getTracks as jest.Mock).mockReturnValue([
+      const localMediaStream = MockMediaStream.createWithTracks([
         localVideoTrack,
       ]);
+      const conference = getTestConferenceWithLocalMediaStream(
+        localMediaStream
+      );
+      const remotePeer1RtcConnection = MockRtcPeerConnection.create();
+      const remotePeer2RtcConnection = MockRtcPeerConnection.create();
 
       conference.addRemotePeer(
         getTestRemotePeerWithRtcPeerconnection(remotePeer1RtcConnection)
@@ -476,13 +453,11 @@ describe("Conference", () => {
     it("should remove the local video stream", () => {
       // Given
       const videoTracks = [
-        MockMediaStreamTrack.createAudioTrack("audio-1"),
-        MockMediaStreamTrack.createAudioTrack("audio-2"),
+        MockMediaStreamTrack.createVideoTrack("video-1"),
+        MockMediaStreamTrack.createVideoTrack("video-2"),
       ];
-      const conference = getDefaultTestConference();
-      const mediaStream = conference.localUser().mediaStream();
-
-      (mediaStream.getVideoTracks as jest.Mock).mockReturnValue(videoTracks);
+      const mediaStream = MockMediaStream.createWithTracks(videoTracks);
+      const conference = getTestConferenceWithLocalMediaStream(mediaStream);
 
       // When
       conference.stopLocalVideo();
@@ -491,14 +466,7 @@ describe("Conference", () => {
       expect(videoTracks[0].stop).toHaveBeenCalled();
       expect(videoTracks[1].stop).toHaveBeenCalled();
 
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        1,
-        videoTracks[0]
-      );
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        2,
-        videoTracks[1]
-      );
+      expect(mediaStream.getVideoTracks()).toEqual([]);
     });
 
     it("should stop sending the video stream to other peers", () => {
@@ -518,6 +486,8 @@ describe("Conference", () => {
       const senderRemotePeer2 = MockRTCRtpSender.createRTCRtpSender(
         MockMediaStreamTrack.createVideoTrack("video-2")
       );
+
+      // TODO: should not be mocked
       (rtcPeerConnection1.getSenders as jest.Mock).mockReturnValue([
         senderRemotePeer1,
       ]);
@@ -532,6 +502,7 @@ describe("Conference", () => {
       conference.stopLocalVideo();
 
       // Then
+      // TODO: verify using getTracks
       expect(rtcPeerConnection1.removeTrack).toHaveBeenCalledWith(
         senderRemotePeer1
       );
@@ -670,10 +641,8 @@ describe("Conference", () => {
         MockMediaStreamTrack.createAudioTrack("audio-1"),
         MockMediaStreamTrack.createAudioTrack("audio-2"),
       ];
-      const conference = getDefaultTestConference();
-      const mediaStream = conference.localUser().mediaStream();
-
-      (mediaStream.getAudioTracks as jest.Mock).mockReturnValue(audioTracks);
+      const mediaStream = MockMediaStream.createWithTracks(audioTracks);
+      const conference = getTestConferenceWithLocalMediaStream(mediaStream);
 
       // When
       conference.leave();
@@ -682,14 +651,7 @@ describe("Conference", () => {
       expect(audioTracks[0].stop).toHaveBeenCalled();
       expect(audioTracks[1].stop).toHaveBeenCalled();
 
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        1,
-        audioTracks[0]
-      );
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        2,
-        audioTracks[1]
-      );
+      expect(mediaStream.getAudioTracks()).toEqual([]);
     });
 
     it("should stop the video stream", () => {
@@ -698,10 +660,8 @@ describe("Conference", () => {
         MockMediaStreamTrack.createVideoTrack("video-1"),
         MockMediaStreamTrack.createVideoTrack("video-2"),
       ];
-      const conference = getDefaultTestConference();
-      const mediaStream = conference.localUser().mediaStream();
-
-      (mediaStream.getVideoTracks as jest.Mock).mockReturnValue(videoTracks);
+      const mediaStream = MockMediaStream.createWithTracks(videoTracks);
+      const conference = getTestConferenceWithLocalMediaStream(mediaStream);
 
       // When
       conference.leave();
@@ -710,14 +670,7 @@ describe("Conference", () => {
       expect(videoTracks[0].stop).toHaveBeenCalled();
       expect(videoTracks[1].stop).toHaveBeenCalled();
 
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        1,
-        videoTracks[0]
-      );
-      expect(mediaStream.removeTrack).toHaveBeenNthCalledWith(
-        2,
-        videoTracks[1]
-      );
+      expect(mediaStream.getVideoTracks()).toEqual([]);
     });
 
     it("should close the connection to each peer", () => {
@@ -732,6 +685,7 @@ describe("Conference", () => {
         MockMediaStreamTrack.createAudioTrack("audio-track")
       );
 
+      // TODO: should not be mocked
       (rtcPeerConnection1.getSenders as jest.Mock).mockReturnValue([
         rtcRtpSender1,
       ]);
