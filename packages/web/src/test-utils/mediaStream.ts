@@ -1,13 +1,40 @@
 export class MockMediaStream extends MediaStream {
-  getTracks = jest.fn().mockReturnValue([]);
-  getVideoTracks = jest.fn().mockReturnValue([]);
-  getAudioTracks = jest.fn().mockReturnValue([]);
-  addTrack = jest.fn();
-  removeTrack = jest.fn();
-  getTrackById = jest.fn();
+  private _tracks: MediaStreamTrack[] = [];
+
+  getTracks() {
+    return this._tracks;
+  }
+
+  getVideoTracks() {
+    return this.getTracks().filter((track) => track.kind === "video");
+  }
+
+  getAudioTracks() {
+    return this.getTracks().filter((track) => track.kind === "audio");
+  }
+
+  addTrack(track: MediaStreamTrack) {
+    this._tracks.push(track);
+  }
+
+  removeTrack(track: MediaStreamTrack) {
+    this._tracks = this._tracks.filter((x) => x !== track);
+  }
+
+  getTrackById(id: string) {
+    return this._tracks.find((x) => x.id === id) || null;
+  }
 
   static create() {
     return new MockMediaStream();
+  }
+
+  static createWithTracks(tracks: MediaStreamTrack[]) {
+    const mediaStream = MockMediaStream.create();
+
+    tracks.forEach((track) => mediaStream.addTrack(track));
+
+    return mediaStream;
   }
 }
 
