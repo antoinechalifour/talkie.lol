@@ -23,3 +23,6 @@ navigator.mediaDevices = new (class extends EventTarget {
   getUserMedia = jest.fn();
   getDisplayMedia = jest.fn();
 })();
+
+// @ts-ignore
+navigator.connection = new (class extends EventTarget {})();
