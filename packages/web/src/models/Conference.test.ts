@@ -13,18 +13,19 @@ import { RemoteUser } from "./RemoteUser";
 import { Author, Message } from "./Message";
 import { MockRTCRtpSender } from "../test-utils/rtcRtpSender";
 
-const getDefaultTestConference = () => {
+const getDefaultTestCurrentUser = () => {
   const mediaStream = MockMediaStream.create();
-  const currentUser = CurrentUser.create(
+  return CurrentUser.create(
     "current-user",
     "current-user-token",
     "current-user-name",
     mockRtcConfiguration(),
     mediaStream
   );
-
-  return Conference.create("conference-name", currentUser);
 };
+
+const getDefaultTestConference = () =>
+  Conference.create("conference-name", getDefaultTestCurrentUser());
 
 const getTestConferenceWithLocalMediaStream = (mediaStream: MediaStream) => {
   const currentUser = CurrentUser.create(
@@ -65,6 +66,19 @@ const getTestRemotePeerWithRtcPeerconnection = (
   );
 
 describe("Conference", () => {
+  describe("name", () => {
+    // Given
+    const conferenceName = "conference-awesome-name";
+    const currentUser = getDefaultTestCurrentUser();
+    const conference = Conference.create(conferenceName, currentUser);
+
+    // When
+    const result = conference.name();
+
+    // Then
+    expect(result).toEqual(conferenceName);
+  });
+
   describe("addRemotePeer", () => {
     describe("when the peer is not in the conference", () => {
       it("should add the peer", () => {
