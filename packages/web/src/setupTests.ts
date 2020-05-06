@@ -26,3 +26,16 @@ navigator.mediaDevices = new (class extends EventTarget {
 
 // @ts-ignore
 navigator.connection = new (class extends EventTarget {})();
+
+// @ts-ignore
+window.MediaQueryList = class extends EventTarget {};
+
+// @ts-ignore
+window.MediaQueryListEvent = class extends Event {
+  private matches: boolean;
+
+  constructor(type: string, { matches }: { matches: boolean }) {
+    super(type);
+    this.matches = matches;
+  }
+};
