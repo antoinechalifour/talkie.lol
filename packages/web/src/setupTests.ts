@@ -25,7 +25,34 @@ navigator.mediaDevices = new (class extends EventTarget {
 })();
 
 // @ts-ignore
-navigator.connection = new (class extends EventTarget {})();
+navigator.connection = new (class extends EventTarget {
+  private eventMap = new Map<string, EventListener[]>();
+
+  dispatchEvent(event: Event): boolean {
+    const listeners = this.eventMap.get(event.type) || [];
+
+    listeners.forEach((listener) => listener(event));
+
+    return true;
+  }
+
+  addEventListener(type: string, listener: EventListener): void {
+    const listeners = this.eventMap.get(type) || [];
+
+    listeners.push(listener);
+
+    this.eventMap.set(type, listeners);
+  }
+
+  removeEventListener(type: string, callback: EventListener): void {
+    const listeners = this.eventMap.get(type) || [];
+
+    this.eventMap.set(
+      type,
+      listeners.filter((x) => x !== callback)
+    );
+  }
+})();
 
 // @ts-ignore
 window.MediaQueryList = class extends EventTarget {};
