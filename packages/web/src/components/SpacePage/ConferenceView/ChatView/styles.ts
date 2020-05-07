@@ -94,7 +94,7 @@ export const MessageLayout = styled(motion.li)`
 export const AuthorName = styled.div`
   grid-area: author;
   font-size: 1.4rem;
-  color: var(--color-lightgray);
+  color: var(--color-text-light);
   opacity: 0.75;
 `;
 
@@ -107,9 +107,9 @@ export const MessageContent = styled.div`
     display: inline-block;
     border-radius: 1rem;
     overflow: hidden;
-    border: 2px solid var(--color-white);
+    border: 2px solid var(--chat-background);
 
-    background: var(--color-white);
+    background: var(--chat-background);
   }
 
   img {
@@ -117,14 +117,15 @@ export const MessageContent = styled.div`
   }
 
   p {
-    color: var(--color-text-reverse);
-    padding: 2rem;
+    min-width: 100px;
+    color: var(--color-darkgray);
+    padding: 1rem 2rem;
   }
 `;
 
 export const ReceivedTime = styled.div`
   grid-area: time;
   font-size: 1.4rem;
-  color: var(--color-lightgray);
+  color: var(--color-text-light);
   opacity: 0.75;
 `;

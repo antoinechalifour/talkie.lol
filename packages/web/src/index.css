@@ -27,6 +27,7 @@ html {
   --background-reverse: var(--color-white);
 
   --color-text: var(--color-white);
+  --color-text-light: var(--color-lightgray);
   --color-text-reverse: var(--color-darkgray);
 
   --box-shadow-1: 0 1px 6px rgba(0, 0, 0, 0.25);
@@ -49,6 +50,8 @@ html {
 
   --switch-handle: var(--color-white);
   --switch-background: var(--color-lightgray);
+
+  --chat-background: var(--background-reverse);
 
   --outline-style: 2px dashed var(--color-green);
 
@@ -78,6 +81,7 @@ body.theme-light {
   --background-darker: #ececf2;
 
   --color-text: var(--color-darkgray);
+  --color-text-light: var(--color-gray);
   --color-text-reverse: var(--color-white);
 
   --box-shadow-1: 0 1px 6px rgba(0, 0, 0, 0.25);
@@ -95,6 +99,8 @@ body.theme-light {
   --input-text-color: var(--color-darkgray);
   --input-text-background: #eee;
   --input-active-background: var(--color-green);
+
+  --chat-background: #eee;
 
   --switch-handle: var(--color-darkgray);
   --switch-background: var(--color-gray);
