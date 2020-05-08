@@ -19,7 +19,7 @@ export const SpaceQrCode: React.FC = () => {
     await copyCanvasToClipboard(canvas);
 
     close();
-    toast.info("The QR code has been copied to your clipboard");
+    toast.success("The QR code has been copied to your clipboard");
   }, [close]);
 
   return (

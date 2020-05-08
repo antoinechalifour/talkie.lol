@@ -9,8 +9,9 @@ const audio = document.createElement("audio");
 audio.src = notificationSound;
 
 const notifyUserJoined = (userName: string) =>
-  toast.success(`User ${userName} joined.`);
-const notifyUserLeft = (userName: string) => toast(`User ${userName} left.`);
+  toast.info(`User ${userName} joined.`);
+const notifyUserLeft = (userName: string) =>
+  toast.info(`User ${userName} left.`);
 const playNotificationSound = () => audio.play();
 
 export const useNotifier = (conference: ConferenceViewModel) => {

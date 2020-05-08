@@ -117,13 +117,21 @@ p {
 }
 
 .Toastify__toast {
-  border-radius: 0.5rem;
   display: grid;
   grid-template-columns: 1fr auto;
-  font-family: inherit;
   padding: 1rem;
+  border-radius: 0.5rem;
+
+  font-family: inherit;
+  line-height: 1.6;
 }
 
-.Toastify__close-button {
-  align-self: center;
+.Toastify__toast--success {
+  background: var(--color-green);
+  color: var(--color-darkgray);
 }
+
+.Toastify__toast--info {
+  background: var(--color-blue);
+}
+
