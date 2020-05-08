@@ -82,8 +82,8 @@ export const JoinSpacePage: React.FC<JoinSpacePageProps> = ({ spaceSlug }) => {
                 type="text"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
-                aria-label="Your name. Leave blank for a funny name!"
-                placeholder="Your name. Leave blank for a funny name!"
+                aria-label="Enter your name"
+                placeholder="Enter your name"
               />
               <Button type="submit" disabled={isFetching}>
                 Join
