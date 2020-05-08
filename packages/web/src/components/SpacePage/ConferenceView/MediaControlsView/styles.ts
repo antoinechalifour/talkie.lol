@@ -38,6 +38,8 @@ export const QrCodeArea = styled.div`
     all: unset;
     cursor: pointer;
     line-height: 1.6;
+
+    color: var(--color-darkgray);
   }
 
   button:focus {
