@@ -12,22 +12,31 @@ const notifyUserJoined = (userName: string) =>
   toast.info(`User ${userName} joined.`);
 const notifyUserLeft = (userName: string) =>
   toast.info(`User ${userName} left.`);
-const playNotificationSound = () => audio.play();
+const playNotificationSound = (): unknown => audio.play();
 
 export const useNotifier = (conference: ConferenceViewModel) => {
   useEffect(() => {
-    const unsubscribePeerAdded = conference.onRemotePeerAdded((newPeer) => {
-      notifyUserJoined(newPeer.name());
-      playNotificationSound();
-    });
+    const observer = conference.observePeerAdded();
 
-    const unsubscribePeerRemoved = conference.onRemotePeerRemoved((oldPeer) => {
-      notifyUserLeft(oldPeer.name());
-    });
+    (async function () {
+      for await (const newPeer of observer) {
+        notifyUserJoined(newPeer.name());
+        playNotificationSound();
+      }
+    })();
 
-    return () => {
-      unsubscribePeerAdded();
-      unsubscribePeerRemoved();
-    };
+    return observer.cancel;
+  }, [conference]);
+
+  useEffect(() => {
+    const observer = conference.observePeerRemoved();
+
+    (async function () {
+      for await (const oldPeer of observer) {
+        notifyUserLeft(oldPeer.name());
+      }
+    })();
+
+    return observer.cancel;
   }, [conference]);
 };

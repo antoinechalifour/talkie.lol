@@ -8,10 +8,17 @@ export const useLocalUser = () => {
     value: conference.localUser(),
   });
 
-  useEffect(
-    () => conference.onLocalUserChanged((value) => setLocalUser({ value })),
-    [conference]
-  );
+  useEffect(() => {
+    const observer = conference.observeLocalUser();
+
+    (async function () {
+      for await (const value of observer) {
+        setLocalUser({ value });
+      }
+    })();
+
+    return observer.cancel;
+  }, [conference]);
 
   return value;
 };

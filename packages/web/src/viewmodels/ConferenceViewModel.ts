@@ -5,17 +5,22 @@ import { CurrentUser } from "../models/CurrentUser";
 import { Message } from "../models/Message";
 import { PushableAsyncIterator } from "../utils/PushableAsyncIterator";
 
-type OnLocalUserChangedListener = (localUser: CurrentUser) => void;
-type OnRemotePeerAddedListener = (newPeer: RemotePeer) => void;
-type OnRemotePeerRemovedListener = (oldPeer: RemotePeer) => void;
-type OnRemotePeersChangedListener = (peers: RemotePeer[]) => void;
-
 export class ConferenceViewModel {
-  private _iteratorsMessageAdded: PushableAsyncIterator<Message>[] = [];
-  private _onLocalUserChangedListeners: OnLocalUserChangedListener[] = [];
-  private _onRemotePeerAddedListeners: OnRemotePeerAddedListener[] = [];
-  private _onRemotePeerRemovedListeners: OnRemotePeerRemovedListener[] = [];
-  private _onRemotePeersChangedListeners: OnRemotePeersChangedListener[] = [];
+  private _messageAddedObservers: Set<
+    PushableAsyncIterator<Message>
+  > = new Set();
+  private _remotePeersChangedObservers: Set<
+    PushableAsyncIterator<RemotePeer[]>
+  > = new Set();
+  private _localUserChangedObservers: Set<
+    PushableAsyncIterator<CurrentUser>
+  > = new Set();
+  private _remotePeerAddedObservers: Set<
+    PushableAsyncIterator<RemotePeer>
+  > = new Set();
+  private _remotePeerRemovedObservers: Set<
+    PushableAsyncIterator<RemotePeer>
+  > = new Set();
 
   private constructor(private conference: Conference) {}
 
@@ -31,14 +36,14 @@ export class ConferenceViewModel {
     return this.conference.messages();
   }
 
-  onLocalUserChanged(listener: OnLocalUserChangedListener) {
-    this._onLocalUserChangedListeners.push(listener);
+  observeLocalUser() {
+    const iterator = new PushableAsyncIterator<CurrentUser>();
 
-    return () => {
-      this._onLocalUserChangedListeners = this._onLocalUserChangedListeners.filter(
-        (x) => x !== listener
-      );
-    };
+    this._localUserChangedObservers.add(iterator);
+
+    return this._makeEventIterator(iterator, () =>
+      this._localUserChangedObservers.delete(iterator)
+    );
   }
 
   addRemotePeer(newRemotePeer: RemotePeer) {
@@ -46,14 +51,14 @@ export class ConferenceViewModel {
     this._notifyRemotePeerAdded(newRemotePeer);
   }
 
-  onRemotePeerAdded(listener: OnRemotePeerAddedListener) {
-    this._onRemotePeerAddedListeners.push(listener);
+  observePeerAdded() {
+    const iterator = new PushableAsyncIterator<RemotePeer>();
 
-    return () => {
-      this._onRemotePeerAddedListeners = this._onRemotePeerAddedListeners.filter(
-        (x) => x !== listener
-      );
-    };
+    this._remotePeerAddedObservers.add(iterator);
+
+    return this._makeEventIterator(iterator, () =>
+      this._remotePeerAddedObservers.delete(iterator)
+    );
   }
 
   removeRemotePeer(remotePeer: RemotePeer) {
@@ -61,24 +66,24 @@ export class ConferenceViewModel {
     this._notifyRemotePeerRemoved(remotePeer);
   }
 
-  onRemotePeerRemoved(listener: OnRemotePeerRemovedListener) {
-    this._onRemotePeerRemovedListeners.push(listener);
+  observePeerRemoved() {
+    const iterator = new PushableAsyncIterator<RemotePeer>();
 
-    return () => {
-      this._onRemotePeerRemovedListeners = this._onRemotePeerRemovedListeners.filter(
-        (x) => x !== listener
-      );
-    };
+    this._remotePeerRemovedObservers.add(iterator);
+
+    return this._makeEventIterator(iterator, () =>
+      this._remotePeerRemovedObservers.delete(iterator)
+    );
   }
 
-  onRemotePeersChanged(listener: OnRemotePeersChangedListener) {
-    this._onRemotePeersChangedListeners.push(listener);
+  observePeersChanged() {
+    const iterator = new PushableAsyncIterator<RemotePeer[]>();
 
-    return () => {
-      this._onRemotePeersChangedListeners = this._onRemotePeersChangedListeners.filter(
-        (x) => x !== listener
-      );
-    };
+    this._remotePeersChangedObservers.add(iterator);
+
+    return this._makeEventIterator(iterator, () =>
+      this._remotePeersChangedObservers.delete(iterator)
+    );
   }
 
   removeRemoteUser(user: RemoteUser) {
@@ -137,10 +142,10 @@ export class ConferenceViewModel {
 
   observeNewMessages() {
     const iterator = new PushableAsyncIterator<Message>();
-    this._iteratorsMessageAdded.push(iterator);
+    this._messageAddedObservers.add(iterator);
 
     return this._makeEventIterator(iterator, () =>
-      this._iteratorsMessageAdded.filter((x) => x !== iterator)
+      this._messageAddedObservers.delete(iterator)
     );
   }
 
@@ -153,29 +158,27 @@ export class ConferenceViewModel {
   }
 
   private _notifyRemotePeerAdded(newRemotePeer: RemotePeer) {
-    this._onRemotePeerAddedListeners.forEach((listener) =>
-      listener(newRemotePeer)
+    this._remotePeerAddedObservers.forEach((iterator) =>
+      iterator.pushValue(newRemotePeer)
     );
-
     this._notifyRemotePeersChanged();
   }
 
   private _notifyRemotePeerRemoved(remotePeer: RemotePeer) {
-    this._onRemotePeerRemovedListeners.forEach((listener) =>
-      listener(remotePeer)
+    this._remotePeerRemovedObservers.forEach((iterator) =>
+      iterator.pushValue(remotePeer)
     );
-
     this._notifyRemotePeersChanged();
   }
 
   private _notifyRemotePeersChanged() {
-    this._onRemotePeersChangedListeners.forEach((listener) =>
-      listener(this.allRemotePeers())
+    this._remotePeersChangedObservers.forEach((iterator) =>
+      iterator.pushValue(this.allRemotePeers())
     );
   }
 
   private _notifyMessageAdded(message: Message) {
-    this._iteratorsMessageAdded.forEach((iterator) =>
+    this._messageAddedObservers.forEach((iterator) =>
       iterator.pushValue(message)
     );
   }
@@ -196,9 +199,13 @@ export class ConferenceViewModel {
         return iterator.next();
       },
       cancel() {
-        console.log("CLEANING EVENT LISTENERS");
         cleanUpFn();
         iterator.return();
+      },
+      async subscribe(callback: (result: T) => void) {
+        for await (const value of this) {
+          callback(value);
+        }
       },
     };
   }
