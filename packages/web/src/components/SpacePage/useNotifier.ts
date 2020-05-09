@@ -15,24 +15,20 @@ const notifyUserLeft = (userName: string) =>
 const playNotificationSound = (): unknown => audio.play();
 
 export const useNotifier = (conference: ConferenceViewModel) => {
-  useEffect(() => {
-    const observable = conference.observePeerAdded();
+  useEffect(
+    () =>
+      conference.observePeerAdded().subscribe((newPeer) => {
+        notifyUserJoined(newPeer.name());
+        playNotificationSound();
+      }),
+    [conference]
+  );
 
-    observable.subscribe((newPeer) => {
-      notifyUserJoined(newPeer.name());
-      playNotificationSound();
-    });
-
-    return observable.cancel;
-  }, [conference]);
-
-  useEffect(() => {
-    const observable = conference.observePeerRemoved();
-
-    observable.subscribe((oldPeer) => {
-      notifyUserLeft(oldPeer.name());
-    });
-
-    return observable.cancel;
-  }, [conference]);
+  useEffect(
+    () =>
+      conference.observePeerRemoved().subscribe((oldPeer) => {
+        notifyUserLeft(oldPeer.name());
+      }),
+    [conference]
+  );
 };

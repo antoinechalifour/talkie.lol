@@ -8,13 +8,13 @@ export const useLocalUser = () => {
     value: conference.localUser(),
   });
 
-  useEffect(() => {
-    const observable = conference.observeLocalUser();
-
-    observable.subscribe((value) => setLocalUser({ value }));
-
-    return observable.cancel;
-  }, [conference]);
+  useEffect(
+    () =>
+      conference
+        .observeLocalUser()
+        .subscribe((value) => setLocalUser({ value })),
+    [conference]
+  );
 
   return value;
 };

@@ -202,10 +202,14 @@ export class ConferenceViewModel {
         cleanUpFn();
         iterator.return();
       },
-      async subscribe(callback: (result: T) => void) {
-        for await (const value of this) {
-          callback(value);
-        }
+      subscribe(callback: (result: T) => void) {
+        (async () => {
+          for await (const value of this) {
+            callback(value);
+          }
+        })();
+
+        return this.cancel;
       },
     };
   }

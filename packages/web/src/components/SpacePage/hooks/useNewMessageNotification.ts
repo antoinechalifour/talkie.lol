@@ -13,15 +13,13 @@ const playNotificationSound = (): unknown => audio.play();
 export const useNewMessageNotification = () => {
   const conference = useConference();
 
-  useEffect(() => {
-    const observable = conference.observeNewMessages();
+  useEffect(
+    () =>
+      conference.observeNewMessages().subscribe((message) => {
+        if (message.author().id === conference.localUser().id()) return;
 
-    observable.subscribe((message) => {
-      if (message.author().id === conference.localUser().id()) return;
-
-      playNotificationSound();
-    });
-
-    return observable.cancel;
-  }, [conference]);
+        playNotificationSound();
+      }),
+    [conference]
+  );
 };
