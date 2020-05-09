@@ -50,6 +50,5 @@ const mediaEnterAnimation = keyframes`
 
 export const MediaArea = styled(VideoAspectRatioContainer)`
   position: relative;
-  border: 2px solid var(--color-black);
   animation: ${mediaEnterAnimation} 0.25s ease;
 `;
