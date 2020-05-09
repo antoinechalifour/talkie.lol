@@ -58,8 +58,10 @@ export class ConferenceViewModel {
   }
 
   removeRemotePeer(remotePeer: RemotePeer) {
-    this.conference.removeRemotePeer(remotePeer);
-    this._notifyRemotePeerRemoved(remotePeer);
+    if (this.conference.hasPeer(remotePeer)) {
+      this.conference.removeRemotePeer(remotePeer);
+      this._notifyRemotePeerRemoved(remotePeer);
+    }
   }
 
   onRemotePeerRemoved(listener: OnRemotePeerRemovedListener) {

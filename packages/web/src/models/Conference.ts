@@ -71,6 +71,10 @@ export class Conference {
     return Array.from(this._remotePeers);
   }
 
+  hasPeer(remotePeer: RemotePeer) {
+    return this.allRemotePeers().some((peer) => peer.is(remotePeer));
+  }
+
   startLocalAudio(audioTracks: MediaStreamTrack[]) {
     this.localUser().setAudioStream(audioTracks);
     this._startStreamingLocalMediaStreamWithAllPeers();

@@ -198,6 +198,25 @@ describe("ConferenceViewModel", () => {
       expect(subscriber).toHaveBeenCalledTimes(1);
       expect(subscriber).toHaveBeenCalledWith([remotePeer2]);
     });
+
+    it("should not notify subscribers when the peer is not in the conference", () => {
+      // Given
+      const subscriberOnRemotePeerRemoved = jest.fn();
+      const subscriberOnRemotePeersChanged = jest.fn();
+      const remotePeer3 = getTestRemotePeerWithRemoteUser(
+        RemoteUser.create("user-3", "Willy Billy")
+      );
+
+      viewModel.onRemotePeerRemoved(subscriberOnRemotePeerRemoved);
+      viewModel.onRemotePeersChanged(subscriberOnRemotePeersChanged);
+
+      // When
+      viewModel.removeRemotePeer(remotePeer3);
+
+      // Then
+      expect(subscriberOnRemotePeerRemoved).not.toHaveBeenCalled();
+      expect(subscriberOnRemotePeersChanged).not.toHaveBeenCalled();
+    });
   });
 
   describe("removeRemoteUser", () => {
@@ -279,6 +298,23 @@ describe("ConferenceViewModel", () => {
       // Then
       expect(subscriber).toHaveBeenCalledTimes(1);
       expect(subscriber).toHaveBeenCalledWith([remotePeer2]);
+    });
+
+    it("should not notify subscribers when the peer is not in the conference", () => {
+      // Given
+      const subscriberOnRemotePeerRemoved = jest.fn();
+      const subscriberOnRemotePeersChanged = jest.fn();
+      const remoteUser3 = RemoteUser.create("user-3", "Willy Billy");
+
+      viewModel.onRemotePeerRemoved(subscriberOnRemotePeerRemoved);
+      viewModel.onRemotePeersChanged(subscriberOnRemotePeersChanged);
+
+      // When
+      viewModel.removeRemoteUser(remoteUser3);
+
+      // Then
+      expect(subscriberOnRemotePeerRemoved).not.toHaveBeenCalled();
+      expect(subscriberOnRemotePeersChanged).not.toHaveBeenCalled();
     });
   });
 
