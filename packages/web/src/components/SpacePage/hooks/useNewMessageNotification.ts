@@ -14,16 +14,14 @@ export const useNewMessageNotification = () => {
   const conference = useConference();
 
   useEffect(() => {
-    const observer = conference.observeNewMessages();
+    const observable = conference.observeNewMessages();
 
-    (async function () {
-      for await (const message of observer) {
-        if (message.author().id === conference.localUser().id()) continue;
+    observable.subscribe((message) => {
+      if (message.author().id === conference.localUser().id()) return;
 
-        playNotificationSound();
-      }
-    })();
+      playNotificationSound();
+    });
 
-    return observer.cancel;
+    return observable.cancel;
   }, [conference]);
 };

@@ -7,15 +7,13 @@ export const useMessages = () => {
   const [messages, setMessages] = useState([...conference.messages()]);
 
   useEffect(() => {
-    const observer = conference.observeNewMessages();
+    const observable = conference.observeNewMessages();
 
-    (async function () {
-      for await (const newMessage of observer) {
-        setMessages((oldMessages) => [...oldMessages, newMessage]);
-      }
-    })();
+    observable.subscribe((newMessage) =>
+      setMessages((oldMessages) => [...oldMessages, newMessage])
+    );
 
-    return observer.cancel;
+    return observable.cancel;
   }, [conference]);
 
   return messages;

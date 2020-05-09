@@ -7,15 +7,11 @@ export const useRemotePeers = () => {
   const [remotePeers, setRemotePeers] = useState(conference.allRemotePeers());
 
   useEffect(() => {
-    const observer = conference.observePeersChanged();
+    const observable = conference.observePeersChanged();
 
-    (async function () {
-      for await (const peers of observer) {
-        setRemotePeers([...peers]);
-      }
-    })();
+    observable.subscribe((peers) => setRemotePeers([...peers]));
 
-    return observer.cancel;
+    return observable.cancel;
   }, [conference]);
 
   return remotePeers;

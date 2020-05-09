@@ -9,15 +9,11 @@ export const useLocalUser = () => {
   });
 
   useEffect(() => {
-    const observer = conference.observeLocalUser();
+    const observable = conference.observeLocalUser();
 
-    (async function () {
-      for await (const value of observer) {
-        setLocalUser({ value });
-      }
-    })();
+    observable.subscribe((value) => setLocalUser({ value }));
 
-    return observer.cancel;
+    return observable.cancel;
   }, [conference]);
 
   return value;
