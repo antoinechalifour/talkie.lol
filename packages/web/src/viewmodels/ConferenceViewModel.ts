@@ -31,6 +31,7 @@ export class ConferenceViewModel {
     return this.conference.messages();
   }
 
+  // TODO: pretty sure this is useless
   onLocalUserChanged(listener: OnLocalUserChangedListener) {
     this._onLocalUserChangedListeners.push(listener);
 
