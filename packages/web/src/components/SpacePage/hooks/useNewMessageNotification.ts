@@ -8,18 +8,22 @@ import notificationSound from "../../../assets/new-message.mp3";
 const audio = document.createElement("audio");
 audio.src = notificationSound;
 
-const playNotificationSound = () => audio.play();
+const playNotificationSound = (): unknown => audio.play();
 
 export const useNewMessageNotification = () => {
   const conference = useConference();
 
-  useEffect(
-    () =>
-      conference.onMessageAdded((message) => {
-        if (message.author().id === conference.localUser().id()) return;
+  useEffect(() => {
+    const observer = conference.observeNewMessages();
+
+    (async function () {
+      for await (const message of observer) {
+        if (message.author().id === conference.localUser().id()) continue;
 
         playNotificationSound();
-      }),
-    [conference]
-  );
+      }
+    })();
+
+    return observer.cancel;
+  }, [conference]);
 };

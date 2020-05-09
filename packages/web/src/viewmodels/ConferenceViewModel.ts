@@ -3,19 +3,19 @@ import { RemotePeer } from "../models/RemotePeer";
 import { RemoteUser } from "../models/RemoteUser";
 import { CurrentUser } from "../models/CurrentUser";
 import { Message } from "../models/Message";
+import { PushableAsyncIterator } from "../utils/PushableAsyncIterator";
 
 type OnLocalUserChangedListener = (localUser: CurrentUser) => void;
 type OnRemotePeerAddedListener = (newPeer: RemotePeer) => void;
 type OnRemotePeerRemovedListener = (oldPeer: RemotePeer) => void;
 type OnRemotePeersChangedListener = (peers: RemotePeer[]) => void;
-type OnMessageAddedListener = (message: Message) => void;
 
 export class ConferenceViewModel {
+  private _iteratorsMessageAdded: PushableAsyncIterator<Message>[] = [];
   private _onLocalUserChangedListeners: OnLocalUserChangedListener[] = [];
   private _onRemotePeerAddedListeners: OnRemotePeerAddedListener[] = [];
   private _onRemotePeerRemovedListeners: OnRemotePeerRemovedListener[] = [];
   private _onRemotePeersChangedListeners: OnRemotePeersChangedListener[] = [];
-  private _onMessageAddedListeners: OnMessageAddedListener[] = [];
 
   private constructor(private conference: Conference) {}
 
@@ -135,14 +135,13 @@ export class ConferenceViewModel {
     this._notifyMessageAdded(message);
   }
 
-  onMessageAdded(listener: OnMessageAddedListener) {
-    this._onMessageAddedListeners.push(listener);
+  observeNewMessages() {
+    const iterator = new PushableAsyncIterator<Message>();
+    this._iteratorsMessageAdded.push(iterator);
 
-    return () => {
-      this._onMessageAddedListeners = this._onMessageAddedListeners.filter(
-        (x) => x !== listener
-      );
-    };
+    return this._makeEventIterator(iterator, () =>
+      this._iteratorsMessageAdded.filter((x) => x !== iterator)
+    );
   }
 
   userById(userId: string) {
@@ -176,10 +175,31 @@ export class ConferenceViewModel {
   }
 
   private _notifyMessageAdded(message: Message) {
-    this._onMessageAddedListeners.forEach((listener) => listener(message));
+    this._iteratorsMessageAdded.forEach((iterator) =>
+      iterator.pushValue(message)
+    );
   }
 
   static create(conference: Conference) {
     return new ConferenceViewModel(conference);
+  }
+
+  private _makeEventIterator<T>(
+    iterator: PushableAsyncIterator<T>,
+    cleanUpFn: () => unknown
+  ) {
+    return {
+      [Symbol.asyncIterator](): AsyncIterableIterator<T> {
+        return this;
+      },
+      next(): Promise<IteratorResult<T, void>> {
+        return iterator.next();
+      },
+      cancel() {
+        console.log("CLEANING EVENT LISTENERS");
+        cleanUpFn();
+        iterator.return();
+      },
+    };
   }
 }
