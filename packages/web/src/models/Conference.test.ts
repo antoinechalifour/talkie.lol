@@ -68,6 +68,17 @@ const getTestRemotePeerWithRtcPeerconnection = (
     MockRtcDataChannel.create()
   );
 
+const getTestRemotePeerWithRemoteUserAndRtcPeerconnection = (
+  remoteUser: RemoteUser,
+  rtcPeerConnection: RTCPeerConnection
+) =>
+  MockRemotePeer.create(
+    remoteUser,
+    rtcPeerConnection,
+    MockMediaStream.create(),
+    MockRtcDataChannel.create()
+  );
+
 describe("Conference", () => {
   describe("name", () => {
     // Given
@@ -761,6 +772,74 @@ describe("Conference", () => {
         '{"fileId":"1589122070093","fileName":"file.txt","mimeType":"text/plain"}'
       );
     });
+  });
+
+  describe("requestFileDownload", () => {
+    let rtcPeerConnection1: RTCPeerConnection;
+    let rtcPeerConnection2: RTCPeerConnection;
+    let remotePeer1: RemotePeer;
+    let remotePeer2: RemotePeer;
+    let conference: Conference;
+
+    beforeEach(() => {
+      rtcPeerConnection1 = MockRtcPeerConnection.create();
+      rtcPeerConnection2 = MockRtcPeerConnection.create();
+
+      const remoteUser1 = RemoteUser.create("user-1", "John Doe");
+      const remoteUser2 = RemoteUser.create("user-2", "Jane Doe");
+
+      remotePeer1 = getTestRemotePeerWithRemoteUserAndRtcPeerconnection(
+        remoteUser1,
+        rtcPeerConnection1
+      );
+      remotePeer2 = getTestRemotePeerWithRemoteUserAndRtcPeerconnection(
+        remoteUser2,
+        rtcPeerConnection2
+      );
+
+      conference = getDefaultTestConference();
+      conference.addRemotePeer(remotePeer1);
+      conference.addRemotePeer(remotePeer2);
+    });
+
+    it("should open a data channel with the target peer to download the file", () => {
+      // Given
+      const peerId = remotePeer2.id();
+      const fileId = "file-id-1";
+
+      // When
+      conference.requestFileDownload(peerId, fileId);
+
+      // Then
+      expect(rtcPeerConnection1.createDataChannel).not.toHaveBeenCalled();
+      expect(rtcPeerConnection2.createDataChannel).toHaveBeenCalledTimes(1);
+      expect(rtcPeerConnection2.createDataChannel).toHaveBeenCalledWith(
+        "download/file-id-1"
+      );
+    });
+
+    it("should download the file", () => {
+      const rtcDataChannel = MockRtcDataChannel.create();
+      const events: any[] = [
+        {
+          type: "message",
+        },
+      ];
+
+      (rtcPeerConnection2.createDataChannel as jest.Mock).mockReturnValue(
+        rtcDataChannel
+      );
+
+      conference.requestFileDownload(remotePeer2.id(), "file-id-1");
+
+      // When
+      events.forEach((event) => rtcDataChannel.dispatchEvent(event));
+
+      // Then TODO
+      expect(true).toBe(false);
+    });
+
+    it.todo("should throw when the peer is not found");
   });
 
   describe("leave", () => {

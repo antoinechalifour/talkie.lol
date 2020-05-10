@@ -617,6 +617,32 @@ describe("ConferenceViewModel", () => {
     });
   });
 
+  describe("requestFileDownload", () => {
+    let conference: Conference;
+    let viewModel: ConferenceViewModel;
+    let mockRequestFileDownload: jest.SpyInstance;
+
+    beforeEach(() => {
+      conference = getDefaultTestConference();
+      viewModel = ConferenceViewModel.create(conference);
+
+      mockRequestFileDownload = jest.spyOn(conference, "requestFileDownload");
+    });
+
+    it("should request the file from the conference", () => {
+      // Given
+      const peerId = "peer-1";
+      const fileId = "file-1";
+
+      // When
+      viewModel.requestFileDownload(peerId, fileId);
+
+      // Then
+      expect(mockRequestFileDownload).toHaveBeenCalledTimes(1);
+      expect(mockRequestFileDownload).toHaveBeenCalledWith(peerId, fileId);
+    });
+  });
+
   describe("leave", () => {
     it("should leave the conference", () => {
       // Given

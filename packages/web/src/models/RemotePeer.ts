@@ -7,7 +7,8 @@ import { User } from "./User";
 import { Message } from "./Message";
 import { TextMessage } from "./TextMessage";
 import { ImageMessage } from "./ImageMessage";
-import { FilePreviewMessage } from "./FilePreviewMessage";
+import { FilePreview, FilePreviewMessage } from "./FilePreviewMessage";
+import { ChunkFileReader } from "../services/ChunkFileReader";
 
 const log = debug("app:RemotePeer");
 
@@ -16,6 +17,7 @@ type OfferCallback = (offer: RTCSessionDescriptionInit) => void;
 type ConnectedCallback = () => void;
 type DisconnectedCallback = () => void;
 type MessageCallback = (message: Message) => void;
+type GetFileCallback = (fileId: string) => File;
 
 interface RemotePeerOptions {
   rtcConfiguration: RTCConfiguration;
@@ -23,10 +25,12 @@ interface RemotePeerOptions {
   onNegociationNeeded: (offer: RTCSessionDescriptionInit) => void;
   onDisconnected: () => void;
   onMessage: MessageCallback;
+  getFile: (fileId: string) => File;
 }
 
 export class RemotePeer implements User {
   public isConnected: boolean;
+  private _availableFilesInfo: Set<FilePreview> = new Set();
 
   constructor(
     private _user: RemoteUser,
@@ -153,6 +157,37 @@ export class RemotePeer implements User {
     this._connection = null;
   }
 
+  requestFile(fileId: string) {
+    const filePreview = this._getFilePreviewById(fileId);
+    const fileDataChannel = this._connection.createDataChannel(
+      `download/${filePreview.fileId}`
+    );
+
+    console.log(filePreview);
+
+    // TODO: not tested
+    const buffer: ArrayBuffer[] = [];
+    let bufferSize = 0;
+    fileDataChannel.addEventListener("message", (e) => {
+      const chunk = e.data as ArrayBuffer;
+
+      buffer.push(chunk);
+      bufferSize += chunk.byteLength;
+
+      if (bufferSize >= filePreview.size) {
+        console.log("Downloading file...");
+        fileDataChannel.close();
+        const blob = new Blob(buffer);
+
+        const link = document.createElement("a");
+        link.download = filePreview.fileName;
+        link.href = URL.createObjectURL(blob);
+
+        link.click();
+      }
+    });
+  }
+
   static createOfferer(user: RemoteUser, options: RemotePeerOptions) {
     const connection = new RTCPeerConnection(options.rtcConfiguration);
     const mediaStream = new MediaStream();
@@ -163,6 +198,7 @@ export class RemotePeer implements User {
       ._onNegotiationNeeded(options.onNegociationNeeded)
       ._onDisconnected(options.onDisconnected)
       ._onMessage(options.onMessage)
+      ._onDownloadDataChannel(options.getFile)
       ._debugRtc()
       ._debugDataChannel();
   }
@@ -175,13 +211,9 @@ export class RemotePeer implements User {
       ._onIceCandidate(options.onIceCandidate)
       ._onNegotiationNeeded(options.onNegociationNeeded)
       ._onDisconnected(options.onDisconnected)
+      ._onChatDataChannel(options.onMessage)
+      ._onDownloadDataChannel(options.getFile)
       ._debugRtc();
-
-    connection.addEventListener("datachannel", (e) => {
-      log(`♻️ Data Channel | ${e.channel.label}`);
-      remotePeer._addDataChannel(e.channel);
-      remotePeer._onMessage(options.onMessage);
-    });
 
     return remotePeer;
   }
@@ -330,10 +362,44 @@ export class RemotePeer implements User {
         callback();
       }
     });
+
     this._connection.addEventListener("connectionstatechange", () => {
       if (this._connection.connectionState === "closed") {
         callback();
       }
+    });
+
+    return this;
+  }
+
+  private _onChatDataChannel(onMessage: MessageCallback) {
+    this._connection.addEventListener("datachannel", (e) => {
+      if (e.channel.label !== "chat") return;
+
+      log(`♻️ Data Channel | ${e.channel.label}`);
+      this._addDataChannel(e.channel);
+      this._onMessage(onMessage);
+    });
+
+    return this;
+  }
+
+  // TODO: not tested
+  private _onDownloadDataChannel(getFile: GetFileCallback) {
+    this._connection.addEventListener("datachannel", (e) => {
+      const channel = e.channel;
+
+      if (!channel.label.startsWith("download/")) return;
+
+      const [, fileId] = channel.label.split("/");
+      const file = getFile(fileId);
+      const chunkFileReader = new ChunkFileReader(file, 8000);
+
+      chunkFileReader.onChunk((chunk) => {
+        console.log("Sending chunk");
+        channel.send(chunk);
+      });
+      chunkFileReader.read();
     });
 
     return this;
@@ -348,12 +414,29 @@ export class RemotePeer implements User {
       id: this.id(),
       name: this.name(),
     };
-    const messageChunkBuilder = new MessageChunkBuilder(author, onMessage);
+
+    // TODO: extract callback to a method
+    const messageChunkBuilder = new MessageChunkBuilder(author, (message) => {
+      // TODO: not tested
+      if (message instanceof FilePreviewMessage) {
+        this._availableFilesInfo.add(message.preview());
+      }
+
+      onMessage(message);
+    });
 
     dataChannel.addEventListener("message", (e) =>
       messageChunkBuilder.read(e.data)
     );
 
     return this;
+  }
+
+  private _getFilePreviewById(fileId: string) {
+    for (const filePreview of Array.from(this._availableFilesInfo)) {
+      if (filePreview.fileId === fileId) return filePreview;
+    }
+
+    throw new Error(`File preview ${fileId} was not found`);
   }
 }

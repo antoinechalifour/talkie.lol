@@ -143,16 +143,33 @@ export class Conference {
         id: this.localUser().id(),
         name: this.localUser().name(),
       },
+      // TODO: should be in the factory method
       {
         fileId: file.lastModified.toString(),
         fileName: file.name,
         mimeType: file.type,
+        size: file.size,
       }
     );
 
     this._sendMessage(message);
 
     return message;
+  }
+
+  requestFileDownload(peerId: string, fileId: string) {
+    const remotePeer = this.allRemotePeers().find((x) => x.id() === peerId)!;
+
+    remotePeer.requestFile(fileId);
+  }
+
+  // TODO: not tested
+  fileById(fileId: string) {
+    for (const file of Array.from(this._files)) {
+      if (file.lastModified.toString() === fileId) return file;
+    }
+
+    throw new Error(`File ${fileId} not found`);
   }
 
   leave() {

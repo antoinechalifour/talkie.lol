@@ -5,6 +5,7 @@ export interface FilePreview {
   fileId: string;
   fileName: string;
   mimeType: string;
+  size: number;
 }
 
 export class FilePreviewMessage extends Message {

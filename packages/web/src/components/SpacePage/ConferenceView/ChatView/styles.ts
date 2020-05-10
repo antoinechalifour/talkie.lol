@@ -66,6 +66,10 @@ export const InputGroup = styled.div`
 
     background: var(--button-background);
     color: #fff;
+
+    &:focus {
+      outline: var(--outline-style);
+    }
   }
 
   input:disabled + button {
@@ -133,6 +137,10 @@ export const ReceivedTime = styled.div`
 export const FilePreview = styled.button`
   all: unset;
   cursor: pointer;
+
+  &:focus {
+    outline: var(--outline-style);
+  }
 
   > span {
     display: grid;

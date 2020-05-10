@@ -53,6 +53,7 @@ export const useRtcOfferReceivedHandler = (conference: ConferenceViewModel) => {
       },
       onDisconnected: () => conference.removeRemotePeer(remotePeer),
       onMessage: (message) => conference.addMessage(message),
+      getFile: (fileId) => conference.fileById(fileId),
     });
 
     conference.addRemotePeer(remotePeer);

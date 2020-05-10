@@ -422,6 +422,12 @@ describe("RemotePeer", () => {
         });
       });
     });
+
+    describe("sending requested files", () => {
+      it("should send the requested file", () => {
+        // Then
+      });
+    });
   });
 
   describe("answerer", () => {
@@ -436,7 +442,7 @@ describe("RemotePeer", () => {
         iceServers: [],
       };
 
-      rtcDataChannel = MockRtcDataChannel.create();
+      rtcDataChannel = MockRtcDataChannel.createChat();
       mediaStream = MockMediaStream.create();
       rtcPeerConnection = MockRtcPeerConnection.create();
 
@@ -466,7 +472,7 @@ describe("RemotePeer", () => {
     });
 
     describe("data channel handling", () => {
-      it("should set the data channel when received", () => {
+      it('should set the data channel when received with label "chat"', () => {
         // Given
         const spyAddEventListener = jest.spyOn(
           rtcDataChannel,
@@ -482,6 +488,26 @@ describe("RemotePeer", () => {
 
         // Then
         expect(spyAddEventListener).toHaveBeenCalled();
+      });
+
+      it('should not set the data channel when received with a label that is not "chat"', () => {
+        // Given
+        const spyAddEventListener = jest.spyOn(
+          rtcDataChannel,
+          "addEventListener"
+        );
+        const event: any = {
+          type: "datachannel",
+          channel: rtcDataChannel,
+        };
+        // @ts-ignore
+        rtcDataChannel.label = "download/file-1";
+
+        // When
+        rtcPeerConnection.dispatchEvent(event);
+
+        // Then
+        expect(spyAddEventListener).not.toHaveBeenCalled();
       });
     });
   });

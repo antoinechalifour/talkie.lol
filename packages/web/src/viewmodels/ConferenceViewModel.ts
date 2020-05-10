@@ -160,6 +160,15 @@ export class ConferenceViewModel {
     return message;
   }
 
+  requestFileDownload(peerId: string, fileId: string) {
+    this.conference.requestFileDownload(peerId, fileId);
+  }
+
+  // TODO: not tested
+  fileById(fileId: string) {
+    return this.conference.fileById(fileId);
+  }
+
   leave() {
     this.conference.leave();
   }
