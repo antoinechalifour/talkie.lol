@@ -13,6 +13,7 @@ import { RemotePeer } from "../models/RemotePeer";
 import { TextMessage } from "../models/TextMessage";
 import { ImageMessage } from "../models/ImageMessage";
 import { ConferenceViewModel } from "./ConferenceViewModel";
+import { FilePreviewMessage } from "../models/FilePreviewMessage";
 
 const getDefaultTestCurrentUser = () =>
   CurrentUser.create(
@@ -568,23 +569,51 @@ describe("ConferenceViewModel", () => {
   describe("makeFileAvailable", () => {
     let conference: Conference;
     let viewModel: ConferenceViewModel;
+    let message: FilePreviewMessage;
+    let mockMakeFileAvailable: jest.SpyInstance;
 
     beforeEach(() => {
       conference = getDefaultTestConference();
       viewModel = ConferenceViewModel.create(conference);
+      mockMakeFileAvailable = jest.spyOn(conference, "makeFileAvailable");
+      message = FilePreviewMessage.createFilePreviewMessage(
+        getDefaultTestAuthor(),
+        {
+          fileId: "file-1",
+          fileName: "file.txt",
+          mimeType: "text/plain",
+        }
+      );
+
+      mockMakeFileAvailable.mockReturnValue(message);
     });
 
     it("should make the file available in the conference", () => {
       // Given
-      const makeFileAvailableSpy = jest.spyOn(conference, "makeFileAvailable");
       const file = new File([], "file.txt");
 
       // When
       viewModel.makeFileAvailable(file);
 
       // Then
-      expect(makeFileAvailableSpy).toHaveBeenCalledTimes(1);
-      expect(makeFileAvailableSpy).toHaveBeenCalledWith(file);
+      expect(mockMakeFileAvailable).toHaveBeenCalledTimes(1);
+      expect(mockMakeFileAvailable).toHaveBeenCalledWith(file);
+    });
+
+    it("should notify subscribers to the MessageAdded event", () => {
+      // Given
+      const subscriber = jest.fn();
+      const unsubscribe = viewModel.onMessageAdded(subscriber);
+      const file = new File([], "file.txt");
+
+      // When
+      viewModel.makeFileAvailable(file);
+      unsubscribe();
+      viewModel.makeFileAvailable(file);
+
+      // Then
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      expect(subscriber).toHaveBeenCalledWith(message);
     });
   });
 

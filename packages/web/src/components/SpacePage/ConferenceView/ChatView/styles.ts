@@ -102,8 +102,8 @@ export const MessageContent = styled.div`
   grid-area: message;
   display: inline-block;
 
-  img,
-  p {
+  > img,
+  > p {
     display: inline-block;
     border-radius: 1rem;
     overflow: hidden;
@@ -112,11 +112,11 @@ export const MessageContent = styled.div`
     background: var(--chat-background);
   }
 
-  img {
+  > img {
     max-width: 100%;
   }
 
-  p {
+  > p {
     min-width: 100px;
     color: var(--color-darkgray);
     padding: 1rem 2rem;
@@ -129,3 +129,34 @@ export const ReceivedTime = styled.div`
   color: var(--color-text-light);
   opacity: 0.75;
 `;
+
+export const FilePreview = styled.button`
+  all: unset;
+  cursor: pointer;
+
+  > span {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 1rem;
+    align-items: center;
+    overflow: hidden;
+
+    background: #eee;
+    color: var(--color-darkgray);
+    border-left: 4px solid var(--color-red);
+    padding: 1rem;
+  }
+
+  > span p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`;
+
+export const tooltipStyle = {
+  background: "var(--color-black)",
+  color: "var(--color-white)",
+  padding: "1rem",
+  borderRadius: "0.5rem",
+};

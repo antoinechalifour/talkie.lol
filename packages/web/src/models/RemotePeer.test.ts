@@ -10,6 +10,7 @@ import { RemotePeer } from "./RemotePeer";
 import { RemoteUser } from "./RemoteUser";
 import { TextMessage } from "./TextMessage";
 import { ImageMessage } from "./ImageMessage";
+import { FilePreviewMessage } from "./FilePreviewMessage";
 
 const getDefaultTestUser = () => RemoteUser.create("user-1", "John Doe");
 const getTestRemotePeer = (remoteUser: RemoteUser) =>
@@ -375,6 +376,18 @@ describe("RemotePeer", () => {
             type: "message",
             data: "text-chunk-2",
           },
+          {
+            type: "message",
+            data: "start:filepreview:2",
+          },
+          {
+            type: "message",
+            data: '{"fileId": "123456",',
+          },
+          {
+            type: "message",
+            data: '"fileName": "file.txt", "mimeType": "text/plain"}',
+          },
         ];
 
         // When
@@ -388,8 +401,9 @@ describe("RemotePeer", () => {
         const message1 = onMessage.mock.calls[0][0] as TextMessage;
         const message2 = onMessage.mock.calls[1][0] as ImageMessage;
         const message3 = onMessage.mock.calls[2][0] as TextMessage;
+        const message4 = onMessage.mock.calls[3][0] as FilePreviewMessage;
 
-        expect(onMessage).toHaveBeenCalledTimes(3);
+        expect(onMessage).toHaveBeenCalledTimes(4);
 
         expect(message1.author()).toEqual(author);
         expect(message1.content()).toEqual("Hello world");
@@ -399,6 +413,13 @@ describe("RemotePeer", () => {
 
         expect(message3.author()).toEqual(author);
         expect(message3.content()).toEqual("text-chunk-1/text-chunk-2");
+
+        expect(message4.author()).toEqual(author);
+        expect(message4.preview()).toEqual({
+          fileId: "123456",
+          fileName: "file.txt",
+          mimeType: "text/plain",
+        });
       });
     });
   });

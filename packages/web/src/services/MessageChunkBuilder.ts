@@ -1,6 +1,7 @@
 import { Author, Message } from "../models/Message";
 import { ImageMessage } from "../models/ImageMessage";
 import { TextMessage } from "../models/TextMessage";
+import { FilePreviewMessage, FilePreview } from "../models/FilePreviewMessage";
 
 type OnMessage = (message: Message) => void;
 
@@ -52,14 +53,42 @@ export class MessageChunkBuilder {
     this.messageBuilder += chunk;
     this.numberOfIncomingChunk -= 1;
 
-    if (this.numberOfIncomingChunk === 0) {
-      const message =
-        this.currentMessageType === "image"
-          ? ImageMessage.createImageMessage(this.author, this.messageBuilder)
-          : TextMessage.createTextMessage(this.author, this.messageBuilder);
+    if (this.numberOfIncomingChunk !== 0) return;
 
-      this.onMessage(message);
-      this._reset();
+    this._buildMessage();
+  }
+
+  private _buildMessage() {
+    let message: Message;
+
+    switch (this.currentMessageType) {
+      case "image":
+        message = ImageMessage.createImageMessage(
+          this.author,
+          this.messageBuilder
+        );
+        break;
+
+      case "text":
+        message = TextMessage.createTextMessage(
+          this.author,
+          this.messageBuilder
+        );
+        break;
+
+      case "filepreview":
+        const preview: FilePreview = JSON.parse(this.messageBuilder);
+        message = FilePreviewMessage.createFilePreviewMessage(
+          this.author,
+          preview
+        );
+        break;
+
+      default:
+        throw new Error(`Invalid message type: ${this.currentMessageType}`);
     }
+
+    this.onMessage(message);
+    this._reset();
   }
 }

@@ -1,7 +1,7 @@
 import { Author, Message } from "./Message";
 import { v4 as uuid } from "uuid";
 
-export interface Preview {
+export interface FilePreview {
   fileId: string;
   fileName: string;
   mimeType: string;
@@ -12,7 +12,7 @@ export class FilePreviewMessage extends Message {
     id: string,
     author: Author,
     receivedAt: Date,
-    private _preview: Preview
+    private _preview: FilePreview
   ) {
     super(id, author, receivedAt);
   }
@@ -21,16 +21,7 @@ export class FilePreviewMessage extends Message {
     return this._preview;
   }
 
-  static createFilePreviewMessage(
-    author: Author,
-    fileId: string,
-    fileName: string,
-    mimeType: string
-  ) {
-    return new FilePreviewMessage(uuid(), author, new Date(), {
-      fileId,
-      fileName,
-      mimeType,
-    });
+  static createFilePreviewMessage(author: Author, preview: FilePreview) {
+    return new FilePreviewMessage(uuid(), author, new Date(), preview);
   }
 }

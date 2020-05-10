@@ -153,7 +153,11 @@ export class ConferenceViewModel {
   }
 
   makeFileAvailable(file: File) {
-    this.conference.makeFileAvailable(file);
+    const message = this.conference.makeFileAvailable(file);
+
+    this._notifyMessageAdded(message);
+
+    return message;
   }
 
   leave() {

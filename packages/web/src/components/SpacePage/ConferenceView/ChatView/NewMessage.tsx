@@ -36,17 +36,20 @@ export const NewMessage: React.FC = () => {
     return false;
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
 
-    const files = e.dataTransfer.files;
+      const files = e.dataTransfer.files;
 
-    for (const file of Array.from(files)) {
-      conference.makeFileAvailable(file);
-    }
+      for (const file of Array.from(files)) {
+        conference.makeFileAvailable(file);
+      }
 
-    return false;
-  }, []);
+      return false;
+    },
+    [conference]
+  );
 
   return (
     <form onSubmit={handleSubmit}>

@@ -1,16 +1,22 @@
 import React from "react";
 import Linkify from "linkifyjs/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFile } from "@fortawesome/free-solid-svg-icons";
+import Tooltip from "@reach/tooltip";
 
 import { Message } from "../../../../models/Message";
+import { ImageMessage } from "../../../../models/ImageMessage";
+import { TextMessage } from "../../../../models/TextMessage";
+import { FilePreviewMessage } from "../../../../models/FilePreviewMessage";
 import {
   AuthorName,
   MessageContent,
   MessageLayout,
   ReceivedTime,
+  FilePreview,
+  tooltipStyle,
 } from "./styles";
 import { messageAnimation } from "./animations";
-import { ImageMessage } from "../../../../models/ImageMessage";
-import { TextMessage } from "../../../../models/TextMessage";
 
 export interface ChatMessageProps {
   message: Message;
@@ -28,6 +34,18 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       <Linkify tagName="p" options={{ target: "_blank" }}>
         {message.content()}
       </Linkify>
+    );
+  } else if (message instanceof FilePreviewMessage) {
+    const preview = message.preview();
+    content = (
+      <FilePreview>
+        <Tooltip label="Download file" style={tooltipStyle}>
+          <span>
+            <FontAwesomeIcon icon={faFile} />
+            <p>{preview.fileName}</p>
+          </span>
+        </Tooltip>
+      </FilePreview>
     );
   } else {
     throw new Error("Invalid message type");

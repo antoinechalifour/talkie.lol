@@ -143,12 +143,16 @@ export class Conference {
         id: this.localUser().id(),
         name: this.localUser().name(),
       },
-      file.lastModified.toString(),
-      file.name,
-      file.type
+      {
+        fileId: file.lastModified.toString(),
+        fileName: file.name,
+        mimeType: file.type,
+      }
     );
 
     this._sendMessage(message);
+
+    return message;
   }
 
   leave() {

@@ -722,6 +722,22 @@ describe("Conference", () => {
       conference.addRemotePeer(remotePeer);
     });
 
+    it("should return a file preview message", () => {
+      // When
+      const message = conference.makeFileAvailable(file);
+
+      // Then
+      expect(message.author()).toEqual({
+        id: conference.localUser().id(),
+        name: conference.localUser().name(),
+      });
+      expect(message.preview()).toEqual({
+        fileId: "1589122070093",
+        fileName: "file.txt",
+        mimeType: "text/plain",
+      });
+    });
+
     it("should add the file to the conference", () => {
       // When
       conference.makeFileAvailable(file);
