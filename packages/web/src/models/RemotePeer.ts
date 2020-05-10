@@ -140,7 +140,7 @@ export class RemotePeer implements User {
 
     return new RemotePeer(user, connection, mediaStream, dataChannel)
       ._onIceCandidate(options.onIceCandidate)
-      ._onNegociationNeeded(options.onNegociationNeeded)
+      ._onNegotiationNeeded(options.onNegociationNeeded)
       ._onDisconnected(options.onDisconnected)
       ._onMessage(options.onMessage)
       ._debugRtc()
@@ -153,7 +153,7 @@ export class RemotePeer implements User {
 
     const remotePeer = new RemotePeer(user, connection, mediaStream, null)
       ._onIceCandidate(options.onIceCandidate)
-      ._onNegociationNeeded(options.onNegociationNeeded)
+      ._onNegotiationNeeded(options.onNegociationNeeded)
       ._onDisconnected(options.onDisconnected)
       ._debugRtc();
 
@@ -166,6 +166,7 @@ export class RemotePeer implements User {
     return remotePeer;
   }
 
+  /* istanbul ignore next */
   private _debugRtc() {
     this._connection.addEventListener("icecandidateerror", (e) => {
       log(
@@ -213,6 +214,7 @@ export class RemotePeer implements User {
     return this;
   }
 
+  /* istanbul ignore next */
   private _debugDataChannel() {
     if (!this._dataChannel) return this;
 
@@ -278,7 +280,7 @@ export class RemotePeer implements User {
     return this;
   }
 
-  private _onNegociationNeeded(callback: OfferCallback) {
+  private _onNegotiationNeeded(callback: OfferCallback) {
     this._connection.addEventListener("negotiationneeded", async () => {
       const offer = await this._connection.createOffer();
 
