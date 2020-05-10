@@ -1,8 +1,10 @@
 import debug from "debug";
 
+import { splitStringToChunks } from "../utils/chunks";
 import { RemoteUser } from "./RemoteUser";
 import { User } from "./User";
 import { Message } from "./Message";
+import { MessageChunkBuilder } from "../services/MessageChunkBuilder";
 
 const log = debug("app:RemotePeer");
 
@@ -92,12 +94,13 @@ export class RemotePeer implements User {
 
     if (!dataChannel) return;
 
-    const content = JSON.stringify({
-      type: message.type(),
-      content: message.content(),
-    });
+    const chunks = splitStringToChunks(message.content(), 8000);
+    const numberOfChunks = chunks.length;
+    const header = `start:${message.type()}:${numberOfChunks}`;
 
-    dataChannel.send(content);
+    dataChannel.send(header);
+
+    chunks.forEach((chunk) => dataChannel.send(chunk));
   }
 
   // -------------------------------------------------- //
@@ -138,7 +141,7 @@ export class RemotePeer implements User {
 
     return new RemotePeer(user, connection, mediaStream, dataChannel)
       ._onIceCandidate(options.onIceCandidate)
-      ._onNegociationNeeded(options.onNegociationNeeded)
+      ._onNegotiationNeeded(options.onNegociationNeeded)
       ._onDisconnected(options.onDisconnected)
       ._onMessage(options.onMessage)
       ._debugRtc()
@@ -151,7 +154,7 @@ export class RemotePeer implements User {
 
     const remotePeer = new RemotePeer(user, connection, mediaStream, null)
       ._onIceCandidate(options.onIceCandidate)
-      ._onNegociationNeeded(options.onNegociationNeeded)
+      ._onNegotiationNeeded(options.onNegociationNeeded)
       ._onDisconnected(options.onDisconnected)
       ._debugRtc();
 
@@ -164,6 +167,7 @@ export class RemotePeer implements User {
     return remotePeer;
   }
 
+  /* istanbul ignore next */
   private _debugRtc() {
     this._connection.addEventListener("icecandidateerror", (e) => {
       log(
@@ -211,6 +215,7 @@ export class RemotePeer implements User {
     return this;
   }
 
+  /* istanbul ignore next */
   private _debugDataChannel() {
     if (!this._dataChannel) return this;
 
@@ -276,7 +281,7 @@ export class RemotePeer implements User {
     return this;
   }
 
-  private _onNegociationNeeded(callback: OfferCallback) {
+  private _onNegotiationNeeded(callback: OfferCallback) {
     this._connection.addEventListener("negotiationneeded", async () => {
       const offer = await this._connection.createOffer();
 
@@ -320,20 +325,15 @@ export class RemotePeer implements User {
 
     if (!dataChannel) return this;
 
-    dataChannel.addEventListener("message", (e) => {
-      const { type, content } = JSON.parse(e.data);
-      const author = {
-        id: this.id(),
-        name: this.name(),
-      };
+    const author = {
+      id: this.id(),
+      name: this.name(),
+    };
+    const messageChunkBuilder = new MessageChunkBuilder(author, onMessage);
 
-      const message =
-        type === "image"
-          ? Message.createImageMessage(author, content)
-          : Message.createTextMessage(author, content);
-
-      onMessage(message);
-    });
+    dataChannel.addEventListener("message", (e) =>
+      messageChunkBuilder.read(e.data)
+    );
 
     return this;
   }

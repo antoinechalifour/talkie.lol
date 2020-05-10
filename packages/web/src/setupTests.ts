@@ -4,28 +4,7 @@
 // learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom/extend-expect";
 
-// @ts-ignore
-window.MediaStream = class extends EventTarget {};
-// @ts-ignore
-window.MediaStreamTrack = class extends EventTarget {};
-// @ts-ignore
-window.RTCPeerConnection = class extends EventTarget {};
-// @ts-ignore
-window.RTCDataChannel = class extends EventTarget {};
-// @ts-ignore
-window.RTCRtpSender = class extends EventTarget {};
-
-// @ts-ignore
-navigator.mediaDevices = new (class extends EventTarget {
-  ondevicechange = null;
-  enumerateDevices = jest.fn();
-  getSupportedConstraints = jest.fn();
-  getUserMedia = jest.fn();
-  getDisplayMedia = jest.fn();
-})();
-
-// @ts-ignore
-navigator.connection = new (class extends EventTarget {
+class EventTarget {
   private eventMap = new Map<string, EventListener[]>();
 
   dispatchEvent(event: Event): boolean {
@@ -52,7 +31,40 @@ navigator.connection = new (class extends EventTarget {
       listeners.filter((x) => x !== callback)
     );
   }
+}
+
+window.EventTarget = EventTarget;
+
+// @ts-ignore
+window.MediaStream = class extends EventTarget {};
+// @ts-ignore
+window.MediaStreamTrack = class extends EventTarget {};
+// @ts-ignore
+window.MediaStreamTrackEvent = class extends Event {
+  private track: MediaStreamTrack;
+  constructor(type: string, dict: any) {
+    super(type, dict);
+    this.track = dict.track;
+  }
+};
+// @ts-ignore
+window.RTCPeerConnection = class extends EventTarget {};
+// @ts-ignore
+window.RTCDataChannel = class extends EventTarget {};
+// @ts-ignore
+window.RTCRtpSender = class extends EventTarget {};
+
+// @ts-ignore
+navigator.mediaDevices = new (class extends EventTarget {
+  ondevicechange = null;
+  enumerateDevices = jest.fn();
+  getSupportedConstraints = jest.fn();
+  getUserMedia = jest.fn();
+  getDisplayMedia = jest.fn();
 })();
+
+// @ts-ignore
+navigator.connection = new (class extends EventTarget {})();
 
 // @ts-ignore
 window.MediaQueryList = class extends EventTarget {};
