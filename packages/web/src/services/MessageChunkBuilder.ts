@@ -1,4 +1,6 @@
 import { Author, Message } from "../models/Message";
+import { ImageMessage } from "../models/ImageMessage";
+import { TextMessage } from "../models/TextMessage";
 
 type OnMessage = (message: Message) => void;
 
@@ -53,8 +55,8 @@ export class MessageChunkBuilder {
     if (this.numberOfIncomingChunk === 0) {
       const message =
         this.currentMessageType === "image"
-          ? Message.createImageMessage(this.author, this.messageBuilder)
-          : Message.createTextMessage(this.author, this.messageBuilder);
+          ? ImageMessage.createImageMessage(this.author, this.messageBuilder)
+          : TextMessage.createTextMessage(this.author, this.messageBuilder);
 
       this.onMessage(message);
       this._reset();

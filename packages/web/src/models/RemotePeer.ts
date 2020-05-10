@@ -1,10 +1,12 @@
 import debug from "debug";
 
 import { splitStringToChunks } from "../utils/chunks";
+import { MessageChunkBuilder } from "../services/MessageChunkBuilder";
 import { RemoteUser } from "./RemoteUser";
 import { User } from "./User";
 import { Message } from "./Message";
-import { MessageChunkBuilder } from "../services/MessageChunkBuilder";
+import { TextMessage } from "./TextMessage";
+import { ImageMessage } from "./ImageMessage";
 
 const log = debug("app:RemotePeer");
 
@@ -94,9 +96,22 @@ export class RemotePeer implements User {
 
     if (!dataChannel) return;
 
-    const chunks = splitStringToChunks(message.content(), 8000);
+    let type: string;
+    let content: string;
+
+    if (message instanceof TextMessage) {
+      type = "text";
+      content = message.content();
+    } else if (message instanceof ImageMessage) {
+      type = "image";
+      content = message.source();
+    } else {
+      throw new Error("Invalid message type");
+    }
+
+    const chunks = splitStringToChunks(content, 8000);
     const numberOfChunks = chunks.length;
-    const header = `start:${message.type()}:${numberOfChunks}`;
+    const header = `start:${type}:${numberOfChunks}`;
 
     dataChannel.send(header);
 

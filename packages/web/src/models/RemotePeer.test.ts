@@ -2,12 +2,14 @@ import {
   MockMediaStream,
   MockMediaStreamTrack,
 } from "../test-utils/mediaStream";
-import { RemotePeer } from "./RemotePeer";
-import { RemoteUser } from "./RemoteUser";
 import { MockRtcPeerConnection } from "../test-utils/rtcPeerConnection";
 import { MockRtcDataChannel } from "../test-utils/rtcDataChannel";
 import { flushPromises } from "../test-utils/flushPromises";
 import { MockRemotePeer } from "../test-utils/remotePeer";
+import { RemotePeer } from "./RemotePeer";
+import { RemoteUser } from "./RemoteUser";
+import { TextMessage } from "./TextMessage";
+import { ImageMessage } from "./ImageMessage";
 
 const getDefaultTestUser = () => RemoteUser.create("user-1", "John Doe");
 const getTestRemotePeer = (remoteUser: RemoteUser) =>
@@ -383,22 +385,19 @@ describe("RemotePeer", () => {
           id: remotePeer.id(),
           name: remotePeer.name(),
         };
-        const message1 = onMessage.mock.calls[0][0];
-        const message2 = onMessage.mock.calls[1][0];
-        const message3 = onMessage.mock.calls[2][0];
+        const message1 = onMessage.mock.calls[0][0] as TextMessage;
+        const message2 = onMessage.mock.calls[1][0] as ImageMessage;
+        const message3 = onMessage.mock.calls[2][0] as TextMessage;
 
         expect(onMessage).toHaveBeenCalledTimes(3);
 
         expect(message1.author()).toEqual(author);
-        expect(message1.type()).toEqual("text");
         expect(message1.content()).toEqual("Hello world");
 
         expect(message2.author()).toEqual(author);
-        expect(message2.type()).toEqual("image");
-        expect(message2.content()).toEqual("img-chunk-1/img-chunk-2");
+        expect(message2.source()).toEqual("img-chunk-1/img-chunk-2");
 
         expect(message3.author()).toEqual(author);
-        expect(message3.type()).toEqual("text");
         expect(message3.content()).toEqual("text-chunk-1/text-chunk-2");
       });
     });

@@ -9,19 +9,29 @@ import {
   ReceivedTime,
 } from "./styles";
 import { messageAnimation } from "./animations";
+import { ImageMessage } from "../../../../models/ImageMessage";
+import { TextMessage } from "../../../../models/TextMessage";
 
 export interface ChatMessageProps {
   message: Message;
 }
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
-  const content = message.isImage() ? (
-    <img src={message.content()} alt={`Send from ${message.author()}`} />
-  ) : (
-    <Linkify tagName="p" options={{ target: "_blank" }}>
-      {message.content()}
-    </Linkify>
-  );
+  let content: JSX.Element;
+
+  if (message instanceof ImageMessage) {
+    content = (
+      <img src={message.source()} alt={`Send from ${message.author()}`} />
+    );
+  } else if (message instanceof TextMessage) {
+    content = (
+      <Linkify tagName="p" options={{ target: "_blank" }}>
+        {message.content()}
+      </Linkify>
+    );
+  } else {
+    throw new Error("Invalid message type");
+  }
 
   return (
     <MessageLayout

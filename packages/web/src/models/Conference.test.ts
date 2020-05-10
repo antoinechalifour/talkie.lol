@@ -6,12 +6,14 @@ import {
 import { MockRemotePeer } from "../test-utils/remotePeer";
 import { MockRtcPeerConnection } from "../test-utils/rtcPeerConnection";
 import { MockRtcDataChannel } from "../test-utils/rtcDataChannel";
+import { MockRTCRtpSender } from "../test-utils/rtcRtpSender";
 
 import { Conference } from "./Conference";
 import { CurrentUser } from "./CurrentUser";
 import { RemoteUser } from "./RemoteUser";
-import { Author, Message } from "./Message";
-import { MockRTCRtpSender } from "../test-utils/rtcRtpSender";
+import { Author } from "./Message";
+import { ImageMessage } from "./ImageMessage";
+import { TextMessage } from "./TextMessage";
 
 const getDefaultTestCurrentUser = () => {
   const mediaStream = MockMediaStream.create();
@@ -540,12 +542,14 @@ describe("Conference", () => {
       const messages = conference.messages();
 
       expect(messages.length).toBe(1);
-      expect(messages[0].type()).toEqual("text");
-      expect(messages[0].author()).toEqual({
+
+      const newMessage = messages[0] as TextMessage;
+
+      expect(newMessage.author()).toEqual({
         id: localUser.id(),
         name: localUser.name(),
       });
-      expect(messages[0].content()).toEqual(message);
+      expect(newMessage.content()).toEqual(message);
     });
 
     it("should send the message to all the peers", () => {
@@ -634,12 +638,13 @@ describe("Conference", () => {
       const messages = conference.messages();
 
       expect(messages.length).toBe(1);
-      expect(messages[0].type()).toEqual("image");
-      expect(messages[0].author()).toEqual({
+
+      const newMessage = messages[0] as ImageMessage;
+      expect(newMessage.author()).toEqual({
         id: localUser.id(),
         name: localUser.name(),
       });
-      expect(messages[0].content()).toEqual(message);
+      expect(newMessage.source()).toEqual(message);
     });
 
     it("should send the message to all the peers", () => {
@@ -688,8 +693,8 @@ describe("Conference", () => {
         name: "Jane Doe",
         id: "user-1",
       };
-      const message1 = Message.createTextMessage(author, "Hey there");
-      const message2 = Message.createTextMessage(author, "What's up?");
+      const message1 = TextMessage.createTextMessage(author, "Hey there");
+      const message2 = TextMessage.createTextMessage(author, "What's up?");
       const conference = getDefaultTestConference();
 
       // When

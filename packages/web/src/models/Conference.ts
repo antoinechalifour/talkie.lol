@@ -4,6 +4,8 @@ import { RemotePeer } from "./RemotePeer";
 import { CurrentUser } from "./CurrentUser";
 import { RemoteUser } from "./RemoteUser";
 import { Message } from "./Message";
+import { TextMessage } from "./TextMessage";
+import { ImageMessage } from "./ImageMessage";
 
 const log = debug("app:Conference");
 
@@ -96,7 +98,7 @@ export class Conference {
   }
 
   sendMessage(messageContent: string) {
-    const message = Message.createTextMessage(
+    const message = TextMessage.createTextMessage(
       {
         id: this.localUser().id(),
         name: this.localUser().name(),
@@ -110,7 +112,7 @@ export class Conference {
   }
 
   sendImage(image: string) {
-    const message = Message.createImageMessage(
+    const message = ImageMessage.createImageMessage(
       {
         id: this.localUser().id(),
         name: this.localUser().name(),

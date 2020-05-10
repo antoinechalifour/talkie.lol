@@ -10,6 +10,8 @@ import { CurrentUser } from "../models/CurrentUser";
 import { Message } from "../models/Message";
 import { RemoteUser } from "../models/RemoteUser";
 import { RemotePeer } from "../models/RemotePeer";
+import { TextMessage } from "../models/TextMessage";
+import { ImageMessage } from "../models/ImageMessage";
 import { ConferenceViewModel } from "./ConferenceViewModel";
 
 const getDefaultTestCurrentUser = () =>
@@ -72,7 +74,10 @@ describe("ConferenceViewModel", () => {
       const conference = getDefaultTestConference();
       const viewModel = ConferenceViewModel.create(conference);
       conference.addMessage(
-        Message.createTextMessage(getDefaultTestAuthor(), "message 1 content")
+        TextMessage.createTextMessage(
+          getDefaultTestAuthor(),
+          "message 1 content"
+        )
       );
 
       // When
@@ -391,7 +396,7 @@ describe("ConferenceViewModel", () => {
     beforeEach(() => {
       conference = getDefaultTestConference();
       viewModel = ConferenceViewModel.create(conference);
-      message = Message.createTextMessage(
+      message = TextMessage.createTextMessage(
         getDefaultTestAuthor(),
         "hello world"
       );
@@ -445,7 +450,7 @@ describe("ConferenceViewModel", () => {
     beforeEach(() => {
       conference = getDefaultTestConference();
       viewModel = ConferenceViewModel.create(conference);
-      message = Message.createImageMessage(
+      message = ImageMessage.createImageMessage(
         getDefaultTestAuthor(),
         "data:image/png;base64,iVBORw0KGgoA"
       );
@@ -502,7 +507,7 @@ describe("ConferenceViewModel", () => {
 
     it("should add the message to the conference", () => {
       // Given
-      const message = Message.createTextMessage(
+      const message = TextMessage.createTextMessage(
         getDefaultTestAuthor(),
         "Hello world"
       );
@@ -516,11 +521,11 @@ describe("ConferenceViewModel", () => {
 
     it("should notify subscribers to the MessageAdded event", () => {
       // Given
-      const message1 = Message.createTextMessage(
+      const message1 = TextMessage.createTextMessage(
         getDefaultTestAuthor(),
         "Hello world"
       );
-      const message2 = Message.createTextMessage(
+      const message2 = TextMessage.createTextMessage(
         getDefaultTestAuthor(),
         "What's up?"
       );

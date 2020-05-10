@@ -10,7 +10,7 @@ export const NewMessage: React.FC = () => {
   const conference = useConference();
   const [message, setMessage] = useState("");
 
-  const onPaste = useCallback(
+  const handlePaste = useCallback(
     async (e: React.ClipboardEvent<HTMLInputElement>) => {
       const image = await getImageFromClipboard(e.clipboardData.items);
 
@@ -21,7 +21,7 @@ export const NewMessage: React.FC = () => {
     [conference]
   );
 
-  const onSubmit = useCallback(
+  const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
 
@@ -31,15 +31,33 @@ export const NewMessage: React.FC = () => {
     [conference, message]
   );
 
+  const handleDrag = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    return false;
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+
+    const files = e.dataTransfer.files;
+    console.log(files);
+
+    return false;
+  }, []);
+
   return (
-    <form onSubmit={onSubmit}>
-      <InputGroup>
+    <form onSubmit={handleSubmit}>
+      <InputGroup
+        onDragEnter={handleDrag}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
+      >
         <input
           type="text"
           placeholder="Type something..."
           aria-label="Type a message"
           value={message}
-          onPaste={onPaste}
+          onPaste={handlePaste}
           onChange={(e) => setMessage(e.target.value)}
         />
 
