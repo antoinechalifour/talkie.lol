@@ -1,5 +1,6 @@
 import debug from "debug";
 
+import { splitStringToChunks } from "../utils/chunks";
 import { RemoteUser } from "./RemoteUser";
 import { User } from "./User";
 import { Message } from "./Message";
@@ -92,12 +93,13 @@ export class RemotePeer implements User {
 
     if (!dataChannel) return;
 
-    const content = JSON.stringify({
-      type: message.type(),
-      content: message.content(),
-    });
+    const chunks = splitStringToChunks(message.content(), 8000);
+    const numberOfChunks = chunks.length;
+    const header = `start:${message.type()}:${numberOfChunks}`;
 
-    dataChannel.send(content);
+    dataChannel.send(header);
+
+    chunks.forEach((chunk) => dataChannel.send(chunk));
   }
 
   // -------------------------------------------------- //
@@ -320,19 +322,41 @@ export class RemotePeer implements User {
 
     if (!dataChannel) return this;
 
+    let state = "idle";
+    let messageInChunks = "";
+    let currentMessageType: string | null = null;
+    let numberOfIncomingChunk: number | null = null;
+
     dataChannel.addEventListener("message", (e) => {
-      const { type, content } = JSON.parse(e.data);
-      const author = {
-        id: this.id(),
-        name: this.name(),
-      };
+      if (state === "idle") {
+        // Then handle header
+        [, currentMessageType, numberOfIncomingChunk] = e.data.split(":");
+        state = "reading";
+      } else if (numberOfIncomingChunk !== null && numberOfIncomingChunk > 0) {
+        // Then handle chunk
+        messageInChunks += e.data;
+        numberOfIncomingChunk -= 1;
 
-      const message =
-        type === "image"
-          ? Message.createImageMessage(author, content)
-          : Message.createTextMessage(author, content);
+        if (numberOfIncomingChunk === 0) {
+          // Build the message
+          const author = {
+            id: this.id(),
+            name: this.name(),
+          };
 
-      onMessage(message);
+          const message =
+            currentMessageType === "image"
+              ? Message.createImageMessage(author, messageInChunks)
+              : Message.createTextMessage(author, messageInChunks);
+
+          onMessage(message);
+
+          state = "idle";
+          messageInChunks = "";
+          currentMessageType = null;
+          numberOfIncomingChunk = null;
+        }
+      }
     });
 
     return this;
