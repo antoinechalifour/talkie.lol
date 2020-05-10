@@ -6,12 +6,14 @@ import { RemoteUser } from "./RemoteUser";
 import { Message } from "./Message";
 import { TextMessage } from "./TextMessage";
 import { ImageMessage } from "./ImageMessage";
+import { FilePreviewMessage } from "./FilePreviewMessage";
 
 const log = debug("app:Conference");
 
 export class Conference {
   private _remotePeers: Set<RemotePeer> = new Set();
   private _messages: Message[] = [];
+  private _files: Set<File> = new Set();
 
   private constructor(
     private _name: string,
@@ -127,6 +129,26 @@ export class Conference {
 
   addMessage(message: Message) {
     this._messages.push(message);
+  }
+
+  files() {
+    return Array.from(this._files);
+  }
+
+  makeFileAvailable(file: File) {
+    this._files.add(file);
+
+    const message = FilePreviewMessage.createFilePreviewMessage(
+      {
+        id: this.localUser().id(),
+        name: this.localUser().name(),
+      },
+      file.lastModified.toString(),
+      file.name,
+      file.type
+    );
+
+    this._sendMessage(message);
   }
 
   leave() {

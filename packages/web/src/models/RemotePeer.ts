@@ -7,6 +7,7 @@ import { User } from "./User";
 import { Message } from "./Message";
 import { TextMessage } from "./TextMessage";
 import { ImageMessage } from "./ImageMessage";
+import { FilePreviewMessage } from "./FilePreviewMessage";
 
 const log = debug("app:RemotePeer");
 
@@ -105,6 +106,9 @@ export class RemotePeer implements User {
     } else if (message instanceof ImageMessage) {
       type = "image";
       content = message.source();
+    } else if (message instanceof FilePreviewMessage) {
+      type = "filepreview";
+      content = JSON.stringify(message.preview());
     } else {
       throw new Error("Invalid message type");
     }

@@ -152,6 +152,10 @@ export class ConferenceViewModel {
     return this.conference.userById(userId);
   }
 
+  makeFileAvailable(file: File) {
+    this.conference.makeFileAvailable(file);
+  }
+
   leave() {
     this.conference.leave();
   }

@@ -40,7 +40,10 @@ export const NewMessage: React.FC = () => {
     e.preventDefault();
 
     const files = e.dataTransfer.files;
-    console.log(files);
+
+    for (const file of Array.from(files)) {
+      conference.makeFileAvailable(file);
+    }
 
     return false;
   }, []);

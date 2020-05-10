@@ -14,6 +14,7 @@ import { RemoteUser } from "./RemoteUser";
 import { Author } from "./Message";
 import { ImageMessage } from "./ImageMessage";
 import { TextMessage } from "./TextMessage";
+import { RemotePeer } from "./RemotePeer";
 
 const getDefaultTestCurrentUser = () => {
   const mediaStream = MockMediaStream.create();
@@ -703,6 +704,46 @@ describe("Conference", () => {
 
       // Then
       expect(conference.messages()).toEqual([message1, message2]);
+    });
+  });
+
+  describe("makeFileAvailable", () => {
+    let conference: Conference;
+    let remotePeer: RemotePeer;
+    let file: File;
+
+    beforeEach(() => {
+      file = new File([], "file.txt", {
+        lastModified: 1589122070093,
+        type: "text/plain",
+      });
+      conference = getDefaultTestConference();
+      remotePeer = getTestRemotePeer(RemoteUser.create("user-1", "John Doe"));
+      conference.addRemotePeer(remotePeer);
+    });
+
+    it("should add the file to the conference", () => {
+      // When
+      conference.makeFileAvailable(file);
+
+      // Then
+      expect(conference.files()).toEqual([file]);
+    });
+
+    it("should send a file preview message to all the peers", () => {
+      // When
+      conference.makeFileAvailable(file);
+
+      // Then
+      expect(remotePeer.dataChannel()!.send).toHaveBeenCalledTimes(2);
+      expect(remotePeer.dataChannel()!.send).toHaveBeenNthCalledWith(
+        1,
+        "start:filepreview:1"
+      );
+      expect(remotePeer.dataChannel()!.send).toHaveBeenNthCalledWith(
+        2,
+        '{"fileId":"1589122070093","fileName":"file.txt","mimeType":"text/plain"}'
+      );
     });
   });
 

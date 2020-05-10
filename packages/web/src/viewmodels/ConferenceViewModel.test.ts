@@ -565,6 +565,29 @@ describe("ConferenceViewModel", () => {
     });
   });
 
+  describe("makeFileAvailable", () => {
+    let conference: Conference;
+    let viewModel: ConferenceViewModel;
+
+    beforeEach(() => {
+      conference = getDefaultTestConference();
+      viewModel = ConferenceViewModel.create(conference);
+    });
+
+    it("should make the file available in the conference", () => {
+      // Given
+      const makeFileAvailableSpy = jest.spyOn(conference, "makeFileAvailable");
+      const file = new File([], "file.txt");
+
+      // When
+      viewModel.makeFileAvailable(file);
+
+      // Then
+      expect(makeFileAvailableSpy).toHaveBeenCalledTimes(1);
+      expect(makeFileAvailableSpy).toHaveBeenCalledWith(file);
+    });
+  });
+
   describe("leave", () => {
     it("should leave the conference", () => {
       // Given
