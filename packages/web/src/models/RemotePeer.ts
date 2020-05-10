@@ -4,6 +4,7 @@ import { splitStringToChunks } from "../utils/chunks";
 import { RemoteUser } from "./RemoteUser";
 import { User } from "./User";
 import { Message } from "./Message";
+import { MessageChunkBuilder } from "../services/MessageChunkBuilder";
 
 const log = debug("app:RemotePeer");
 
@@ -324,42 +325,15 @@ export class RemotePeer implements User {
 
     if (!dataChannel) return this;
 
-    let state = "idle";
-    let messageInChunks = "";
-    let currentMessageType: string | null = null;
-    let numberOfIncomingChunk: number | null = null;
+    const author = {
+      id: this.id(),
+      name: this.name(),
+    };
+    const messageChunkBuilder = new MessageChunkBuilder(author, onMessage);
 
-    dataChannel.addEventListener("message", (e) => {
-      if (state === "idle") {
-        // Then handle header
-        [, currentMessageType, numberOfIncomingChunk] = e.data.split(":");
-        state = "reading";
-      } else if (numberOfIncomingChunk !== null && numberOfIncomingChunk > 0) {
-        // Then handle chunk
-        messageInChunks += e.data;
-        numberOfIncomingChunk -= 1;
-
-        if (numberOfIncomingChunk === 0) {
-          // Build the message
-          const author = {
-            id: this.id(),
-            name: this.name(),
-          };
-
-          const message =
-            currentMessageType === "image"
-              ? Message.createImageMessage(author, messageInChunks)
-              : Message.createTextMessage(author, messageInChunks);
-
-          onMessage(message);
-
-          state = "idle";
-          messageInChunks = "";
-          currentMessageType = null;
-          numberOfIncomingChunk = null;
-        }
-      }
-    });
+    dataChannel.addEventListener("message", (e) =>
+      messageChunkBuilder.read(e.data)
+    );
 
     return this;
   }
