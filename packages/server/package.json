@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@koa/cors": "^3.0.0",
-    "apollo-server-koa": "2.11.0",
+    "apollo-server-koa": "2.14.2",
     "awilix": "4.2.5",
     "debug": "4.1.1",
     "dotenv": "^8.2.0",
